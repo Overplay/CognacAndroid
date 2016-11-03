@@ -5,23 +5,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class EnterEmailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.welcome);
+        setContentView(R.layout.activity_enter_email);
     }
 
-    public void login(View view) {
-        Intent intent = new Intent(this, LoginActivity.class);
+    public void next(View view) {
+        Intent intent = new Intent(this, EnterPasswordActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
     }
 
-    public void signup(View view) {
-        Intent intent = new Intent(this, EnterNameActivity.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+    public void goBack(View view) {
+        this.finish();
+        overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
     }
 }

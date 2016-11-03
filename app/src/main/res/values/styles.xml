@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/OGBackgroundGrey</item>
         <item name="colorPrimaryDark">@color/OGBackgroundGrey</item>
-        <item name="colorAccent">@color/OGLightBlue</item>
+        <item name="colorAccent">@color/OGWhite</item>
 
         <item name="android:textColorPrimary">@color/OGWhite</item>
     </style>

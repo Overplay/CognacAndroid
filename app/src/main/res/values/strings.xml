@@ -8,4 +8,13 @@
     <string name="login">Log in</string>
     <string name="signup">Sign up</string>
 
+    <string name="emailCaps">EMAIL</string>
+    <string name="passwordCaps">PASSWORD</string>
+    <string name="firstNameCaps">FIRST NAME</string>
+    <string name="lastNameCaps">LAST NAME</string>
+
+    <string name="enterNameTitle">WHO ARE YOU?</string>
+    <string name="enterEmailTitle">WHAT\'S YOUR EMAIL?</string>
+    <string name="enterPasswordTitle">PASSWORD?</string>
+
 </resources>
