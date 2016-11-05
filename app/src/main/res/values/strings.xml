@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Absinthe-Android</string>
 
-    <string name="welcome_message">Welcome!</string>
+    <string name="welcome_message">WELCOME!</string>
     <string name="welcome_text">To use Ourglass TV...</string>
     <string name="or">or</string>
 
     <string name="login">Log in</string>
+    <string name="loginCaps">LOG IN</string>
     <string name="signup">Sign up</string>
 
     <string name="emailCaps">EMAIL</string>
@@ -16,5 +17,8 @@
     <string name="enterNameTitle">WHO ARE YOU?</string>
     <string name="enterEmailTitle">WHAT\'S YOUR EMAIL?</string>
     <string name="enterPasswordTitle">PASSWORD?</string>
+
+    <string name="goBackDescription">go back</string>
+    <string name="nextDescription">next</string>
 
 </resources>

@@ -32,16 +32,6 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin" >
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="goBack"
-            android:id="@+id/backButton"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="206dp"
-            android:text="Back" />
-
         <TextView
             android:text="@string/firstNameCaps"
             android:textSize="15sp"
@@ -49,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
+            android:labelFor="@+id/firstName"
             android:id="@+id/firstNameLabel" />
 
         <EditText
@@ -59,7 +50,7 @@
             android:ems="10"
             android:layout_below="@+id/firstNameLabel"
             android:layout_alignStart="@+id/firstNameLabel"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/firstName" />
 
         <TextView
@@ -70,6 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
+            android:labelFor="@+id/lastName"
             android:id="@+id/lastNameLabel" />
 
         <EditText
@@ -80,19 +72,35 @@
             android:ems="10"
             android:layout_below="@+id/lastNameLabel"
             android:layout_alignStart="@+id/lastNameLabel"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/lastName" />
 
-        <Button
-            android:text="Next"
-            android:onClick="next"
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="28dp"
-            android:id="@+id/button2"
+            android:onClick="goBack"
+            android:id="@+id/backButton"
+            android:layout_below="@id/lastName"
+            android:layout_alignStart="@id/lastName"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/ic_fast_rewind_black_24dp"
+            android:contentDescription="@string/goBackDescription"
+            android:background="@color/OGLightBlue"
+            android:tint="@color/OGWhite"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="next"
+            android:id="@+id/loginButton"
             android:layout_alignBaseline="@+id/backButton"
             android:layout_alignBottom="@+id/backButton"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_play_circle_outline_black_24dp"
+            android:contentDescription="@string/nextDescription"
+            android:background="@color/OGLightBlue"
+            android:tint="@color/OGWhite"/>
+
     </RelativeLayout>
 </RelativeLayout>
 
