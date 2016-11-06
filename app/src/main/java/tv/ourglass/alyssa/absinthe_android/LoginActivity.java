@@ -46,6 +46,10 @@ public class LoginActivity extends AppCompatActivity {
     public void login(View view) {
         Log.d("LoginActivity", mEmail.getText().toString());
         Log.d("LoginActivity", mPassword.getText().toString());
+
+        Intent intent = new Intent(this, MainTabsActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
     }
 
     public void goBack(View view) {

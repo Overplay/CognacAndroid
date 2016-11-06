@@ -20,5 +20,8 @@
 
     <string name="goBackDescription">go back</string>
     <string name="nextDescription">next</string>
+    <string name="title_activity_main_tabs">MainTabsActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
 </resources>

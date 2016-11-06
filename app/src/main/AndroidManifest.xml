@@ -18,7 +18,11 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".EnterNameActivity" />
         <activity android:name=".EnterEmailActivity" />
-        <activity android:name=".EnterPasswordActivity"></activity>
+        <activity android:name=".EnterPasswordActivity" />
+        <activity
+            android:name=".MainTabsActivity"
+            android:label="@string/title_activity_main_tabs"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
