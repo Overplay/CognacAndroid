@@ -9,7 +9,7 @@
     tools:context="tv.ourglass.alyssa.absinthe_android.SettingsFragment">
 
     <ListView
-        android:id="@+id/android:list"
+        android:id="@+id/optionsList"
         android:divider="@color/OGBackgroundGrey"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"

@@ -1,6 +1,7 @@
 package tv.ourglass.alyssa.absinthe_android;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -66,8 +67,11 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     public View getTabView(int position) {
         View v = LayoutInflater.from(context).inflate(R.layout.custom_tab, null);
 
-        TextView tv = (TextView) v.findViewById(R.id.text);
-        tv.setText(tabTitles[position]);
+        TextView text = (TextView) v.findViewById(R.id.text);
+        text.setText(tabTitles[position]);
+
+        Typeface font = Typeface.createFromAsset(context.getAssets(), "Poppins-Regular.ttf");
+        text.setTypeface(font);
 
         ImageView img = (ImageView) v.findViewById(R.id.image);
         img.setImageResource(tabIcons[position]);
