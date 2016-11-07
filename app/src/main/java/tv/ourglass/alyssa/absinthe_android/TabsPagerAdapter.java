@@ -35,19 +35,17 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return SettingsFragment.newInstance(position);
-        //return MainTabsActivity.PlaceholderFragment.newInstance(position);
-        /*
+
         switch (tabTitles[position]) {
             case "TV":
-                return MainTabsActivity.PlaceholderFragment.newInstance(position);
+                return new DevicesFragment();
             case "Locations":
-                return MainTabsActivity.PlaceholderFragment.newInstance(position);
+                return new LocationsFragment();
             case "Settings":
-                return SettingsFragment.newInstance(position);
+                return new SettingsFragment();
             default:
-                return MainTabsActivity.PlaceholderFragment.newInstance(5);
-        }*/
+                return new BlankFragment();
+        }
     }
 
     @Override
@@ -66,12 +64,14 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     }
 
     public View getTabView(int position) {
-        // Given you have a custom layout in `res/layout/custom_tab.xml` with a TextView and ImageView
         View v = LayoutInflater.from(context).inflate(R.layout.custom_tab, null);
+
         TextView tv = (TextView) v.findViewById(R.id.text);
         tv.setText(tabTitles[position]);
+
         ImageView img = (ImageView) v.findViewById(R.id.image);
         img.setImageResource(tabIcons[position]);
+
         return v;
     }
 }

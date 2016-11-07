@@ -21,7 +21,14 @@
     <string name="goBackDescription">go back</string>
     <string name="nextDescription">next</string>
 
-    <string name="section_format">Section %1$d</string>
     <string name="iconDescription">icon</string>
+
+    <string-array name="settingsOptions">
+        <item>Invite Friends</item>
+        <item>Edit Account</item>
+        <item>Add New Ourglass Device</item>
+        <item>Add/Manage Venues</item>
+        <item>Log Out</item>
+    </string-array>
 
 </resources>
