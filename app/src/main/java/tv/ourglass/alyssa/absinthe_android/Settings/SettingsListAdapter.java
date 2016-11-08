@@ -1,6 +1,7 @@
-package tv.ourglass.alyssa.absinthe_android;
+package tv.ourglass.alyssa.absinthe_android.Settings;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import tv.ourglass.alyssa.absinthe_android.R;
+import tv.ourglass.alyssa.absinthe_android.Registration.WelcomeActivity;
+import tv.ourglass.alyssa.absinthe_android.Settings.SettingsListOption;
 
 /**
  * Created by alyssa on 11/6/16.
@@ -72,6 +77,7 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
 
                     case "Log Out":
                         Log.d("SettingsListAdapter", "Log out");
+                        goTo(WelcomeActivity.class);
                         break;
 
                     default:
@@ -83,5 +89,10 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
 
         return view;
 
+    }
+
+    private void goTo(Class dest) {
+        Intent intent = new Intent(context, dest);
+        context.startActivity(intent);
     }
 }

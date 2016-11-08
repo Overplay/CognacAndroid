@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.absinthe_android;
+package tv.ourglass.alyssa.absinthe_android.Registration;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import tv.ourglass.alyssa.absinthe_android.R;
+import tv.ourglass.alyssa.absinthe_android.Tabs.MainTabsActivity;
 
 public class EnterPasswordActivity extends AppCompatActivity {
 
@@ -25,19 +28,26 @@ public class EnterPasswordActivity extends AppCompatActivity {
             text.setTypeface(font);
         }
 
+        font = Typeface.createFromAsset(getAssets(), "Poppins-Light.ttf");
+        text = (TextView)findViewById(R.id.passwordRequirements);
+        if (text != null) {
+            text.setTypeface(font);
+        }
+
         font = Typeface.createFromAsset(getAssets(), "Poppins-Regular.ttf");
         text = (TextView)findViewById(R.id.passwordLabel);
         if (text != null) {
             text.setTypeface(font);
         }
 
+
         mPassword.setTypeface(font);
     }
 
     public void next(View view) {
-        /*Intent intent = new Intent(this, EnterEmailActivity.class);
+        Intent intent = new Intent(this, MainTabsActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);*/
+        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
     }
 
     public void goBack(View view) {

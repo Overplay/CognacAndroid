@@ -3,7 +3,8 @@
     <color name="OGWhite">#ffffff</color>
     <color name="OGLightBlue">#20b8eb</color>
     <color name="OGOrange">#ff8000</color>
-    <color name="OGGreen">#35cc3a</color>
+    <color name="OGGreen">#51b85e</color>
     <color name="OGDockColor">#4d4d4d</color>
     <color name="OGBackgroundGrey">#333333</color>
+    <color name="OGLightGrey">#c7c5c5</color>
 </resources>

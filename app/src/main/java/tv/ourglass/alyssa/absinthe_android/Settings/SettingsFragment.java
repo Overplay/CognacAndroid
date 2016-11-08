@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.absinthe_android;
+package tv.ourglass.alyssa.absinthe_android.Settings;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+
+import tv.ourglass.alyssa.absinthe_android.R;
+import tv.ourglass.alyssa.absinthe_android.Settings.SettingsListAdapter;
+import tv.ourglass.alyssa.absinthe_android.Settings.SettingsListOption;
 
 
 public class SettingsFragment extends Fragment {
@@ -25,7 +29,7 @@ public class SettingsFragment extends Fragment {
             R.drawable.ic_person_outline_black_36dp,
             R.drawable.ic_queue_play_next_black_36dp,
             R.drawable.ic_add_location_black_36dp,
-            R.drawable.ic_fast_rewind_black_36dp
+            R.drawable.ic_chevron_left_black_24dp
     };
 
     @Override

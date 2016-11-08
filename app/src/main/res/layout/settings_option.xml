@@ -3,7 +3,6 @@
     android:id="@+id/option"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="20dp"
     android:orientation="horizontal" >
 
 <ImageView
@@ -24,7 +23,7 @@
     android:layout_height="wrap_content"
     android:textSize="20sp"
     android:textColor="@color/OGWhite"
-    android:paddingTop="5dp"
-    android:paddingStart="10dp" />
+    android:paddingTop="10dp"
+    android:paddingStart="15dp" />
 
 </LinearLayout>

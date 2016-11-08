@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.absinthe_android;
+package tv.ourglass.alyssa.absinthe_android.Settings;
 
 /**
  * Created by alyssa on 11/7/16.

@@ -18,6 +18,8 @@
     <string name="enterEmailTitle">WHAT\'S YOUR EMAIL?</string>
     <string name="enterPasswordTitle">PASSWORD?</string>
 
+    <string name="passwordRequirements">Your password must be at least 8 characters long and include one capital letter, one special character (?!@$%^&amp;*), and one number.</string>
+
     <string name="goBackDescription">go back</string>
     <string name="nextDescription">next</string>
 

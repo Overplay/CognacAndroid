@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.absinthe_android;
+package tv.ourglass.alyssa.absinthe_android.Tabs;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -14,6 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import tv.ourglass.alyssa.absinthe_android.BlankFragment;
+import tv.ourglass.alyssa.absinthe_android.Devices.DevicesFragment;
+import tv.ourglass.alyssa.absinthe_android.Locations.LocationsFragment;
+import tv.ourglass.alyssa.absinthe_android.R;
+import tv.ourglass.alyssa.absinthe_android.Settings.SettingsFragment;
 
 /**
  * Created by alyssa on 11/6/16.
