@@ -25,12 +25,6 @@
 
     <string name="iconDescription">icon</string>
 
-    <string-array name="settingsOptions">
-        <item>Invite Friends</item>
-        <item>Edit Account</item>
-        <item>Add New Ourglass Device</item>
-        <item>Add/Manage Venues</item>
-        <item>Log Out</item>
-    </string-array>
+    <string name="networkLabel">Network:</string>
 
 </resources>

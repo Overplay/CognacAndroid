@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.absinthe_android.Registration;
+package tv.ourglass.alyssa.absinthe_android.Scenes.Registration;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -9,18 +9,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import tv.ourglass.alyssa.absinthe_android.R;
-import tv.ourglass.alyssa.absinthe_android.Registration.EnterPasswordActivity;
 
-public class EnterEmailActivity extends AppCompatActivity {
+public class EnterNameActivity extends AppCompatActivity {
 
-    EditText mEmail;
+    EditText mFirstName;
+    EditText mLastName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_enter_email);
+        setContentView(R.layout.activity_enter_name);
 
-        mEmail = (EditText)findViewById(R.id.email);
+        mFirstName = (EditText)findViewById(R.id.firstName);
+        mLastName = (EditText)findViewById(R.id.lastName);
 
         TextView text = (TextView)findViewById(R.id.textView);
         Typeface font = Typeface.createFromAsset(getAssets(), "Poppins-Medium.ttf");
@@ -29,16 +30,22 @@ public class EnterEmailActivity extends AppCompatActivity {
         }
 
         font = Typeface.createFromAsset(getAssets(), "Poppins-Regular.ttf");
-        text = (TextView)findViewById(R.id.emailLabel);
+        text = (TextView)findViewById(R.id.firstNameLabel);
         if (text != null) {
             text.setTypeface(font);
         }
 
-        mEmail.setTypeface(font);
+        text = (TextView)findViewById(R.id.lastNameLabel);
+        if (text != null) {
+            text.setTypeface(font);
+        }
+
+        mFirstName.setTypeface(font);
+        mLastName.setTypeface(font);
     }
 
     public void next(View view) {
-        Intent intent = new Intent(this, EnterPasswordActivity.class);
+        Intent intent = new Intent(this, EnterEmailActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
     }

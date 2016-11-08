@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.absinthe_android.Settings;
+package tv.ourglass.alyssa.absinthe_android.Scenes.Settings;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,8 +10,6 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import tv.ourglass.alyssa.absinthe_android.R;
-import tv.ourglass.alyssa.absinthe_android.Settings.SettingsListAdapter;
-import tv.ourglass.alyssa.absinthe_android.Settings.SettingsListOption;
 
 
 public class SettingsFragment extends Fragment {

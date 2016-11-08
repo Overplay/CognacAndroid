@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.absinthe_android.Settings;
+package tv.ourglass.alyssa.absinthe_android.Scenes.Settings;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +14,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import tv.ourglass.alyssa.absinthe_android.R;
-import tv.ourglass.alyssa.absinthe_android.Registration.WelcomeActivity;
-import tv.ourglass.alyssa.absinthe_android.Settings.SettingsListOption;
+import tv.ourglass.alyssa.absinthe_android.Scenes.Registration.WelcomeActivity;
 
 /**
  * Created by alyssa on 11/6/16.
@@ -53,6 +52,7 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
 
         view.setTag(option);
 
+        // Add actions to the options
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

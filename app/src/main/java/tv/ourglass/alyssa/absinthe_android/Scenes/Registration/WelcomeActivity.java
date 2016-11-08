@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.absinthe_android.Registration;
+package tv.ourglass.alyssa.absinthe_android.Scenes.Registration;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -9,8 +9,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import tv.ourglass.alyssa.absinthe_android.R;
-import tv.ourglass.alyssa.absinthe_android.Registration.EnterNameActivity;
-import tv.ourglass.alyssa.absinthe_android.Registration.LoginActivity;
 
 public class WelcomeActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.absinthe_android.Tabs;
+package tv.ourglass.alyssa.absinthe_android.Scenes.Tabs;
 
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/OGLightBlue"
-    tools:context="tv.ourglass.alyssa.absinthe_android.Registration.EnterNameActivity">
+    tools:context=".Scenes.Registration.EnterNameActivity">
 
     <TextView
         android:text="@string/enterNameTitle"

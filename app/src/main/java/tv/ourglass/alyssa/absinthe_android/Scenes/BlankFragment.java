@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.absinthe_android.Locations;
+package tv.ourglass.alyssa.absinthe_android.Scenes;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,16 +8,15 @@ import android.view.ViewGroup;
 
 import tv.ourglass.alyssa.absinthe_android.R;
 
-public class LocationsFragment extends Fragment {
+/**
+ * Created by alyssa on 11/6/16.
+ */
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+public class BlankFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_locations, container, false);
+        return inflater.inflate(R.layout.fragment_blank, container, false);
     }
 }

@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/OGBackgroundGrey"
-    tools:context="tv.ourglass.alyssa.absinthe_android.Registration.WelcomeActivity">
+    tools:context=".Scenes.Registration.WelcomeActivity">
 
     <TextView
         android:text="@string/welcome_message"

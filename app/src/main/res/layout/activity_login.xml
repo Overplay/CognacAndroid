@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/OGGreen"
-    tools:context="tv.ourglass.alyssa.absinthe_android.Registration.LoginActivity">
+    tools:context=".Scenes.Registration.LoginActivity">
 
     <TextView
         android:text="@string/loginCaps"
