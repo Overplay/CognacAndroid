@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import tv.ourglass.alyssa.absinthe_android.Networking.Applejack;
 import tv.ourglass.alyssa.absinthe_android.R;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Tabs.MainTabsActivity;
 

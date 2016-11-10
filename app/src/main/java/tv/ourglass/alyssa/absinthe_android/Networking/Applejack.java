@@ -17,7 +17,14 @@ import okhttp3.Response;
 public class Applejack {
 
     public final String TAG = "Applejack";
-    private final OkHttpClient client = new OkHttpClient();
+    private static final OkHttpClient client = new OkHttpClient();
+    private static Applejack singleton = new Applejack();
+
+    private Applejack() { }
+
+    public static Applejack getInstance() {
+        return singleton;
+    }
 
     public void request(String url) throws Exception {
         Request request = new Request.Builder()
