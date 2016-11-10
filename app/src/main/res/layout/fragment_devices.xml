@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Scenes.Devices.DevicesFragment">
 
     <LinearLayout
@@ -44,10 +45,27 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/text"
+    <ListView
+        android:id="@+id/devicesList"
+        android:divider="@color/OGBackgroundGrey"
+        android:dividerHeight="25dp"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Devices" />
+        android:layout_height="match_parent">
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/emptyDeviceList"
+        android:textColor="@color/OGWhite"
+        android:textSize="15sp"/>
 
 </LinearLayout>

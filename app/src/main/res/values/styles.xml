@@ -6,8 +6,8 @@
         <item name="colorPrimary">@color/OGBackgroundGrey</item>
         <item name="colorPrimaryDark">@color/OGBackgroundGrey</item>
         <item name="colorAccent">@color/OGWhite</item>
-
         <item name="android:textColorPrimary">@color/OGWhite</item>
+        <item name="android:editTextBackground">@color/OGWhite</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
