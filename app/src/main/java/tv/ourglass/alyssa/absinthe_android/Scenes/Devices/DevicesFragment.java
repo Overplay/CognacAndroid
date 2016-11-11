@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import tv.ourglass.alyssa.absinthe_android.Networking.NetUtils;
 import tv.ourglass.alyssa.absinthe_android.R;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Settings.SettingsListAdapter;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Settings.SettingsListOption;
@@ -46,6 +47,7 @@ public class DevicesFragment extends Fragment {
         font = Typeface.createFromAsset(getActivity().getAssets(), "Poppins-SemiBold.ttf");
         if (text != null) {
             text.setTypeface(font);
+            text.setText(NetUtils.getCurrentSSID(getContext()));
         }
 
         // Construct the data source
