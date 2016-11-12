@@ -45,24 +45,43 @@
             android:labelFor="@+id/email"
             android:id="@+id/emailLabel" />
 
-        <EditText
+        <LinearLayout
+            android:id="@+id/emailContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:backgroundTint="@color/OGWhite"
-            android:ems="10"
             android:layout_below="@+id/emailLabel"
             android:layout_alignStart="@+id/emailLabel"
             android:layout_marginTop="5dp"
-            android:id="@+id/email" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:inputType="textEmailAddress"
+                android:backgroundTint="@color/OGWhite"
+                android:ems="10"
+                android:id="@+id/email" />
+
+            <ImageView
+                android:id="@+id/emailCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ic_check_black_36dp"
+                android:contentDescription="@string/goodCheckDescription"
+                android:tint="@color/OGWhite"
+                android:alpha="0.0" />
+
+        </LinearLayout>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="goBack"
             android:id="@+id/backButton"
-            android:layout_below="@id/email"
-            android:layout_alignStart="@id/email"
+            android:layout_below="@id/emailContainer"
+            android:layout_alignStart="@id/emailContainer"
             android:layout_marginTop="50dp"
             android:src="@drawable/ic_fast_rewind_black_36dp"
             android:contentDescription="@string/goBackDescription"
@@ -73,13 +92,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="next"
-            android:id="@+id/loginButton"
+            android:id="@+id/nextButton"
             android:layout_alignBaseline="@+id/backButton"
             android:layout_alignBottom="@+id/backButton"
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_play_circle_outline_black_36dp"
             android:contentDescription="@string/nextDescription"
             android:background="@color/OGOrange"
+            android:alpha="0.0"
             android:tint="@color/OGWhite"/>
 
     </RelativeLayout>

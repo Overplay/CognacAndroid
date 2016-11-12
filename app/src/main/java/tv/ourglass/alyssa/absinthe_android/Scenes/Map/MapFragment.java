@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.absinthe_android.Scenes.Locations;
+package tv.ourglass.alyssa.absinthe_android.Scenes.Map;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import tv.ourglass.alyssa.absinthe_android.R;
 
-public class LocationsFragment extends Fragment {
+public class MapFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

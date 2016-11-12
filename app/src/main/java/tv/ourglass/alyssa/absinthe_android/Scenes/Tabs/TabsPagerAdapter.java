@@ -16,8 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import tv.ourglass.alyssa.absinthe_android.Scenes.BlankFragment;
-import tv.ourglass.alyssa.absinthe_android.Scenes.Devices.DevicesFragment;
-import tv.ourglass.alyssa.absinthe_android.Scenes.Locations.LocationsFragment;
+import tv.ourglass.alyssa.absinthe_android.Scenes.Control.DevicesFragment;
+import tv.ourglass.alyssa.absinthe_android.Scenes.Map.MapFragment;
 import tv.ourglass.alyssa.absinthe_android.R;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Settings.SettingsFragment;
 
@@ -47,7 +47,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
             case "TV":
                 return new DevicesFragment();
             case "Locations":
-                return new LocationsFragment();
+                return new MapFragment();
             case "Settings":
                 return new SettingsFragment();
             default:

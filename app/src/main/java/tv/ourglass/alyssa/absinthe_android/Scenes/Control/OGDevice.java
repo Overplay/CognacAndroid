@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.absinthe_android.Scenes.Devices;
+package tv.ourglass.alyssa.absinthe_android.Scenes.Control;
 
 /**
  * Created by atorres on 11/8/16.

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Scenes.Devices.DevicesFragment">
+    tools:context=".Scenes.Control.DevicesFragment">
 
     <LinearLayout
         android:id="@+id/header"
@@ -34,7 +34,7 @@
                 android:id="@+id/networkLabel" />
 
             <TextView
-                android:text="Name"
+                android:text=""
                 android:textColor="@color/OGWhite"
                 android:textSize="30sp"
                 android:layout_width="match_parent"
@@ -52,7 +52,8 @@
         android:footerDividersEnabled="true"
         android:headerDividersEnabled="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp">
 
     </ListView>
 

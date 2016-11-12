@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.absinthe_android.Scenes.Devices;
+package tv.ourglass.alyssa.absinthe_android.Scenes.Control;
 
 import android.content.Context;
 import android.content.Intent;
