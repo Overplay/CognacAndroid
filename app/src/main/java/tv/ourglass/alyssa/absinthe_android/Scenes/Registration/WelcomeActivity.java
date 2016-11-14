@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.R;
 
 public class WelcomeActivity extends AppCompatActivity {
@@ -18,13 +19,13 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
 
         TextView text = (TextView)findViewById(R.id.welcomeTextView);
-        Typeface font = Typeface.createFromAsset(getAssets(), "Poppins-Bold.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.boldFont);
         if (text != null) {
             text.setTypeface(font);
         }
 
         text = (TextView)findViewById(R.id.textView1);
-        font = Typeface.createFromAsset(getAssets(), "Poppins-Regular.ttf");
+        font = Typeface.createFromAsset(getAssets(), OGConstants.regularFont);
         if (text != null) {
             text.setTypeface(font);
         }

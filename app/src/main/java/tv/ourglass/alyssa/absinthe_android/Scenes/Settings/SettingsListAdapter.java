@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.R;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Registration.WelcomeActivity;
 
@@ -47,7 +48,7 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
             name.setText(option.name);
         }
 
-        Typeface font = Typeface.createFromAsset(context.getAssets(), "Poppins-Regular.ttf");
+        Typeface font = Typeface.createFromAsset(context.getAssets(), OGConstants.regularFont);
         name.setTypeface(font);
 
         view.setTag(option);

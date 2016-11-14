@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.R;
 
 public class EnterNameActivity extends RegistrationBaseActivity {
@@ -33,12 +34,12 @@ public class EnterNameActivity extends RegistrationBaseActivity {
 
         // Set fonts
         TextView text = (TextView)findViewById(R.id.textView);
-        Typeface font = Typeface.createFromAsset(getAssets(), "Poppins-Medium.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.mediumFont);
         if (text != null) {
             text.setTypeface(font);
         }
 
-        font = Typeface.createFromAsset(getAssets(), "Poppins-Regular.ttf");
+        font = Typeface.createFromAsset(getAssets(), OGConstants.regularFont);
         text = (TextView)findViewById(R.id.firstNameLabel);
         if (text != null) {
             text.setTypeface(font);
@@ -90,14 +91,16 @@ public class EnterNameActivity extends RegistrationBaseActivity {
 
     private void checkFields() {
         if ((mFirstName.getText().toString().isEmpty() && mLastName.getText().toString().isEmpty())) {
-            mNextButton.animate().alpha(0f).setDuration(350).start();
+            mNextButton.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
         } else {
-            mNextButton.animate().alpha(1f).setDuration(350).start();
+            mNextButton.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
         }
     }
 
     public void next(View view) {
-        Intent intent = new Intent(this, EnterEmailActivity.class);
+        Intent intent = new Intent(this, EnterEmailActivity.class)
+                .putExtra(OGConstants.firstNameExtra, mFirstName.getText().toString())
+                .putExtra(OGConstants.lastNameExtra, mLastName.getText().toString());
         startActivity(intent);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
     }

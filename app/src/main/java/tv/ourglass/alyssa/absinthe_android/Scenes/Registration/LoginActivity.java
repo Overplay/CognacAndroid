@@ -24,6 +24,7 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.Networking.Applejack;
 import tv.ourglass.alyssa.absinthe_android.R;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Tabs.MainTabsActivity;
@@ -55,13 +56,13 @@ public class LoginActivity extends RegistrationBaseActivity {
 
         // Set fonts
         TextView text = (TextView) findViewById(R.id.textView);
-        Typeface font = Typeface.createFromAsset(getAssets(), "Poppins-Medium.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.mediumFont);
         if (text != null) {
             text.setTypeface(font);
         }
 
         text = (TextView) findViewById(R.id.emailLabel);
-        font = Typeface.createFromAsset(getAssets(), "Poppins-Regular.ttf");
+        font = Typeface.createFromAsset(getAssets(), OGConstants.regularFont);
         if (text != null) {
             text.setTypeface(font);
         }
@@ -89,10 +90,10 @@ public class LoginActivity extends RegistrationBaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (isValidEmail(mEmail.getText().toString())) {
-                    mEmailCheck.animate().alpha(1f).setDuration(350).start();
+                    mEmailCheck.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
 
                 } else {
-                    mEmailCheck.animate().alpha(0f).setDuration(350).start();
+                    mEmailCheck.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
                 }
                 checkFields();
             }
@@ -112,10 +113,10 @@ public class LoginActivity extends RegistrationBaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (isValidPassword(mPassword.getText().toString())) {
-                    mPasswordCheck.animate().alpha(1f).setDuration(350).start();
+                    mPasswordCheck.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
 
                 } else {
-                    mPasswordCheck.animate().alpha(0f).setDuration(350).start();
+                    mPasswordCheck.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
                 }
                 checkFields();
             }
@@ -124,16 +125,16 @@ public class LoginActivity extends RegistrationBaseActivity {
 
     private void checkFields() {
         if (isValidEmail(mEmail.getText().toString()) && isValidPassword(mPassword.getText().toString())) {
-            mLoginButton.animate().alpha(1f).setDuration(350).start();
+            mLoginButton.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
         } else {
-            mLoginButton.animate().alpha(0f).setDuration(350).start();
+            mLoginButton.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
         }
     }
 
     public void login(View view) {
 
         Applejack.getInstance().login(mEmail.getText().toString(), mPassword.getText().toString(),
-                new Callback() {
+                new Applejack.HttpCallback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         LoginActivity.this.runOnUiThread(new Runnable() {
@@ -145,30 +146,18 @@ public class LoginActivity extends RegistrationBaseActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, final Response response) {
+                    public void onSuccess(Response response) {
+                        Log.d(TAG, response.toString());
 
-                        if (!response.isSuccessful()) {
+                        LoginActivity.this.runOnUiThread(new Runnable() {
 
-                            LoginActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showAlert("Uh oh!", "There was a problem logging in.");
-                                }
-                            });
-
-                        } else {
-                            Log.d(TAG, response.toString());
-
-                            LoginActivity.this.runOnUiThread(new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    Intent intent = new Intent(LoginActivity.this, MainTabsActivity.class);
-                                    startActivity(intent);
-                                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-                                }
-                            });
-                        }
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(LoginActivity.this, MainTabsActivity.class);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                            }
+                        });
                     }
                 });
     }

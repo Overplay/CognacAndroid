@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.Networking.NetUtils;
 import tv.ourglass.alyssa.absinthe_android.R;
 
@@ -36,13 +37,13 @@ public class DevicesFragment extends Fragment {
 
         // Set fonts
         TextView text = (TextView)view.findViewById(R.id.networkLabel);
-        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "Poppins-Regular.ttf");
+        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), OGConstants.regularFont);
         if (text != null) {
             text.setTypeface(font);
         }
 
         text = (TextView)view.findViewById(R.id.networkName);
-        font = Typeface.createFromAsset(getActivity().getAssets(), "Poppins-SemiBold.ttf");
+        font = Typeface.createFromAsset(getActivity().getAssets(), OGConstants.semiBoldFont);
         if (text != null) {
             text.setTypeface(font);
             text.setText(NetUtils.getCurrentSSID(getContext()));
@@ -63,7 +64,7 @@ public class DevicesFragment extends Fragment {
 
         // Attach text to display when list is empty
         TextView empty = (TextView) view.findViewById(R.id.empty);
-        font = Typeface.createFromAsset(getActivity().getAssets(), "Poppins-Light.ttf");
+        font = Typeface.createFromAsset(getActivity().getAssets(), OGConstants.lightFont);
         empty.setTypeface(font);
         listView.setEmptyView(empty);
 

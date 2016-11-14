@@ -6,16 +6,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Response;
+import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
+import tv.ourglass.alyssa.absinthe_android.Networking.Applejack;
 import tv.ourglass.alyssa.absinthe_android.R;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Tabs.MainTabsActivity;
 
 public class EnterPasswordActivity extends RegistrationBaseActivity {
+
+    public String TAG = "EnterPasswordActivity";
 
     private EditText mPassword;
     private ImageView mPasswordCheck;
@@ -34,18 +43,18 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
 
         // Set fonts
         TextView text = (TextView)findViewById(R.id.textView);
-        Typeface font = Typeface.createFromAsset(getAssets(), "Poppins-Medium.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.mediumFont);
         if (text != null) {
             text.setTypeface(font);
         }
 
-        font = Typeface.createFromAsset(getAssets(), "Poppins-Light.ttf");
+        font = Typeface.createFromAsset(getAssets(), OGConstants.lightFont);
         text = (TextView)findViewById(R.id.passwordRequirements);
         if (text != null) {
             text.setTypeface(font);
         }
 
-        font = Typeface.createFromAsset(getAssets(), "Poppins-Regular.ttf");
+        font = Typeface.createFromAsset(getAssets(), OGConstants.regularFont);
         text = (TextView)findViewById(R.id.passwordLabel);
         if (text != null) {
             text.setTypeface(font);
@@ -68,12 +77,12 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (isValidPassword(mPassword.getText().toString())) {
-                    mPasswordCheck.animate().alpha(1f).setDuration(350).start();
-                    mNextButton.animate().alpha(1f).setDuration(350).start();
+                    mPasswordCheck.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
+                    mNextButton.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
 
                 } else {
-                    mPasswordCheck.animate().alpha(0f).setDuration(350).start();
-                    mNextButton.animate().alpha(0f).setDuration(350).start();
+                    mPasswordCheck.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
+                    mNextButton.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
 
                 }
             }
@@ -81,8 +90,36 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
     }
 
     public void next(View view) {
-        Intent intent = new Intent(this, MainTabsActivity.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+        Intent prev = getIntent();
+        Applejack.getInstance().register(prev.getStringExtra(OGConstants.emailExtra),
+                mPassword.getText().toString(), prev.getStringExtra(OGConstants.firstNameExtra),
+                prev.getStringExtra(OGConstants.lastNameExtra),
+
+                new Applejack.HttpCallback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        EnterPasswordActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showAlert("Uh oh!", "There was a problem signing you up. Do you already have an account with that email?");
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onSuccess(Response response) {
+                        Log.d(TAG, response.toString());
+
+                        EnterPasswordActivity.this.runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(EnterPasswordActivity.this, MainTabsActivity.class);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                            }
+                        });
+                    }
+                });
     }
 }

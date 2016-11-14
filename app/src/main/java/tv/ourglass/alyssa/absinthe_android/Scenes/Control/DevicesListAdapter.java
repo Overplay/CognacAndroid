@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.R;
 
 /**
@@ -55,11 +56,11 @@ public class DevicesListAdapter extends ArrayAdapter<OGDevice> {
             ipAddress.setText(device.ipAddress);
         }
 
-        Typeface font = Typeface.createFromAsset(context.getAssets(), "Poppins-SemiBold.ttf");
+        Typeface font = Typeface.createFromAsset(context.getAssets(), OGConstants.semiBoldFont);
         name.setTypeface(font);
         number.setTypeface(font);
 
-        font = Typeface.createFromAsset(context.getAssets(), "Poppins-Light.ttf");
+        font = Typeface.createFromAsset(context.getAssets(), OGConstants.lightFont);
         location.setTypeface(font);
         ipAddress.setTypeface(font);
 

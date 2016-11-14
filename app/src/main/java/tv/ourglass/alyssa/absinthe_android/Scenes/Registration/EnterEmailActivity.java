@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.R;
 
 public class EnterEmailActivity extends RegistrationBaseActivity {
@@ -33,12 +34,12 @@ public class EnterEmailActivity extends RegistrationBaseActivity {
 
         // Set fonts
         TextView text = (TextView)findViewById(R.id.textView);
-        Typeface font = Typeface.createFromAsset(getAssets(), "Poppins-Medium.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.mediumFont);
         if (text != null) {
             text.setTypeface(font);
         }
 
-        font = Typeface.createFromAsset(getAssets(), "Poppins-Regular.ttf");
+        font = Typeface.createFromAsset(getAssets(), OGConstants.regularFont);
         text = (TextView)findViewById(R.id.emailLabel);
         if (text != null) {
             text.setTypeface(font);
@@ -61,12 +62,12 @@ public class EnterEmailActivity extends RegistrationBaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (isValidEmail(mEmail.getText().toString())) {
-                    mEmailCheck.animate().alpha(1f).setDuration(350).start();
-                    mNextButton.animate().alpha(1f).setDuration(350).start();
+                    mEmailCheck.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
+                    mNextButton.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
 
                 } else {
-                    mEmailCheck.animate().alpha(0f).setDuration(350).start();
-                    mNextButton.animate().alpha(0f).setDuration(350).start();
+                    mEmailCheck.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
+                    mNextButton.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
 
                 }
             }
@@ -74,7 +75,10 @@ public class EnterEmailActivity extends RegistrationBaseActivity {
     }
 
     public void next(View view) {
-        Intent intent = new Intent(this, EnterPasswordActivity.class);
+        Intent intent = new Intent(this, EnterPasswordActivity.class)
+                .putExtra(OGConstants.emailExtra, mEmail.getText().toString())
+                .putExtra(OGConstants.firstNameExtra, getIntent().getStringExtra(OGConstants.firstNameExtra))
+                .putExtra(OGConstants.lastNameExtra, getIntent().getStringExtra(OGConstants.lastNameExtra));
         startActivity(intent);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
     }
