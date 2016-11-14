@@ -1,5 +1,7 @@
 package tv.ourglass.alyssa.absinthe_android.Networking;
 
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,9 +28,9 @@ public class Applejack {
 
     private final OkHttpClient client = AbsintheApplication.okclient;
 
-    private static Applejack instance = new Applejack();
-
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+    private static Applejack instance = new Applejack();
 
     private Applejack() { }
 
@@ -72,23 +74,32 @@ public class Applejack {
                 .post(body)
                 .build();
 
+        //if (context.getSharedPreferences("tv.ourglass.absinthe_android", Context.MODE_PRIVATE))
+
+        request(req, cb);
+    }
+
+    private void get(String url, HttpCallback cb) {
+        Request req = new Request.Builder()
+                .url(url)
+                .build();
+
         request(req, cb);
     }
 
     public void login(String email, String password, HttpCallback cb) {
-
         RequestBody formBody = new FormBody.Builder()
                 .add("email", email)
                 .add("password", password)
                 .add("type", "local")
                 .build();
 
-        Request request = new Request.Builder()
+        Request req = new Request.Builder()
                 .url(OGConstants.OGCloudBaseURL + OGConstants.loginPath)
                 .post(formBody)
                 .build();
 
-        request(request, cb);
+        request(req, cb);
     }
 
     public void register(String email, String password, String firstName, String lastName, HttpCallback cb) {
@@ -96,13 +107,12 @@ public class Applejack {
             JSONObject json = new JSONObject();
             json.put("email", email);
             json.put("password", password);
+            json.put("type", "local");
 
             JSONObject user = new JSONObject();
             user.put("firstName", firstName);
             user.put("lastName", lastName);
             json.put("user", user);
-
-            json.put("type", "local");
 
             post(OGConstants.OGCloudBaseURL + OGConstants.registerPath, json.toString(), cb);
 
@@ -110,5 +120,63 @@ public class Applejack {
             e.printStackTrace();
             cb.onFailure(null, null);
         }
+    }
+
+    public void changePassword(String email, String newPassword, HttpCallback cb) {
+        RequestBody formBody = new FormBody.Builder()
+                .add("email", email)
+                .add("newpass", newPassword)
+                .build();
+
+        Request req = new Request.Builder()
+                .url(OGConstants.OGCloudBaseURL + OGConstants.changePwdPath)
+                .post(formBody)
+                .build();
+
+        request(req, cb);
+    }
+
+    public void changeAccountInfo(String firstName, String lastName, String email, String userId, HttpCallback cb) {
+        RequestBody formBody = new FormBody.Builder()
+                .add("email", email)
+                .add("firstName", firstName)
+                .add("lastName", lastName)
+                .build();
+
+        Request req = new Request.Builder()
+                .url(OGConstants.OGCloudBaseURL + OGConstants.changeAccountPath + userId)
+                .put(formBody)
+                .build();
+
+        request(req, cb);
+    }
+
+    public void inviteUser(String email, HttpCallback cb) {
+        RequestBody formBody = new FormBody.Builder()
+                .add("email", email)
+                .build();
+
+        Request req = new Request.Builder()
+                .url(OGConstants.OGCloudBaseURL + OGConstants.inviteUserPath)
+                .post(formBody)
+                .build();
+
+        request(req, cb);
+    }
+
+    public void getToken(HttpCallback cb) {
+        get(OGConstants.OGCloudBaseURL + OGConstants.getTokenPath, cb);
+    }
+
+    public void getVenues(HttpCallback cb) {
+        get(OGConstants.OGCloudBaseURL + OGConstants.getVenuesPath, cb);
+    }
+
+    public void getAuthStatus(HttpCallback cb) {
+        get(OGConstants.OGCloudBaseURL + OGConstants.getAuthStatusPath, cb);
+    }
+
+    public void logout(HttpCallback cb) {
+        get(OGConstants.OGCloudBaseURL + OGConstants.logoutPath, cb);
     }
 }
