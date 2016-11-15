@@ -1,6 +1,7 @@
 package tv.ourglass.alyssa.absinthe_android.Networking;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,7 +10,6 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -17,6 +17,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import tv.ourglass.alyssa.absinthe_android.AbsintheApplication;
 import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
+import tv.ourglass.alyssa.absinthe_android.Models.SharedPrefsManager;
 
 /**
  * Created by atorres on 11/10/16.
@@ -56,6 +57,7 @@ public class Applejack {
             public void onResponse(Call call, Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
+                    Log.d(TAG, response.toString());
                     cb.onFailure(call, null);
                     response.body().close();
 
@@ -67,42 +69,84 @@ public class Applejack {
         });
     }
 
-    private void post(String url, String json, HttpCallback cb) {
+    private void post(Context context, String url, String json, HttpCallback cb) {
         RequestBody body = RequestBody.create(JSON, json);
-        Request req = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
+        Request req;
+        String jwt = SharedPrefsManager.getUserApplejackJwt(context);
 
-        //if (context.getSharedPreferences("tv.ourglass.absinthe_android", Context.MODE_PRIVATE))
-
-        request(req, cb);
-    }
-
-    private void get(String url, HttpCallback cb) {
-        Request req = new Request.Builder()
-                .url(url)
-                .build();
-
-        request(req, cb);
-    }
-
-    public void login(String email, String password, HttpCallback cb) {
-        RequestBody formBody = new FormBody.Builder()
-                .add("email", email)
-                .add("password", password)
-                .add("type", "local")
-                .build();
-
-        Request req = new Request.Builder()
-                .url(OGConstants.OGCloudBaseURL + OGConstants.loginPath)
-                .post(formBody)
-                .build();
+        if (jwt != null) {
+            req = new Request.Builder()
+                    .addHeader("Authorization", "Bearer: " + jwt)
+                    .url(url)
+                    .post(body)
+                    .build();
+        } else {
+            req = new Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .build();
+        }
 
         request(req, cb);
     }
 
-    public void register(String email, String password, String firstName, String lastName, HttpCallback cb) {
+    private void get(Context context, String url, HttpCallback cb) {
+        Request req;
+        String jwt = SharedPrefsManager.getUserApplejackJwt(context);
+
+        if (jwt != null) {
+            req = new Request.Builder()
+                    .addHeader("Authorization", "Bearer: " + jwt)
+                    .url(url)
+                    .build();
+        } else {
+            req = new Request.Builder()
+                    //.get()
+                    .url(url)
+                    .build();
+        }
+
+        request(req, cb);
+    }
+
+    private void put(Context context, String url, String json, HttpCallback cb) {
+        RequestBody body = RequestBody.create(JSON, json);
+        Request req;
+        String jwt = SharedPrefsManager.getUserApplejackJwt(context);
+
+        if (jwt != null) {
+            req = new Request.Builder()
+                    .addHeader("Authorization", "Bearer: " + jwt)
+                    .url(url)
+                    .put(body)
+                    .build();
+        } else {
+            req = new Request.Builder()
+                    .url(url)
+                    .put(body)
+                    .build();
+        }
+
+        request(req, cb);
+    }
+
+    public void login(Context context, String email, String password, HttpCallback cb) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("email", email);
+            json.put("password", password);
+            json.put("type", "local");
+
+            post(context, OGConstants.OGCloudBaseURL + OGConstants.loginPath, json.toString(), cb);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            cb.onFailure(null, null);
+        }
+    }
+
+    public void register(Context context, String email, String password, String firstName,
+                         String lastName, HttpCallback cb) {
         try {
             JSONObject json = new JSONObject();
             json.put("email", email);
@@ -114,7 +158,7 @@ public class Applejack {
             user.put("lastName", lastName);
             json.put("user", user);
 
-            post(OGConstants.OGCloudBaseURL + OGConstants.registerPath, json.toString(), cb);
+            post(context, OGConstants.OGCloudBaseURL + OGConstants.registerPath, json.toString(), cb);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -122,61 +166,62 @@ public class Applejack {
         }
     }
 
-    public void changePassword(String email, String newPassword, HttpCallback cb) {
-        RequestBody formBody = new FormBody.Builder()
-                .add("email", email)
-                .add("newpass", newPassword)
-                .build();
+    public void changePassword(Context context, String email, String newPassword, HttpCallback cb) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("email", email);
+            json.put("newpass", newPassword);
 
-        Request req = new Request.Builder()
-                .url(OGConstants.OGCloudBaseURL + OGConstants.changePwdPath)
-                .post(formBody)
-                .build();
+            post(context, OGConstants.OGCloudBaseURL + OGConstants.changePwdPath, json.toString(), cb);
 
-        request(req, cb);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            cb.onFailure(null, null);
+        }
     }
 
-    public void changeAccountInfo(String firstName, String lastName, String email, String userId, HttpCallback cb) {
-        RequestBody formBody = new FormBody.Builder()
-                .add("email", email)
-                .add("firstName", firstName)
-                .add("lastName", lastName)
-                .build();
+    public void changeAccountInfo(Context context, String firstName, String lastName, String email,
+                                  String userId, HttpCallback cb) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("email", email);
+            json.put("firstName", firstName);
+            json.put("lastName", lastName);
 
-        Request req = new Request.Builder()
-                .url(OGConstants.OGCloudBaseURL + OGConstants.changeAccountPath + userId)
-                .put(formBody)
-                .build();
+            put(context, OGConstants.OGCloudBaseURL + OGConstants.changeAccountPath, json.toString(), cb);
 
-        request(req, cb);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            cb.onFailure(null, null);
+        }
     }
 
-    public void inviteUser(String email, HttpCallback cb) {
-        RequestBody formBody = new FormBody.Builder()
-                .add("email", email)
-                .build();
+    public void inviteUser(Context context, String email, HttpCallback cb) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("email", email);
 
-        Request req = new Request.Builder()
-                .url(OGConstants.OGCloudBaseURL + OGConstants.inviteUserPath)
-                .post(formBody)
-                .build();
+            post(context, OGConstants.OGCloudBaseURL + OGConstants.inviteUserPath, json.toString(), cb);
 
-        request(req, cb);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            cb.onFailure(null, null);
+        }
     }
 
-    public void getToken(HttpCallback cb) {
-        get(OGConstants.OGCloudBaseURL + OGConstants.getTokenPath, cb);
+    public void getToken(Context context, HttpCallback cb) {
+        get(context, OGConstants.OGCloudBaseURL + OGConstants.getTokenPath, cb);
     }
 
-    public void getVenues(HttpCallback cb) {
-        get(OGConstants.OGCloudBaseURL + OGConstants.getVenuesPath, cb);
+    public void getVenues(Context context, HttpCallback cb) {
+        get(context, OGConstants.OGCloudBaseURL + OGConstants.getVenuesPath, cb);
     }
 
-    public void getAuthStatus(HttpCallback cb) {
-        get(OGConstants.OGCloudBaseURL + OGConstants.getAuthStatusPath, cb);
+    public void getAuthStatus(Context context, HttpCallback cb) {
+        get(context, OGConstants.OGCloudBaseURL + OGConstants.getAuthStatusPath, cb);
     }
 
-    public void logout(HttpCallback cb) {
-        get(OGConstants.OGCloudBaseURL + OGConstants.logoutPath, cb);
+    public void logout(Context context, HttpCallback cb) {
+        get(context, OGConstants.OGCloudBaseURL + OGConstants.logoutPath, cb);
     }
 }

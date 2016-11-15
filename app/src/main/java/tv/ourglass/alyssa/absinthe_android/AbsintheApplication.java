@@ -1,6 +1,7 @@
 package tv.ourglass.alyssa.absinthe_android;
 
 import android.app.Application;
+import android.content.Context;
 
 import okhttp3.OkHttpClient;
 

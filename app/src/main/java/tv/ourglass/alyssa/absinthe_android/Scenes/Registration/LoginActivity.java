@@ -19,12 +19,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.io.StringReader;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
+import tv.ourglass.alyssa.absinthe_android.Models.SharedPrefsManager;
 import tv.ourglass.alyssa.absinthe_android.Networking.Applejack;
 import tv.ourglass.alyssa.absinthe_android.R;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Tabs.MainTabsActivity;
@@ -132,8 +137,10 @@ public class LoginActivity extends RegistrationBaseActivity {
     }
 
     public void login(View view) {
+        final String email = mEmail.getText().toString();
+        final String password = mPassword.getText().toString();
 
-        Applejack.getInstance().login(mEmail.getText().toString(), mPassword.getText().toString(),
+        Applejack.getInstance().login(this, email, password,
                 new Applejack.HttpCallback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -147,15 +154,42 @@ public class LoginActivity extends RegistrationBaseActivity {
 
                     @Override
                     public void onSuccess(Response response) {
-                        Log.d(TAG, response.toString());
 
-                        LoginActivity.this.runOnUiThread(new Runnable() {
+                        Applejack.getInstance().getToken(LoginActivity.this, new Applejack.HttpCallback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                LoginActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        showAlert("Uh oh!", "There was a problem authorizing you.");
+                                    }
+                                });
+                            }
 
                             @Override
-                            public void run() {
-                                Intent intent = new Intent(LoginActivity.this, MainTabsActivity.class);
-                                startActivity(intent);
-                                overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                            public void onSuccess(Response response) {
+                                SharedPrefsManager.setUserEmail(LoginActivity.this, email);
+                                SharedPrefsManager.setUserPassword(LoginActivity.this, password);
+
+                                try {
+                                    String jsonData = response.body().string();
+                                    JSONObject json = new JSONObject(jsonData);
+                                    SharedPrefsManager.setUserApplejackJwt(LoginActivity.this, json.getString("token"));
+                                    SharedPrefsManager.setUserApplejackJwtExpiry(LoginActivity.this, json.getInt("expires"));
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                LoginActivity.this.runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new Intent(LoginActivity.this, MainTabsActivity.class);
+                                        startActivity(intent);
+                                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                                    }
+                                });
                             }
                         });
                     }

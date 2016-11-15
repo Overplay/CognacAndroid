@@ -18,6 +18,7 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Response;
 import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
+import tv.ourglass.alyssa.absinthe_android.Models.SharedPrefsManager;
 import tv.ourglass.alyssa.absinthe_android.Networking.Applejack;
 import tv.ourglass.alyssa.absinthe_android.R;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Tabs.MainTabsActivity;
@@ -91,10 +92,12 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
 
     public void next(View view) {
         Intent prev = getIntent();
-        Applejack.getInstance().register(prev.getStringExtra(OGConstants.emailExtra),
-                mPassword.getText().toString(), prev.getStringExtra(OGConstants.firstNameExtra),
-                prev.getStringExtra(OGConstants.lastNameExtra),
+        final String email = prev.getStringExtra(OGConstants.emailExtra);
+        final String firstName = prev.getStringExtra(OGConstants.firstNameExtra);
+        final String lastName = prev.getStringExtra(OGConstants.lastNameExtra);
+        final String password = mPassword.getText().toString();
 
+        Applejack.getInstance().register(this, email, password, firstName, lastName,
                 new Applejack.HttpCallback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -109,6 +112,11 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
                     @Override
                     public void onSuccess(Response response) {
                         Log.d(TAG, response.toString());
+
+                        SharedPrefsManager.setUserEmail(EnterPasswordActivity.this, email);
+                        SharedPrefsManager.setUserFirstName(EnterPasswordActivity.this, firstName);
+                        SharedPrefsManager.setUserLastName(EnterPasswordActivity.this, lastName);
+                        SharedPrefsManager.setUserPassword(EnterPasswordActivity.this, password);
 
                         EnterPasswordActivity.this.runOnUiThread(new Runnable() {
 
