@@ -101,7 +101,6 @@ public class Applejack {
                     .build();
         } else {
             req = new Request.Builder()
-                    //.get()
                     .url(url)
                     .build();
         }

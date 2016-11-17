@@ -23,7 +23,7 @@ public class OGConstants {
 
     // Regex constants
     public static final String emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}";
-    public static final String passwordRegEx = ".{2,}";
+    public static final String passwordRegEx = ".{5,}";
 
     // Intent extras
     public static final String firstNameExtra = "INTENT_EXTRA_FIRST_NAME";
