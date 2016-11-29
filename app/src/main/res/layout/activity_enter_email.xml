@@ -9,20 +9,8 @@
 
     <TextView
         android:text="@string/enterEmailTitle"
-        android:textColor="@color/OGWhite"
-        android:background="@color/OGBackgroundGrey"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:fontFamily="sans-serif-medium"
-        android:textSize="30sp"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp"
-        android:layout_centerHorizontal="true"
-        android:textAlignment="center" />
+        style="@style/PageHeader"
+        android:id="@+id/textView" />
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -37,10 +25,7 @@
 
         <TextView
             android:text="@string/emailCaps"
-            android:textSize="15sp"
-            android:textColor="@color/OGWhite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/InputHeader"
             android:layout_marginTop="20dp"
             android:labelFor="@+id/email"
             android:id="@+id/emailLabel" />
@@ -75,7 +60,7 @@
 
         </LinearLayout>
 
-        <ImageButton
+        <!--<ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="goBack"
@@ -86,15 +71,15 @@
             android:src="@drawable/ic_fast_rewind_black_36dp"
             android:contentDescription="@string/goBackDescription"
             android:background="@color/OGOrange"
-            android:tint="@color/OGWhite"/>
+            android:tint="@color/OGWhite"/>-->
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="next"
             android:id="@+id/nextButton"
-            android:layout_alignBaseline="@+id/backButton"
-            android:layout_alignBottom="@+id/backButton"
+            android:layout_below="@+id/emailContainer"
+            android:layout_marginTop="50dp"
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_play_circle_outline_black_36dp"
             android:contentDescription="@string/nextDescription"

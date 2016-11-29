@@ -46,6 +46,11 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        // make Android back button do nothing
+    }
+
     public void login(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

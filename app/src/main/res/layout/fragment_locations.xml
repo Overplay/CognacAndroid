@@ -9,9 +9,23 @@
     tools:context=".Scenes.Map.MapFragment">
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/firstName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Locations" />
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/lastName"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/jwt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>

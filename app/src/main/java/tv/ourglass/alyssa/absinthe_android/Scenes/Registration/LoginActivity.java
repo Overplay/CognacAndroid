@@ -155,41 +155,12 @@ public class LoginActivity extends RegistrationBaseActivity {
                     @Override
                     public void onSuccess(Response response) {
 
-                        Applejack.getInstance().getToken(LoginActivity.this, new Applejack.HttpCallback() {
+                        LoginActivity.this.runOnUiThread(new Runnable() {
                             @Override
-                            public void onFailure(Call call, IOException e) {
-                                LoginActivity.this.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        showAlert("Uh oh!", "There was a problem authorizing you.");
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onSuccess(Response response) {
-                                SharedPrefsManager.setUserEmail(LoginActivity.this, email);
-                                SharedPrefsManager.setUserPassword(LoginActivity.this, password);
-
-                                try {
-                                    String jsonData = response.body().string();
-                                    JSONObject json = new JSONObject(jsonData);
-                                    SharedPrefsManager.setUserApplejackJwt(LoginActivity.this, json.getString("token"));
-                                    SharedPrefsManager.setUserApplejackJwtExpiry(LoginActivity.this, json.getInt("expires"));
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                                LoginActivity.this.runOnUiThread(new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        Intent intent = new Intent(LoginActivity.this, MainTabsActivity.class);
-                                        startActivity(intent);
-                                        overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-                                    }
-                                });
+                            public void run() {
+                                Intent intent = new Intent(LoginActivity.this, MainTabsActivity.class);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
                             }
                         });
                     }

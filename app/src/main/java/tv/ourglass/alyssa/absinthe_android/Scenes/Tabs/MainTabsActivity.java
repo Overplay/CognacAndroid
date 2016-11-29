@@ -40,4 +40,9 @@ public class MainTabsActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        // make back button do nothing
+    }
 }

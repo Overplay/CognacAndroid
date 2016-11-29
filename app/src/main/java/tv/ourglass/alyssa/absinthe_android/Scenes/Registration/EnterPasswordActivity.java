@@ -111,12 +111,6 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
 
                     @Override
                     public void onSuccess(Response response) {
-                        Log.d(TAG, response.toString());
-
-                        SharedPrefsManager.setUserEmail(EnterPasswordActivity.this, email);
-                        SharedPrefsManager.setUserFirstName(EnterPasswordActivity.this, firstName);
-                        SharedPrefsManager.setUserLastName(EnterPasswordActivity.this, lastName);
-                        SharedPrefsManager.setUserPassword(EnterPasswordActivity.this, password);
 
                         EnterPasswordActivity.this.runOnUiThread(new Runnable() {
 

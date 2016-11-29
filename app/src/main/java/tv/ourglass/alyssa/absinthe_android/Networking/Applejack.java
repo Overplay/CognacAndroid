@@ -56,8 +56,9 @@ public class Applejack {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 
+                Log.d(TAG, response.toString());
+
                 if (!response.isSuccessful()) {
-                    Log.d(TAG, response.toString());
                     cb.onFailure(call, null);
                     response.body().close();
 
@@ -129,14 +130,51 @@ public class Applejack {
         request(req, cb);
     }
 
-    public void login(Context context, String email, String password, HttpCallback cb) {
+    public void login(final Context context, final String email, final String password, final HttpCallback cb) {
         try {
             JSONObject json = new JSONObject();
             json.put("email", email);
             json.put("password", password);
             json.put("type", "local");
 
-            post(context, OGConstants.OGCloudBaseURL + OGConstants.loginPath, json.toString(), cb);
+            HttpCallback loginCb = new HttpCallback() {
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    cb.onFailure(call, e);
+                }
+
+                @Override
+                public void onSuccess(Response response) {
+                    SharedPrefsManager.setUserEmail(context, email);
+                    SharedPrefsManager.setUserPassword(context, password);
+
+                    Applejack.getInstance().getToken(context, new Applejack.HttpCallback() {
+
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            cb.onFailure(call, e);
+                        }
+
+                        @Override
+                        public void onSuccess(Response response) {
+                            try {
+                                String jsonData = response.body().string();
+                                JSONObject json = new JSONObject(jsonData);
+                                SharedPrefsManager.setUserApplejackJwt(context, json.getString("token"));
+                                SharedPrefsManager.setUserApplejackJwtExpiry(context, json.getInt("expires"));
+                                cb.onSuccess(response);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                cb.onFailure(null, null);
+                            }
+                        }
+                    });
+                }
+            };
+
+            post(context, OGConstants.OGCloudBaseURL + OGConstants.loginPath, json.toString(), loginCb);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -144,8 +182,8 @@ public class Applejack {
         }
     }
 
-    public void register(Context context, String email, String password, String firstName,
-                         String lastName, HttpCallback cb) {
+    public void register(final Context context, final String email, final String password, final String firstName,
+                         final String lastName, final HttpCallback cb) {
         try {
             JSONObject json = new JSONObject();
             json.put("email", email);
@@ -157,7 +195,47 @@ public class Applejack {
             user.put("lastName", lastName);
             json.put("user", user);
 
-            post(context, OGConstants.OGCloudBaseURL + OGConstants.registerPath, json.toString(), cb);
+            HttpCallback registerCb = new HttpCallback() {
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    cb.onFailure(call, e);
+                }
+
+                @Override
+                public void onSuccess(Response response) {
+                    SharedPrefsManager.setUserFirstName(context, firstName);
+                    SharedPrefsManager.setUserLastName(context, lastName);
+                    SharedPrefsManager.setUserEmail(context, email);
+                    SharedPrefsManager.setUserPassword(context, password);
+
+                    Applejack.getInstance().getToken(context, new Applejack.HttpCallback() {
+
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            cb.onFailure(call, e);
+                        }
+
+                        @Override
+                        public void onSuccess(Response response) {
+                            try {
+                                String jsonData = response.body().string();
+                                JSONObject json = new JSONObject(jsonData);
+                                SharedPrefsManager.setUserApplejackJwt(context, json.getString("token"));
+                                SharedPrefsManager.setUserApplejackJwtExpiry(context, json.getInt("expires"));
+                                cb.onSuccess(response);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                cb.onFailure(null, null);
+                            }
+                        }
+                    });
+                }
+            };
+
+
+            post(context, OGConstants.OGCloudBaseURL + OGConstants.registerPath, json.toString(), registerCb);
 
         } catch (JSONException e) {
             e.printStackTrace();
