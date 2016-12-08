@@ -25,6 +25,11 @@
         <activity android:name=".Scenes.Registration.EnterEmailActivity" />
         <activity android:name=".Scenes.Registration.EnterPasswordActivity" />
         <activity android:name=".Scenes.Tabs.MainTabsActivity" />
+
+        <service
+            android:name=".Networking.OGDPService"
+            android:enabled="true" />
+
     </application>
 
 </manifest>

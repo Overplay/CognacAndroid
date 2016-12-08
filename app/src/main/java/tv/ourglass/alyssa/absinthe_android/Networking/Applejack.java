@@ -243,13 +243,27 @@ public class Applejack {
         }
     }
 
-    public void changePassword(Context context, String email, String newPassword, HttpCallback cb) {
+    public void changePassword(final Context context, String email, final String newPassword, final HttpCallback cb) {
         try {
             JSONObject json = new JSONObject();
             json.put("email", email);
             json.put("newpass", newPassword);
 
-            post(context, OGConstants.OGCloudBaseURL + OGConstants.changePwdPath, json.toString(), cb);
+            HttpCallback changePwdCb = new HttpCallback() {
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    cb.onFailure(call, e);
+                }
+
+                @Override
+                public void onSuccess(Response response) {
+                    SharedPrefsManager.setUserPassword(context, newPassword);
+                    cb.onSuccess(response);
+                }
+            };
+
+            post(context, OGConstants.OGCloudBaseURL + OGConstants.changePwdPath, json.toString(), changePwdCb);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -257,15 +271,32 @@ public class Applejack {
         }
     }
 
-    public void changeAccountInfo(Context context, String firstName, String lastName, String email,
-                                  String userId, HttpCallback cb) {
+    public void changeAccountInfo(final Context context, final String firstName, final String lastName, final String email,
+                                  String userId, final HttpCallback cb) {
         try {
             JSONObject json = new JSONObject();
             json.put("email", email);
             json.put("firstName", firstName);
             json.put("lastName", lastName);
 
-            put(context, OGConstants.OGCloudBaseURL + OGConstants.changeAccountPath, json.toString(), cb);
+            HttpCallback changeActCb = new HttpCallback() {
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    cb.onFailure(call, e);
+                }
+
+                @Override
+                public void onSuccess(Response response) {
+                    SharedPrefsManager.setUserFirstName(context, firstName);
+                    SharedPrefsManager.setUserLastName(context, lastName);
+                    SharedPrefsManager.setUserEmail(context, email);
+                    cb.onSuccess(response);
+                }
+            };
+
+            put(context, OGConstants.OGCloudBaseURL + OGConstants.changeAccountPath + userId, json.toString(),
+                    changeActCb);
 
         } catch (JSONException e) {
             e.printStackTrace();
