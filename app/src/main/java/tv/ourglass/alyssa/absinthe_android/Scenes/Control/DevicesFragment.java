@@ -51,8 +51,8 @@ public class DevicesFragment extends Fragment {
 
         // Construct the data source
         ArrayList<OGDevice> devices = new ArrayList<>();
-        for (int i = 0; i < names.length; i++) {
-            devices.add(new OGDevice(names[i], "location", "0.0.0.0", 1));
+        for (String name : names) {
+            devices.add(new OGDevice(name, "location", "0.0.0.0", 1));
         }
 
         // Create the adapter to convert the array to views

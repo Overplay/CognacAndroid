@@ -1,14 +1,29 @@
 package tv.ourglass.alyssa.absinthe_android.Scenes.Tabs;
 
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Set;
+
+import tv.ourglass.alyssa.absinthe_android.Networking.OGDPBroadcastReceiver;
+import tv.ourglass.alyssa.absinthe_android.Networking.OGDPService;
 import tv.ourglass.alyssa.absinthe_android.R;
 
 public class MainTabsActivity extends AppCompatActivity {
+
+    String TAG = "MainTabsActivity";
+
+    OGDPBroadcastReceiver mBroadcastRcvr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +54,55 @@ public class MainTabsActivity extends AppCompatActivity {
                 }
             }
         }
+
+        Intent di = new Intent(this, OGDPService.class);
+        startService(di);
     }
 
     @Override
     public void onBackPressed() {
         // make back button do nothing
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        registerOGDPResponse();
+    }
+
+    @Override
+    protected void onDestroy(){
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastRcvr);
+        super.onDestroy();
+    }
+
+    public void registerOGDPResponse(){
+
+        mBroadcastRcvr = new OGDPBroadcastReceiver(new OGDPBroadcastReceiver.OGDPBroadcastReceiverListener() {
+            @Override
+            public void foundOGs(final HashMap<String, JSONObject> devices) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Set<String> ipSet = devices.keySet();
+                        String ipString = "...";
+                        for (String ipAddr: ipSet){
+                            ipString = ipString + ipAddr+ "...";
+                        }
+                        Log.d(TAG, ipString);
+                    }
+                });
+            }
+
+            @Override
+            public void ogSearchFail(String errString, Exception e) {
+
+            }
+        });
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastRcvr,
+                new IntentFilter("ogdp"));
+
+
     }
 }

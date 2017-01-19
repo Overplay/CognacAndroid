@@ -29,6 +29,7 @@ public class OGConstants {
     public static final String firstNameExtra = "INTENT_EXTRA_FIRST_NAME";
     public static final String lastNameExtra = "INTENT_EXTRA_LAST_NAME";
     public static final String emailExtra = "INTENT_EXTRA_EMAIL";
+    public static final String deviceUrlExtra = "INTENT_EXTRA_DEVICE_URL";
 
     // Animations
     public static final int fadeInTime = 350;  // ms

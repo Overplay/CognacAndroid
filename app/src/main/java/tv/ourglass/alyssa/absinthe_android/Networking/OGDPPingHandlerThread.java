@@ -64,6 +64,7 @@ public class OGDPPingHandlerThread extends HandlerThread {
                 WifiManager.MulticastLock lock = wifi.createMulticastLock("The Lock");
                 lock.acquire();
 
+                // TODO: fix ping packet to have necessary info
                 String query = "{ \"delay\":350 }";
 
                 try {

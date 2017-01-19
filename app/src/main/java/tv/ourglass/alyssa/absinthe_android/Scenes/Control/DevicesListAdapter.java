@@ -72,6 +72,9 @@ public class DevicesListAdapter extends ArrayAdapter<OGDevice> {
             public void onClick(View view) {
                 OGDevice device = (OGDevice) view.getTag();
                 Log.d("Device", "Chose device");
+                Intent intent = new Intent(context, DeviceViewActivity.class);
+                intent.putExtra(OGConstants.deviceUrlExtra, device.getUrl());
+                context.startActivity(intent);
             }
         });
 

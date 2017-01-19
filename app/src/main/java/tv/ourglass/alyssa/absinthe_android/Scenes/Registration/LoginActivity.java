@@ -2,6 +2,7 @@ package tv.ourglass.alyssa.absinthe_android.Scenes.Registration;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -45,6 +46,8 @@ public class LoginActivity extends RegistrationBaseActivity {
     private ImageView mPasswordCheck;
 
     private ImageButton mLoginButton;
+
+    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,14 +143,20 @@ public class LoginActivity extends RegistrationBaseActivity {
         final String email = mEmail.getText().toString();
         final String password = mPassword.getText().toString();
 
+        progress = ProgressDialog.show(this, "Logging in...", "", true);
+
         Applejack.getInstance().login(this, email, password,
                 new Applejack.HttpCallback() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
+                    public void onFailure(Call call, final IOException e) {
                         LoginActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                progress.dismiss();
                                 showAlert("Uh oh!", "There was a problem logging in.");
+                                if (e != null) {
+                                    Log.d(TAG, e.getLocalizedMessage());
+                                }
                             }
                         });
                     }
@@ -161,6 +170,7 @@ public class LoginActivity extends RegistrationBaseActivity {
                                 Intent intent = new Intent(LoginActivity.this, MainTabsActivity.class);
                                 startActivity(intent);
                                 overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                                Log.d(TAG, "login success");
                             }
                         });
                     }

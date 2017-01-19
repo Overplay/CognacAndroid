@@ -1,5 +1,6 @@
 package tv.ourglass.alyssa.absinthe_android.Scenes.Settings;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -23,7 +24,9 @@ import tv.ourglass.alyssa.absinthe_android.Scenes.Registration.WelcomeActivity;
 
 public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
 
-    Context context;
+    private Context context;
+
+    ProgressDialog progress;
 
     public SettingsListAdapter(Context context, ArrayList<SettingsListOption> options) {
         super(context, 0, options);
@@ -77,7 +80,7 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
                         break;
 
                     case "Log Out":
-                        Log.d("SettingsListAdapter", "Log out");
+                        progress = ProgressDialog.show(context, "Logging out...", "", true);
                         goTo(WelcomeActivity.class);
                         break;
 

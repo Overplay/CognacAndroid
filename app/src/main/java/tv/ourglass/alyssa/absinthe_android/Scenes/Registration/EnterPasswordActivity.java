@@ -1,5 +1,6 @@
 package tv.ourglass.alyssa.absinthe_android.Scenes.Registration;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,8 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
     private ImageView mPasswordCheck;
 
     private ImageButton mNextButton;
+
+    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,9 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
 
     public void next(View view) {
         Intent prev = getIntent();
+
+        progress = ProgressDialog.show(this, "Signing up...", "", true);
+
         final String email = prev.getStringExtra(OGConstants.emailExtra);
         final String firstName = prev.getStringExtra(OGConstants.firstNameExtra);
         final String lastName = prev.getStringExtra(OGConstants.lastNameExtra);
@@ -104,6 +110,7 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
                         EnterPasswordActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                progress.dismiss();
                                 showAlert("Uh oh!", "There was a problem signing you up. Do you already have an account with that email?");
                             }
                         });
