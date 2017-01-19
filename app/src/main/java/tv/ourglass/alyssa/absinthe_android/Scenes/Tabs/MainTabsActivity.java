@@ -12,18 +12,22 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
 import tv.ourglass.alyssa.absinthe_android.Networking.OGDPBroadcastReceiver;
 import tv.ourglass.alyssa.absinthe_android.Networking.OGDPService;
 import tv.ourglass.alyssa.absinthe_android.R;
+import tv.ourglass.alyssa.absinthe_android.Scenes.Control.OGDevice;
 
 public class MainTabsActivity extends AppCompatActivity {
 
     String TAG = "MainTabsActivity";
 
     OGDPBroadcastReceiver mBroadcastRcvr;
+
+    ArrayList<OGDevice> devices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class MainTabsActivity extends AppCompatActivity {
 
         Intent di = new Intent(this, OGDPService.class);
         startService(di);
+        registerOGDPResponse();
     }
 
     @Override
@@ -80,16 +85,12 @@ public class MainTabsActivity extends AppCompatActivity {
 
         mBroadcastRcvr = new OGDPBroadcastReceiver(new OGDPBroadcastReceiver.OGDPBroadcastReceiverListener() {
             @Override
-            public void foundOGs(final HashMap<String, JSONObject> devices) {
+            public void foundOGs(final ArrayList<OGDevice> devices) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Set<String> ipSet = devices.keySet();
-                        String ipString = "...";
-                        for (String ipAddr: ipSet){
-                            ipString = ipString + ipAddr+ "...";
-                        }
-                        Log.d(TAG, ipString);
+                        Log.d(TAG, String.format("found %d OGs", devices.size()));
+
                     }
                 });
             }
@@ -102,7 +103,5 @@ public class MainTabsActivity extends AppCompatActivity {
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastRcvr,
                 new IntentFilter("ogdp"));
-
-
     }
 }

@@ -20,6 +20,8 @@ public class OGConstants {
 
     // UDP constants
     public static final Integer udpDiscoveryPort = 9091;
+    public static final Integer maxTTL = 6;
+    public static final Integer broadcastInterval = 10000; // ms
 
     // Regex constants
     public static final String emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}";
@@ -41,4 +43,7 @@ public class OGConstants {
     public static final String boldFont = "Poppins-Bold.ttf";
     public static final String mediumFont = "Poppins-Medium.ttf";
     public static final String semiBoldFont = "Poppins-SemiBold.ttf";
+
+    // Dev mode
+    public static final boolean devMode = true;
 }

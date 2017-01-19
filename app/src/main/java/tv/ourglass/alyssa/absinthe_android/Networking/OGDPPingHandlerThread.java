@@ -13,6 +13,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
+
 
 /**
  * Created by mkahn on 11/13/16.
@@ -53,7 +55,7 @@ public class OGDPPingHandlerThread extends HandlerThread {
 
     }
 
-    Runnable discoveryRunnable = new Runnable() {
+    private Runnable discoveryRunnable = new Runnable() {
         @Override
         public void run() {
 
@@ -93,6 +95,8 @@ public class OGDPPingHandlerThread extends HandlerThread {
 
                 lock.release();
             }
+
+            mWorkerHandler.postDelayed(discoveryRunnable, OGConstants.broadcastInterval);
         }
     };
 

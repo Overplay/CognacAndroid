@@ -12,8 +12,12 @@ import org.json.JSONObject;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+
+import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
+import tv.ourglass.alyssa.absinthe_android.Scenes.Control.OGDevice;
 
 /**
  * Created by mitch on 11/10/16.
@@ -24,7 +28,7 @@ import java.util.HashSet;
 public class OGDPService extends Service implements OGDPListenHandlerThread.OGDPListenerListener {
 
     public static final String TAG = "OGDPService";
-    public static final int OGDP_PORT = 9091;
+    public static final int OGDP_PORT = OGConstants.udpDiscoveryPort;
 
     private static OGDPService sService;
 
@@ -36,6 +40,8 @@ public class OGDPService extends Service implements OGDPListenHandlerThread.OGDP
     // handlerThread that only sends out the inquiry packet
     private OGDPPingHandlerThread mOGDPDiscoveryThread;
     private OGDPListenHandlerThread mListenerThread;
+
+    public ArrayList<OGDevice> devices = new ArrayList<>();
 
     public HashMap<String, JSONObject> allOGs = new HashMap<>();
     public HashSet<String> allOGAddresses = new HashSet<>();
@@ -115,7 +121,7 @@ public class OGDPService extends Service implements OGDPListenHandlerThread.OGDP
             e.printStackTrace();
         }
 
-        mListenerThread.listen(5000);
+        mListenerThread.listen(15000);
         mOGDPDiscoveryThread.discover(); // send ping and sit back and chill
 
     }
@@ -139,8 +145,7 @@ public class OGDPService extends Service implements OGDPListenHandlerThread.OGDP
 
         Intent intent = new Intent();
         intent.setAction("ogdp");
-        intent.putExtra("devices", allOGs);
-        intent.putExtra("addresses", allOGAddresses);
+        intent.putExtra("devices", devices);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
     }
@@ -152,6 +157,40 @@ public class OGDPService extends Service implements OGDPListenHandlerThread.OGDP
         intent.putExtra("error", message);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
+    }
+
+    @Override
+    public void processDevice(OGDevice device) {
+
+        Log.d(TAG, "processing device");
+
+        for (OGDevice og : this.devices) {
+
+            if (!OGConstants.devMode) {
+                if (og.ipAddress.equals(device.ipAddress)) {
+                    og.systemName = device.systemName;
+                    og.location = device.location;
+                    og.venue = device.venue;
+                    og.ttl = OGConstants.maxTTL;
+                    notifyNewDevices();
+                    return;
+                }
+            }
+
+            if (OGConstants.devMode) {
+                if (og.systemName.equals(device.systemName)) {
+                    og.location = device.location;
+                    og.venue = device.venue;
+                    og.ttl = OGConstants.maxTTL;
+                    notifyNewDevices();
+                    return;
+                }
+            }
+        }
+
+        device.ttl = OGConstants.maxTTL;
+        this.devices.add(device);
+        notifyNewDevices();
     }
 
 

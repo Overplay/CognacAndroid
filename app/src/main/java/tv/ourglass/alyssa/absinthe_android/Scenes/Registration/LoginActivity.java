@@ -145,35 +145,44 @@ public class LoginActivity extends RegistrationBaseActivity {
 
         progress = ProgressDialog.show(this, "Logging in...", "", true);
 
-        Applejack.getInstance().login(this, email, password,
-                new Applejack.HttpCallback() {
-                    @Override
-                    public void onFailure(Call call, final IOException e) {
-                        LoginActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progress.dismiss();
-                                showAlert("Uh oh!", "There was a problem logging in.");
-                                if (e != null) {
-                                    Log.d(TAG, e.getLocalizedMessage());
+        if (!OGConstants.devMode) {
+            Applejack.getInstance().login(this, email, password,
+                    new Applejack.HttpCallback() {
+                        @Override
+                        public void onFailure(Call call, final IOException e) {
+                            LoginActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progress.dismiss();
+                                    showAlert("Uh oh!", "There was a problem logging in.");
+                                    if (e != null) {
+                                        Log.d(TAG, e.getLocalizedMessage());
+                                    }
                                 }
-                            }
-                        });
-                    }
+                            });
+                        }
 
-                    @Override
-                    public void onSuccess(Response response) {
+                        @Override
+                        public void onSuccess(Response response) {
 
-                        LoginActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intent = new Intent(LoginActivity.this, MainTabsActivity.class);
-                                startActivity(intent);
-                                overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-                                Log.d(TAG, "login success");
-                            }
-                        });
-                    }
-                });
+                            LoginActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(LoginActivity.this, MainTabsActivity.class);
+                                    startActivity(intent);
+                                    overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+                                    Log.d(TAG, "login success");
+                                }
+                            });
+                        }
+                    });
+        }
+
+        if (OGConstants.devMode) {
+            Intent intent = new Intent(LoginActivity.this, MainTabsActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+            Log.d(TAG, "login success");
+        }
     }
 }

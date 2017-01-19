@@ -11,7 +11,10 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import tv.ourglass.alyssa.absinthe_android.Scenes.Control.OGDevice;
 
 
 public class OGDPBroadcastReceiver extends BroadcastReceiver {
@@ -22,7 +25,7 @@ public class OGDPBroadcastReceiver extends BroadcastReceiver {
 
     public interface OGDPBroadcastReceiverListener {
 
-        void foundOGs(HashMap<String, JSONObject> devices);
+        void foundOGs(ArrayList<OGDevice> devices);
         void ogSearchFail(String errString, Exception e);
     }
 
@@ -33,13 +36,15 @@ public class OGDPBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.d(TAG, "Received notification of new OGDP search complete");
+        Log.d(TAG, "Received notification from OGDP");
 
         // The getInstance can return a null but only if the service is not started and this
         // should never be the case when this is called. If it is the case, it is a bug.
         if (mListener!=null){
-            if (intent.getStringExtra("error")==null){
-                mListener.foundOGs(OGDPService.getInstance().allOGs);
+
+            if (intent.getStringExtra("error") == null){
+                mListener.foundOGs(OGDPService.getInstance().devices);
+
             } else {
                 mListener.ogSearchFail(intent.getStringExtra("error"), OGDPService.getInstance().lastException);
             }

@@ -1,8 +1,14 @@
 package tv.ourglass.alyssa.absinthe_android.Scenes.Control;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +19,24 @@ import java.util.ArrayList;
 
 import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.Networking.NetUtils;
+import tv.ourglass.alyssa.absinthe_android.Networking.OGDPBroadcastReceiver;
+import tv.ourglass.alyssa.absinthe_android.Networking.OGDPService;
 import tv.ourglass.alyssa.absinthe_android.R;
 
 public class DevicesFragment extends Fragment {
 
-    private String[] names = {
-            "Over bar",
-            "Patio",
-            "Back room",
-            "Main bar",
-            "Pool table"
+    String TAG = "DevicesFragment";
+
+    ArrayList<OGDevice> devices = new ArrayList<>();
+
+    DevicesListAdapter devicesListAdapter;
+
+    private BroadcastReceiver mBroadcastRcvr = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            devices = OGDPService.getInstance().devices;
+            devicesListAdapter.notifyDataSetChanged();
+        }
     };
 
     @Override
@@ -49,18 +63,14 @@ public class DevicesFragment extends Fragment {
             text.setText(NetUtils.getCurrentSSID(getContext()));
         }
 
-        // Construct the data source
-        ArrayList<OGDevice> devices = new ArrayList<>();
-        for (String name : names) {
-            devices.add(new OGDevice(name, "location", "0.0.0.0", 1));
-        }
+        devicesListAdapter = new DevicesListAdapter(getActivity(), devices);
 
-        // Create the adapter to convert the array to views
-        DevicesListAdapter adapter = new DevicesListAdapter(getActivity(), devices);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mBroadcastRcvr,
+                new IntentFilter("ogdp"));
 
         // Attach the adapter to a ListView
         ListView listView = (ListView) view.findViewById(R.id.devicesList);
-        listView.setAdapter(adapter);
+        listView.setAdapter(devicesListAdapter);
 
         // Attach text to display when list is empty
         TextView empty = (TextView) view.findViewById(R.id.empty);

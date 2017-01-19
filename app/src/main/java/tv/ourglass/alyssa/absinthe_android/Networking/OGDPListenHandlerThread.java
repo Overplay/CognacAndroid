@@ -14,6 +14,9 @@ import java.net.DatagramSocket;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 
+import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
+import tv.ourglass.alyssa.absinthe_android.Scenes.Control.OGDevice;
+
 
 /**
  * Created by mkahn on 11/13/16.
@@ -36,8 +39,9 @@ public class OGDPListenHandlerThread extends HandlerThread {
     private HashMap<String, JSONObject> mFoundOGs = new HashMap<>();
 
     public interface OGDPListenerListener {
-        public void devicesFound(HashMap<String, JSONObject> devices);
-        public void error(Exception e);
+        void devicesFound(HashMap<String, JSONObject> devices);
+        void processDevice(OGDevice device);
+        void error(Exception e);
     }
 
     public OGDPListenHandlerThread(String name) {
@@ -63,7 +67,7 @@ public class OGDPListenHandlerThread extends HandlerThread {
 
     }
 
-    Runnable listenerRunnable = new Runnable() {
+    private Runnable listenerRunnable = new Runnable() {
         @Override
         public void run() {
 
@@ -74,7 +78,10 @@ public class OGDPListenHandlerThread extends HandlerThread {
                 while (true) {
 
                     DatagramPacket p = new DatagramPacket(new byte[1200], 1200);
+
+                    // TODO: do we want to have a timeout?
                     ogdpSocket.setSoTimeout(mTimeout);
+
                     ogdpSocket.receive(p);
 
                     String s = new String(p.getData(), 0, p.getLength());
@@ -84,12 +91,34 @@ public class OGDPListenHandlerThread extends HandlerThread {
                         // The next two lines will puke if: a) response is not JSON or, b) response
                         // does not have a name field in the JSON (probably not an OG).
                         JSONObject respJson = new JSONObject(s);
-                        // This will throw a JSON exception if the name field is missing which means
-                        // it definitely is not an OG response. This is kind of a crappy test and
-                        // we should add a more definitive signature down the line.
+
+                        // This will throw a JSON exception if the name or randomFactoid fields are
+                        // missing which means it definitely is not an OG response. This is kind of
+                        // a crappy test and we should add a more definitive signature down the line.
                         String systemName = respJson.getString("name");
-                        Log.d(TAG, "Found and OG named: " + systemName + " at IP Address " + p.getAddress());
-                        mFoundOGs.put(p.getAddress().getHostAddress(), respJson);
+                        Log.d(TAG, systemName);
+                        String randomFactoid = respJson.getString("randomFactoid");
+
+                        OGDevice device = new OGDevice();
+                        device.systemName = systemName;
+                        device.ipAddress = p.getAddress().getHostAddress();
+                        device.ttl = OGConstants.maxTTL;
+
+                        try {
+                            device.location = respJson.getString("locationWithinVenue");
+                        } catch (JSONException e) {
+                            device.location = "";
+                        }
+
+                        try {
+                            device.venue = respJson.getString("venue");
+                        } catch (JSONException e) {
+                            device.venue = "";
+                        }
+
+
+                        //Log.d(TAG, "Found OG! \n" + device.description());
+                        mListener.processDevice(device);
 
                     } catch (JSONException e) {
                         Log.e(TAG, "Received reponse, but not a valid OG response so ignoring");
