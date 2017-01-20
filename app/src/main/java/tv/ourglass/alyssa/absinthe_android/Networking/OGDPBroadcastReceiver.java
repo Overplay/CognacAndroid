@@ -36,8 +36,6 @@ public class OGDPBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.d(TAG, "Received notification from OGDP");
-
         // The getInstance can return a null but only if the service is not started and this
         // should never be the case when this is called. If it is the case, it is a bug.
         if (mListener!=null){

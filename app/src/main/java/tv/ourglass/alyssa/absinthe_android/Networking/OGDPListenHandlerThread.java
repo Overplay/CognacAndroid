@@ -116,7 +116,6 @@ public class OGDPListenHandlerThread extends HandlerThread {
                             device.venue = "";
                         }
 
-
                         //Log.d(TAG, "Found OG! \n" + device.description());
                         mListener.processDevice(device);
 

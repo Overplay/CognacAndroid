@@ -25,10 +25,6 @@ public class MainTabsActivity extends AppCompatActivity {
 
     String TAG = "MainTabsActivity";
 
-    OGDPBroadcastReceiver mBroadcastRcvr;
-
-    ArrayList<OGDevice> devices;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,9 +55,9 @@ public class MainTabsActivity extends AppCompatActivity {
             }
         }
 
+        // Start OG device finding service
         Intent di = new Intent(this, OGDPService.class);
         startService(di);
-        registerOGDPResponse();
     }
 
     @Override
@@ -72,36 +68,10 @@ public class MainTabsActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        registerOGDPResponse();
     }
 
     @Override
     protected void onDestroy(){
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastRcvr);
         super.onDestroy();
-    }
-
-    public void registerOGDPResponse(){
-
-        mBroadcastRcvr = new OGDPBroadcastReceiver(new OGDPBroadcastReceiver.OGDPBroadcastReceiverListener() {
-            @Override
-            public void foundOGs(final ArrayList<OGDevice> devices) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG, String.format("found %d OGs", devices.size()));
-
-                    }
-                });
-            }
-
-            @Override
-            public void ogSearchFail(String errString, Exception e) {
-
-            }
-        });
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastRcvr,
-                new IntentFilter("ogdp"));
     }
 }

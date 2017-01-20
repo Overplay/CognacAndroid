@@ -15,6 +15,9 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Control.OGDevice;
@@ -48,6 +51,8 @@ public class OGDPService extends Service implements OGDPListenHandlerThread.OGDP
     public Exception lastException;
 
     private DatagramSocket mSocket;
+
+    private Timer mTimer = new Timer();
 
     // Stock stuff that needs to be here for all services
 
@@ -121,7 +126,8 @@ public class OGDPService extends Service implements OGDPListenHandlerThread.OGDP
             e.printStackTrace();
         }
 
-        mListenerThread.listen(15000);
+        mListenerThread.listen(15000);  // start listening
+        mTimer.schedule(new DecrementTTL(), OGConstants.ttlInterval, OGConstants.ttlInterval);
         mOGDPDiscoveryThread.discover(); // send ping and sit back and chill
 
     }
@@ -157,6 +163,30 @@ public class OGDPService extends Service implements OGDPListenHandlerThread.OGDP
         intent.putExtra("error", message);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
+    }
+
+    private class DecrementTTL extends TimerTask {
+        public void run() {
+            Iterator<OGDevice> itr = devices.iterator();
+            Log.d(TAG, "decrementing ttl");
+            boolean drop = false;
+            OGDevice d;
+
+            while (itr.hasNext()) {
+
+                d = itr.next();
+                d.ttl -= 1;
+
+                if (d.ttl <= 0) {
+                    drop = true;
+                    itr.remove();
+                }
+            }
+
+            if (drop) {
+                notifyNewDevices(); // indicate there was a change
+            }
+        }
     }
 
     @Override
