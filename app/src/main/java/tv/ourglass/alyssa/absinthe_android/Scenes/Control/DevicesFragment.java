@@ -34,7 +34,9 @@ public class DevicesFragment extends Fragment {
     private BroadcastReceiver mBroadcastRcvr = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            devices = OGDPService.getInstance().devices;
+            Log.d(TAG, "received OGDP broadcast");
+            devices.clear();
+            devices.addAll(OGDPService.getInstance().devices);
             devicesListAdapter.notifyDataSetChanged();
         }
     };
@@ -63,9 +65,9 @@ public class DevicesFragment extends Fragment {
             text.setText(NetUtils.getCurrentSSID(getContext()));
         }
 
-        devicesListAdapter = new DevicesListAdapter(getActivity(), devices);
+        this.devicesListAdapter = new DevicesListAdapter(getActivity(), this.devices);
 
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mBroadcastRcvr,
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastRcvr,
                 new IntentFilter("ogdp"));
 
         // Attach the adapter to a ListView
