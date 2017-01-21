@@ -2,8 +2,10 @@ package tv.ourglass.alyssa.absinthe_android.Scenes.Settings;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 
 import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.R;
+import tv.ourglass.alyssa.absinthe_android.Scenes.Control.DeviceViewActivity;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Registration.WelcomeActivity;
 
 /**
@@ -64,7 +67,8 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
 
                 switch (option.name) {
                     case "Invite Friends":
-                        Log.d("SettingsListAdapter", "invite friends");
+                        Intent intent = new Intent(context, InviteFriendsActivity.class);
+                        context.startActivity(intent);
                         break;
 
                     case "Edit Account":
@@ -80,8 +84,29 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
                         break;
 
                     case "Log Out":
-                        progress = ProgressDialog.show(context, "Logging out...", "", true);
-                        goTo(WelcomeActivity.class);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+                        builder
+                                .setTitle("Logging out")
+                                .setMessage("Are you sure you want to log out?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        progress = ProgressDialog.show(context, "Logging out...", "", true);
+                                        goTo(WelcomeActivity.class);
+                                    }
+                                })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
                         break;
 
                     default:

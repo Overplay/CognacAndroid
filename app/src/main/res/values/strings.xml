@@ -31,4 +31,7 @@
 
     <string name="emptyDeviceList">No Ourglass systems found. Please make sure you\'re connected to the correct Wi-Fi network.</string>
 
+    <string name="friendEmail">FRIEND\'S EMAIL ADDRESS</string>
+    <string name="inviteFriend">Invite</string>
+
 </resources>

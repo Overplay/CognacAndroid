@@ -40,7 +40,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAGbRS2zSCoIZCk2dnlhp9wjhkV9ITXsa0" />
 
-        <activity android:name=".Scenes.Control.DeviceViewActivity"></activity>
+        <activity android:name=".Scenes.Control.DeviceViewActivity" />
+        <activity android:name=".Scenes.Settings.InviteFriendsActivity" />
+        <activity android:name=".Scenes.Settings.EditAccountActivity"></activity>
     </application>
 
 </manifest>

@@ -182,7 +182,7 @@ public class LoginActivity extends RegistrationBaseActivity {
             Intent intent = new Intent(LoginActivity.this, MainTabsActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-            Log.d(TAG, "login success");
+            Log.d(TAG, "non-login success");
         }
     }
 }

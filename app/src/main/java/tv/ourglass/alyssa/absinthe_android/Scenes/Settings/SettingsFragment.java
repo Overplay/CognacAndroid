@@ -14,21 +14,13 @@ import tv.ourglass.alyssa.absinthe_android.R;
 
 public class SettingsFragment extends Fragment {
 
-    private String[] names = {
-            "Invite Friends",
-            "Edit Account",
-            "Add New Ourglass Device",
-            "Add/Manage Venues",
-            "Log Out"
-    };
-
-    private Integer[] iconIds = {
-            R.drawable.ic_card_giftcard_black_36dp,
-            R.drawable.ic_person_outline_black_36dp,
-            R.drawable.ic_queue_play_next_black_36dp,
-            R.drawable.ic_add_location_black_36dp,
-            R.drawable.ic_chevron_left_black_24dp
-    };
+    private ArrayList<SettingsListOption> options = new ArrayList<SettingsListOption>() {{
+        add(new SettingsListOption("Invite Friends", R.drawable.ic_card_giftcard_black_36dp));
+        add(new SettingsListOption("Edit Account", R.drawable.ic_person_outline_black_36dp));
+        add(new SettingsListOption("Add New Ourglass Device", R.drawable.ic_queue_play_next_black_36dp));
+        add(new SettingsListOption("Add/Manage Venues", R.drawable.ic_add_location_black_36dp));
+        add(new SettingsListOption("Log Out", R.drawable.ic_chevron_left_black_24dp));
+    }};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,12 +32,6 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-
-        // Construct the data source
-        ArrayList<SettingsListOption> options = new ArrayList<>();
-        for (int i = 0; i < names.length; i++) {
-            options.add(new SettingsListOption(names[i], iconIds[i]));
-        }
 
         // Create the adapter to convert the array to views
         SettingsListAdapter adapter = new SettingsListAdapter(getActivity(), options);

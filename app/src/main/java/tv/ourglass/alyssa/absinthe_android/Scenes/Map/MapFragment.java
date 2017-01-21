@@ -1,12 +1,18 @@
 package tv.ourglass.alyssa.absinthe_android.Scenes.Map;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,14 +23,26 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.Call;
+import okhttp3.Response;
 import tv.ourglass.alyssa.absinthe_android.Models.SharedPrefsManager;
+import tv.ourglass.alyssa.absinthe_android.Networking.Applejack;
 import tv.ourglass.alyssa.absinthe_android.R;
+import tv.ourglass.alyssa.absinthe_android.Scenes.Registration.LoginActivity;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Settings.SettingsListAdapter;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Settings.SettingsListOption;
+import tv.ourglass.alyssa.absinthe_android.Scenes.Tabs.MainTabsActivity;
 
 public class MapFragment extends Fragment {
+
+    String TAG = "MapFragment";
 
     private String[] names = {
             "Lola's",
@@ -43,7 +61,10 @@ public class MapFragment extends Fragment {
     };
 
     MapView mMapView;
+
     private GoogleMap googleMap;
+
+    ProgressDialog progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +80,48 @@ public class MapFragment extends Fragment {
         for (int i = 0; i < names.length; i++) {
             locations.add(new LocationListOption(names[i], addresses[i]));
         }
+
+        progress = ProgressDialog.show(getActivity(), "Finding venues...", "", true);
+
+        Applejack.getInstance().getVenues(getActivity(), new Applejack.HttpCallback() {
+            @Override
+            public void onFailure(Call call, final IOException e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progress.dismiss();
+                        Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onSuccess(final Response response) {
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progress.dismiss();
+                        Log.d(TAG, response.toString());
+
+                        try {
+                            String jsonStr = response.body().string();
+                            Log.d(TAG, jsonStr);
+                            //JSONArray venueArray = new JSONArray(jsonStr);
+
+                            /*for (int i = 0; i < venueArray.length(); i++) {
+                                JSONObject venue = venueArray.getJSONObject(i);
+                                Log.d(TAG, venue.getString("name"));
+                            }*/
+
+                        } catch (Exception e) {
+                            Log.e(TAG, "error reading json " + e.getLocalizedMessage());
+                            Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
 
         // Create the adapter to convert the array to views
         LocationListAdapter adapter = new LocationListAdapter(getActivity(), locations);
@@ -87,7 +150,11 @@ public class MapFragment extends Fragment {
                 googleMap = mMap;
 
                 // For showing a move to my location button
-                googleMap.setMyLocationEnabled(true);
+                try {
+                    googleMap.setMyLocationEnabled(true);
+                } catch (SecurityException e) {
+                    Log.d(TAG, e.getLocalizedMessage());
+                }
 
                 // For dropping a marker at a point on the Map
                 LatLng sydney = new LatLng(-34, 151);
@@ -125,5 +192,19 @@ public class MapFragment extends Fragment {
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
+    }
+
+    public void showAlert(String title, String message) {
+        AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
+        alert.setTitle(title);
+        alert.setMessage(message);
+        alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alert.show();
     }
 }
