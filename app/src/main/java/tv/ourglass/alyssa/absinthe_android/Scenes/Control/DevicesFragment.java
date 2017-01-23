@@ -41,6 +41,10 @@ public class DevicesFragment extends Fragment {
         }
     };
 
+    /*private ArrayList<OGDevice> test_devices = new ArrayList<OGDevice>() {{
+        add(new OGDevice("System name", "location", "0.0.0.0", "venue", 6));
+    }};*/
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

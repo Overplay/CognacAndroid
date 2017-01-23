@@ -2,6 +2,8 @@ package tv.ourglass.alyssa.absinthe_android.Scenes.Control;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,12 +12,15 @@ import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.R;
 
 
 public class DeviceViewActivity extends AppCompatActivity {
+
+    private TextView mDeviceName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +30,12 @@ public class DeviceViewActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
 
         setContentView(R.layout.activity_device_view);
+
+        // Set name
+        mDeviceName = (TextView)findViewById(R.id.deviceName);
+        Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.mediumFont);
+        mDeviceName.setTypeface(font);
+        mDeviceName.setText(getIntent().getStringExtra(OGConstants.deviceNameExtra));
 
         final WebView webview = (WebView)findViewById(R.id.webview);
 
