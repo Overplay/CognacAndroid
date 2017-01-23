@@ -1,18 +1,27 @@
 package tv.ourglass.alyssa.absinthe_android.Scenes.Settings;
 
+import android.app.Activity;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Response;
 import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
+import tv.ourglass.alyssa.absinthe_android.Models.SharedPrefsManager;
+import tv.ourglass.alyssa.absinthe_android.Networking.Applejack;
 import tv.ourglass.alyssa.absinthe_android.R;
+import tv.ourglass.alyssa.absinthe_android.Scenes.Registration.WelcomeActivity;
 
 import static tv.ourglass.alyssa.absinthe_android.Scenes.Registration.RegistrationBaseActivity.isValidEmail;
 
@@ -73,9 +82,29 @@ public class InviteFriendsActivity extends AppCompatActivity {
 
     public void invite(View view) {
 
-        // TODO: actually invite
+        // TODO: include progress popup?
 
-        Toast.makeText(this, "Invite sent!", Toast.LENGTH_SHORT).show();
-        super.onBackPressed();
+        Applejack.getInstance().inviteUser(this, this.mEmail.getText().toString(), new Applejack.HttpCallback() {
+            @Override
+            public void onFailure(Call call, final IOException e) {
+                InviteFriendsActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(InviteFriendsActivity.this, "Unable to send invite", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onSuccess(final Response response) {
+                InviteFriendsActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(InviteFriendsActivity.this, "Invite sent!", Toast.LENGTH_SHORT).show();
+                        InviteFriendsActivity.super.onBackPressed();
+                    }
+                });
+            }
+        });
     }
 }
