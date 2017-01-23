@@ -6,6 +6,9 @@ package tv.ourglass.alyssa.absinthe_android.Models;
 
 public class OGConstants {
 
+    // Dev mode
+    public static final boolean devMode = false;
+
     // OG Cloud paths
     public static final String OGCloudBaseURL = "http://107.170.209.248";
     public static final String getTokenPath = "/user/jwt";
@@ -44,7 +47,4 @@ public class OGConstants {
     public static final String boldFont = "Poppins-Bold.ttf";
     public static final String mediumFont = "Poppins-Medium.ttf";
     public static final String semiBoldFont = "Poppins-SemiBold.ttf";
-
-    // Dev mode
-    public static final boolean devMode = true;
 }

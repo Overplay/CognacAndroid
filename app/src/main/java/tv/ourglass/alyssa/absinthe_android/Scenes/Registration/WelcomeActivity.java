@@ -18,6 +18,8 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
+
+
         TextView text = (TextView)findViewById(R.id.welcomeTextView);
         Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.boldFont);
         if (text != null) {

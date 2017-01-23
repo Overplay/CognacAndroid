@@ -130,6 +130,9 @@ public class Applejack {
         request(req, cb);
     }
 
+    /* Logs in with given credentials and gets the JWT. Returns a success if both login and get
+       token are successful, failure if not.
+    */
     public void login(final Context context, final String email, final String password, final HttpCallback cb) {
         try {
             JSONObject json = new JSONObject();
@@ -148,6 +151,8 @@ public class Applejack {
                 public void onSuccess(Response response) {
                     SharedPrefsManager.setUserEmail(context, email);
                     SharedPrefsManager.setUserPassword(context, password);
+
+                    // TODO: get and set user id?
 
                     Applejack.getInstance().getToken(context, new Applejack.HttpCallback() {
 
