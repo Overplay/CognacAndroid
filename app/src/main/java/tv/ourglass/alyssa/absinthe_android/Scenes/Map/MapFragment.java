@@ -83,6 +83,7 @@ public class MapFragment extends Fragment {
 
         progress = ProgressDialog.show(getActivity(), "Finding venues...", "", true);
 
+        // TODO: this doesn't work
         Applejack.getInstance().getVenues(getActivity(), new Applejack.HttpCallback() {
             @Override
             public void onFailure(Call call, final IOException e) {
@@ -105,6 +106,7 @@ public class MapFragment extends Fragment {
                         Log.d(TAG, response.toString());
 
                         try {
+                            Log.d(TAG, response.body().string());
                             String jsonStr = response.body().string();
                             Log.d(TAG, jsonStr);
                             //JSONArray venueArray = new JSONArray(jsonStr);

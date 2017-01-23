@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import tv.ourglass.alyssa.absinthe_android.Scenes.BlankFragment;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Control.DevicesFragment;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Map.MapFragment;
@@ -28,12 +30,22 @@ import tv.ourglass.alyssa.absinthe_android.Scenes.Settings.SettingsFragment;
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
-    private String[] tabTitles = {"TV", "Locations", "Settings"};
-    private int[] tabIcons = {
-            R.drawable.ic_tv_black_24dp,
-            R.drawable.ic_map_black_24dp,
-            R.drawable.ic_settings_black_24dp
-    };
+
+    private class TabOption {
+        String title;
+        Integer icon;
+
+        public TabOption(String title, Integer icon) {
+            this.title = title;
+            this.icon = icon;
+        }
+    }
+
+    private ArrayList<TabOption> tabs = new ArrayList<TabOption>() {{
+        add(new TabOption("TV", R.drawable.ic_tv_black_24dp));
+        //add(new TabOption("Locations", R.drawable.ic_map_black_24dp));
+        add(new TabOption("Settings", R.drawable.ic_settings_black_24dp));
+    }};
 
     public TabsPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -43,7 +55,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        switch (tabTitles[position]) {
+        switch (tabs.get(position).title) {
             case "TV":
                 return new DevicesFragment();
             case "Locations":
@@ -57,12 +69,12 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return tabTitles.length;
+        return tabs.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        Drawable image = ContextCompat.getDrawable(context, tabIcons[position]);
+        Drawable image = ContextCompat.getDrawable(context, tabs.get(position).icon);
         image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
         SpannableString sb = new SpannableString(" ");
         ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
@@ -74,13 +86,13 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         View v = LayoutInflater.from(context).inflate(R.layout.custom_tab, null);
 
         TextView text = (TextView) v.findViewById(R.id.text);
-        text.setText(tabTitles[position]);
+        text.setText(tabs.get(position).title);
 
         Typeface font = Typeface.createFromAsset(context.getAssets(), "Poppins-Regular.ttf");
         text.setTypeface(font);
 
         ImageView img = (ImageView) v.findViewById(R.id.image);
-        img.setImageResource(tabIcons[position]);
+        img.setImageResource(tabs.get(position).icon);
 
         return v;
     }
