@@ -1,5 +1,6 @@
 package tv.ourglass.alyssa.absinthe_android.Scenes.Settings;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,10 +14,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.Call;
+import okhttp3.Response;
 import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
+import tv.ourglass.alyssa.absinthe_android.Models.SharedPrefsManager;
+import tv.ourglass.alyssa.absinthe_android.Networking.Applejack;
 import tv.ourglass.alyssa.absinthe_android.R;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Control.DeviceViewActivity;
 import tv.ourglass.alyssa.absinthe_android.Scenes.Registration.WelcomeActivity;
@@ -26,6 +33,8 @@ import tv.ourglass.alyssa.absinthe_android.Scenes.Registration.WelcomeActivity;
  */
 
 public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
+
+    String TAG = "SettingsListAdapter";
 
     private Context context;
 
@@ -41,7 +50,7 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
         SettingsListOption option = getItem(position);
 
         if (view == null) {
-            view = LayoutInflater.from(getContext()).inflate(R.layout.settings_option, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.settings_option, parent, false);
         }
 
         ImageView icon = (ImageView) view.findViewById(R.id.icon);
@@ -94,7 +103,7 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         progress = ProgressDialog.show(context, "Logging out...", "", true);
-                                        goTo(WelcomeActivity.class);
+                                        logout();
                                     }
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -118,6 +127,35 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
 
         return view;
 
+    }
+
+    private void logout() {
+        Applejack.getInstance().logout(context, new Applejack.HttpCallback() {
+            @Override
+            public void onFailure(Call call, final IOException e) {
+                ((Activity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progress.dismiss();
+                        Toast.makeText(context, "Error logging out", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onSuccess(final Response response) {
+                ((Activity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SharedPrefsManager.setUserPassword(context, "");
+                        SharedPrefsManager.setUserApplejackJwt(context, "");
+                        progress.dismiss();
+                        Toast.makeText(context, "Logged out!", Toast.LENGTH_SHORT).show();
+                        goTo(WelcomeActivity.class);
+                    }
+                });
+            }
+        });
     }
 
     private void goTo(Class dest) {
