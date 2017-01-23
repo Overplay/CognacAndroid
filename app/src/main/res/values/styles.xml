@@ -44,4 +44,9 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="EditTextCustom" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/apptheme_edit_text_holo_light</item>
+        <item name="android:textColor">@color/OGWhite</item>
+    </style>
+
 </resources>
