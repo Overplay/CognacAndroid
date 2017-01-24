@@ -19,13 +19,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Scenes.Registration.WelcomeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".Scenes.Registration.WelcomeActivity" />
         <activity android:name=".Scenes.Registration.LoginActivity" />
         <activity android:name=".Scenes.Registration.EnterNameActivity" />
         <activity android:name=".Scenes.Registration.EnterEmailActivity" />
@@ -42,7 +36,14 @@
 
         <activity android:name=".Scenes.Control.DeviceViewActivity" />
         <activity android:name=".Scenes.Settings.InviteFriendsActivity" />
-        <activity android:name=".Scenes.Settings.EditAccountActivity"></activity>
+        <activity android:name=".Scenes.Settings.EditAccountActivity" />
+        <activity android:name=".Scenes.Registration.CheckAuthActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

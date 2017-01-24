@@ -8,7 +8,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.IOException;
+
+import okhttp3.Call;
 import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
+import tv.ourglass.alyssa.absinthe_android.Models.SharedPrefsManager;
+import tv.ourglass.alyssa.absinthe_android.Networking.Applejack;
 import tv.ourglass.alyssa.absinthe_android.R;
 
 public class WelcomeActivity extends AppCompatActivity {
@@ -17,8 +22,6 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-
-
 
         TextView text = (TextView)findViewById(R.id.welcomeTextView);
         Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.boldFont);
