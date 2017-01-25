@@ -34,4 +34,7 @@
     <string name="friendEmail">FRIEND\'S EMAIL ADDRESS</string>
     <string name="inviteFriend">Invite</string>
 
+    <string name="notConnected">Not connected</string>
+
+
 </resources>
