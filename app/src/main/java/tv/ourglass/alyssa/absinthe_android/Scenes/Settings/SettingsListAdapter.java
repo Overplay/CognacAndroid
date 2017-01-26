@@ -141,6 +141,8 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
                     public void run() {
                         progress.dismiss();
                         Log.d(TAG, "error logging out with Applejack");
+                        Toast.makeText(context, "Logged out!", Toast.LENGTH_SHORT).show();
+                        goTo(WelcomeActivity.class);
                     }
                 });
             }
