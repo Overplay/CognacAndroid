@@ -130,6 +130,9 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
     }
 
     private void logout() {
+        SharedPrefsManager.setUserPassword(context, "");
+        SharedPrefsManager.setUserApplejackJwt(context, "");
+
         Applejack.getInstance().logout(context, new Applejack.HttpCallback() {
             @Override
             public void onFailure(Call call, final IOException e) {
@@ -137,7 +140,7 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
                     @Override
                     public void run() {
                         progress.dismiss();
-                        Toast.makeText(context, "Error logging out", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "error logging out with Applejack");
                     }
                 });
             }
@@ -147,8 +150,6 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
                 ((Activity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        SharedPrefsManager.setUserPassword(context, "");
-                        SharedPrefsManager.setUserApplejackJwt(context, "");
                         progress.dismiss();
                         Toast.makeText(context, "Logged out!", Toast.LENGTH_SHORT).show();
                         goTo(WelcomeActivity.class);
