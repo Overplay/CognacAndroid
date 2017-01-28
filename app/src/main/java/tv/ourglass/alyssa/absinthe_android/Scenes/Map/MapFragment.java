@@ -1,7 +1,11 @@
 package tv.ourglass.alyssa.absinthe_android.Scenes.Map;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -155,6 +159,27 @@ public class MapFragment extends Fragment {
                 googleMap.addMarker(new MarkerOptions()
                         .position(sydney).title("Marker Title").snippet("Marker Description"));
 
+                // Zoom into current location
+                LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+                Criteria criteria = new Criteria();
+
+                try {
+                    Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+
+                    if (location != null) {
+                        LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(pos)
+                                .zoom(12)
+                                .build();
+
+                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    }
+
+                } catch (SecurityException e) {
+                    Log.d(TAG, e.getLocalizedMessage());
+                }
             }
         });
 
