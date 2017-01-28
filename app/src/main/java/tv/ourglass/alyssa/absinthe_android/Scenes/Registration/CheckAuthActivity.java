@@ -78,6 +78,7 @@ public class CheckAuthActivity extends AppCompatActivity {
                                             });
                                         }
                                     });
+                            response.body().close();
                         }
                     });
         }

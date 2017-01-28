@@ -174,6 +174,8 @@ public class LoginActivity extends RegistrationBaseActivity {
                                     Log.d(TAG, "login success");
                                 }
                             });
+
+                            response.body().close();
                         }
                     });
         }

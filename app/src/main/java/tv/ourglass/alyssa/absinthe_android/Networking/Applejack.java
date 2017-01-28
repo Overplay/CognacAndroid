@@ -56,15 +56,12 @@ public class Applejack {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 
-                Log.d(TAG, response.toString());
-
                 if (!response.isSuccessful()) {
                     cb.onFailure(call, null);
                     response.body().close();
 
                 } else {
                     cb.onSuccess(response);
-                    response.body().close();
                 }
             }
         });
@@ -99,10 +96,12 @@ public class Applejack {
             req = new Request.Builder()
                     .addHeader("Authorization", "Bearer: " + jwt)
                     .url(url)
+                    .get()
                     .build();
         } else {
             req = new Request.Builder()
                     .url(url)
+                    .get()
                     .build();
         }
 

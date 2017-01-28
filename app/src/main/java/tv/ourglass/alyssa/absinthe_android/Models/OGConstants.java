@@ -7,7 +7,7 @@ package tv.ourglass.alyssa.absinthe_android.Models;
 public class OGConstants {
 
     // Dev mode
-    public static final boolean devMode = false;
+    public static final boolean devMode = true;
 
     // OG Cloud paths
     public static final String OGCloudBaseURL = "http://107.170.209.248";

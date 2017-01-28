@@ -1,9 +1,7 @@
 package tv.ourglass.alyssa.absinthe_android.Scenes.Map;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -24,7 +22,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -32,39 +29,20 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import tv.ourglass.alyssa.absinthe_android.Models.SharedPrefsManager;
 import tv.ourglass.alyssa.absinthe_android.Networking.Applejack;
 import tv.ourglass.alyssa.absinthe_android.R;
-import tv.ourglass.alyssa.absinthe_android.Scenes.Registration.LoginActivity;
-import tv.ourglass.alyssa.absinthe_android.Scenes.Settings.SettingsListAdapter;
-import tv.ourglass.alyssa.absinthe_android.Scenes.Settings.SettingsListOption;
-import tv.ourglass.alyssa.absinthe_android.Scenes.Tabs.MainTabsActivity;
 
 public class MapFragment extends Fragment {
 
     String TAG = "MapFragment";
 
-    private String[] names = {
-            "Lola's",
-            "Paddy's Pub",
-            "Novo",
-            "New York Lounge",
-            "The Drunkard"
-    };
-
-    private String[] addresses = {
-            "1234 Main St, San Jose, CA 95120",
-            "24 Main St, New York City, NY 12345",
-            "88 Abc Lane, Boston, MA 12335",
-            "334 Higuera St, San Luis Obispo, CA 93405",
-            "6789 24th St, Chicago IL, 12345"
-    };
+    ArrayList<LocationListOption> locationList = new ArrayList<>();
 
     MapView mMapView;
 
     private GoogleMap googleMap;
 
-    ProgressDialog progress;
+    LocationListAdapter locationListAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,13 +53,9 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_locations, container, false);
 
-        // Set up list of venues
-        ArrayList<LocationListOption> locations = new ArrayList<>();
-        for (int i = 0; i < names.length; i++) {
-            locations.add(new LocationListOption(names[i], addresses[i]));
-        }
+        this.locationListAdapter = new LocationListAdapter(getActivity(), locationList);
 
-        progress = ProgressDialog.show(getActivity(), "Finding venues...", "", true);
+        // TODO: if user connects to internet, try to get venues
 
         // TODO: this doesn't work
         Applejack.getInstance().getVenues(getActivity(), new Applejack.HttpCallback() {
@@ -90,7 +64,6 @@ public class MapFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        progress.dismiss();
                         Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -99,38 +72,57 @@ public class MapFragment extends Fragment {
             @Override
             public void onSuccess(final Response response) {
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progress.dismiss();
-                        Log.d(TAG, response.toString());
+                 try {
+                     String jsonStr = response.body().string();
+                     JSONArray locationArray = new JSONArray(jsonStr);
 
-                        try {
-                            Log.d(TAG, response.body().string());
-                            String jsonStr = response.body().string();
-                            Log.d(TAG, jsonStr);
-                            //JSONArray venueArray = new JSONArray(jsonStr);
+                     Log.d(TAG, jsonStr);
 
-                            /*for (int i = 0; i < venueArray.length(); i++) {
-                                JSONObject venue = venueArray.getJSONObject(i);
-                                Log.d(TAG, venue.getString("name"));
-                            }*/
+                     Log.d(TAG, String.format("%d venues found!", locationArray.length()));
 
-                        } catch (Exception e) {
-                            Log.e(TAG, "error reading json " + e.getLocalizedMessage());
-                            Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                     for (int i = 0; i < locationArray.length(); i++) {
+                         JSONObject o = locationArray.getJSONObject(i);
+
+                         // Get name
+                         String name = o.getString("name");
+
+                         // Get location
+                         JSONObject addr = (JSONObject)o.get("address");
+                         String location = String.format("%s, %s, %s, %s", addr.getString("street"),
+                                 addr.getString("city"), addr.getString("state"), addr.getString("zip"));
+
+                         // Get coordinates
+                         /*JSONObject geoloc = (JSONObject)o.get("geolocation");
+                         long latitude = geoloc.getLong("latitude");
+                         long longitude = geoloc.getLong("longitude");*/
+                         //Log.d(TAG, o.)
+
+                         // Add to array
+                         locationList.add(new LocationListOption(name, location, 0, 0));
+                     }
+
+                     getActivity().runOnUiThread(new Runnable() {
+                         @Override
+                         public void run() {
+                             locationListAdapter.notifyDataSetChanged();
+                         }
+                     });
+
+                 } catch (Exception e) {
+                     Log.e(TAG, e.getLocalizedMessage());
+                     getActivity().runOnUiThread(new Runnable() {
+                         @Override
+                         public void run() {
+                             Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
+                         }
+                     });
+                 }
             }
         });
 
-        // Create the adapter to convert the array to views
-        LocationListAdapter adapter = new LocationListAdapter(getActivity(), locations);
-
         // Attach the adapter to a ListView
         ListView listView = (ListView) rootView.findViewById(R.id.locationList);
-        listView.setAdapter(adapter);
+        listView.setAdapter(this.locationListAdapter);
 
         // Set up map
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
@@ -163,9 +155,6 @@ public class MapFragment extends Fragment {
                 googleMap.addMarker(new MarkerOptions()
                         .position(sydney).title("Marker Title").snippet("Marker Description"));
 
-                // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
 

@@ -128,6 +128,8 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
                                 overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
                             }
                         });
+
+                        response.body().close();
                     }
                 });
     }
