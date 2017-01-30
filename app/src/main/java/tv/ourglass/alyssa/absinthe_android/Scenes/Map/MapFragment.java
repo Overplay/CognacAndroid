@@ -26,13 +26,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
+import tv.ourglass.alyssa.absinthe_android.AbsintheApplication;
+import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.Networking.Applejack;
 import tv.ourglass.alyssa.absinthe_android.R;
 
@@ -48,6 +54,8 @@ public class MapFragment extends Fragment {
 
     LocationListAdapter locationListAdapter;
 
+    OkHttpClient okclient = AbsintheApplication.okclient;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +69,6 @@ public class MapFragment extends Fragment {
 
         // TODO: if user connects to internet, try to get venues
 
-        // TODO: this doesn't work
         Applejack.getInstance().getVenues(getActivity(), new Applejack.HttpCallback() {
             @Override
             public void onFailure(Call call, final IOException e) {
@@ -80,8 +87,6 @@ public class MapFragment extends Fragment {
                      String jsonStr = response.body().string();
                      JSONArray locationArray = new JSONArray(jsonStr);
 
-                     Log.d(TAG, jsonStr);
-
                      Log.d(TAG, String.format("%d venues found!", locationArray.length()));
 
                      for (int i = 0; i < locationArray.length(); i++) {
@@ -92,14 +97,13 @@ public class MapFragment extends Fragment {
 
                          // Get location
                          JSONObject addr = (JSONObject)o.get("address");
-                         String location = String.format("%s, %s, %s, %s", addr.getString("street"),
+                         String location = String.format("%s, %s, %s %s", addr.getString("street"),
                                  addr.getString("city"), addr.getString("state"), addr.getString("zip"));
 
                          // Get coordinates
                          /*JSONObject geoloc = (JSONObject)o.get("geolocation");
                          long latitude = geoloc.getLong("latitude");
                          long longitude = geoloc.getLong("longitude");*/
-                         //Log.d(TAG, o.)
 
                          // Add to array
                          locationList.add(new LocationListOption(name, location, 0, 0));
@@ -121,6 +125,8 @@ public class MapFragment extends Fragment {
                          }
                      });
                  }
+
+                response.body().close();
             }
         });
 
@@ -154,13 +160,50 @@ public class MapFragment extends Fragment {
                     Log.d(TAG, e.getLocalizedMessage());
                 }
 
-                // For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(-34, 151);
-                googleMap.addMarker(new MarkerOptions()
-                        .position(sydney).title("Marker Title").snippet("Marker Description"));
+                // Show markers for found venues
+                for (final LocationListOption loc : locationList) {
+                    getGeolocation(loc.address, new Applejack.HttpCallback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.e(TAG, e.getLocalizedMessage());
+                        }
+
+                        @Override
+                        public void onSuccess(Response response) {
+                            try {
+                                String jsonStr = response.body().string();
+                                JSONObject responseObj = new JSONObject(jsonStr);
+                                JSONObject result = responseObj.getJSONArray("results").getJSONObject(0);
+                                final JSONObject location = result.getJSONObject("geometry").getJSONObject("location");
+
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        try {
+                                            LatLng markerLoc = new LatLng(location.getDouble("lat"), location.getDouble("lng"));
+                                            googleMap.addMarker(new MarkerOptions()
+                                                    .position(markerLoc)
+                                                    .title(loc.name)
+                                                    .snippet(loc.address));
+
+                                        } catch (JSONException e) {
+                                            Log.e(TAG, e.getLocalizedMessage());
+                                        }
+                                    }
+                                });
+
+                            } catch (Exception e) {
+                                Log.e(TAG, e.getLocalizedMessage());
+                            }
+
+                            response.body().close();
+                        }
+                    });
+                }
 
                 // Zoom into current location
-                LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+                /*LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
                 Criteria criteria = new Criteria();
 
                 try {
@@ -179,7 +222,7 @@ public class MapFragment extends Fragment {
 
                 } catch (SecurityException e) {
                     Log.d(TAG, e.getLocalizedMessage());
-                }
+                }*/
             }
         });
 
@@ -222,5 +265,35 @@ public class MapFragment extends Fragment {
                     }
                 });
         alert.show();
+    }
+
+    private void getGeolocation(String address, final Applejack.HttpCallback cb) {
+        String formattedAddr = address.replaceAll("\\s", "+");
+
+        Request req = new Request.Builder()
+                .url(OGConstants.googleGeocodingRequestBase + formattedAddr
+                        + "&key=" + OGConstants.googleGeocodingAPIKey)
+                .get()
+                .build();
+
+        okclient.newCall(req).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                cb.onFailure(call, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    Log.e(TAG, "geocoding request not successful");
+                    cb.onFailure(call, null);
+                    response.body().close();
+
+                } else {
+                    cb.onSuccess(response);
+                }
+            }
+        });
     }
 }

@@ -67,7 +67,7 @@ public class Applejack {
         });
     }
 
-    private void post(Context context, String url, String json, HttpCallback cb) {
+    public void post(Context context, String url, String json, HttpCallback cb) {
         RequestBody body = RequestBody.create(JSON, json);
         Request req;
         String jwt = SharedPrefsManager.getUserApplejackJwt(context);
@@ -88,7 +88,7 @@ public class Applejack {
         request(req, cb);
     }
 
-    private void get(Context context, String url, HttpCallback cb) {
+    public void get(Context context, String url, HttpCallback cb) {
         Request req;
         String jwt = SharedPrefsManager.getUserApplejackJwt(context);
 
