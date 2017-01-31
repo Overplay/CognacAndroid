@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -54,9 +56,14 @@ public class LocationListAdapter extends ArrayAdapter<LocationListOption> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Animation clickAnimation = new AlphaAnimation(1.0f, 0.3f);
+                clickAnimation.setDuration(200);
+                view.startAnimation(clickAnimation);
                 LocationListOption location = (LocationListOption) view.getTag();
 
-                Log.d("LocationListAdapter", "clicked " + location.name);
+                if (location.marker != null) {
+                    location.marker.showInfoWindow();
+                }
             }
         });
 

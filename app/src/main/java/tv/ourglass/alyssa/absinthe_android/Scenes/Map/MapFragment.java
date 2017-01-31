@@ -174,22 +174,22 @@ public class MapFragment extends Fragment {
                                 String jsonStr = response.body().string();
                                 JSONObject responseObj = new JSONObject(jsonStr);
                                 JSONObject result = responseObj.getJSONArray("results").getJSONObject(0);
-                                final JSONObject location = result.getJSONObject("geometry").getJSONObject("location");
+                                JSONObject location = result.getJSONObject("geometry").getJSONObject("location");
+
+                                final double lat = location.getDouble("lat");
+                                final double lng = location.getDouble("lng");
+
+                                loc.latitude = lat;
+                                loc.longitude = lng;
 
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-
-                                        try {
-                                            LatLng markerLoc = new LatLng(location.getDouble("lat"), location.getDouble("lng"));
-                                            googleMap.addMarker(new MarkerOptions()
-                                                    .position(markerLoc)
-                                                    .title(loc.name)
-                                                    .snippet(loc.address));
-
-                                        } catch (JSONException e) {
-                                            Log.e(TAG, e.getLocalizedMessage());
-                                        }
+                                        LatLng markerLoc = new LatLng(lat, lng);
+                                        loc.marker = googleMap.addMarker(new MarkerOptions()
+                                                .position(markerLoc)
+                                                .title(loc.name)
+                                                .snippet(loc.address));
                                     }
                                 });
 

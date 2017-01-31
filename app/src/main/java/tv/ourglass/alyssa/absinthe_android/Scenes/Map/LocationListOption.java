@@ -1,5 +1,7 @@
 package tv.ourglass.alyssa.absinthe_android.Scenes.Map;
 
+import com.google.android.gms.maps.model.Marker;
+
 /**
  * Created by atorres on 1/11/17.
  */
@@ -7,13 +9,15 @@ package tv.ourglass.alyssa.absinthe_android.Scenes.Map;
 public class LocationListOption {
     public String name;
     public String address;
-    public long latitude;
-    public long longitude;
+    public double latitude;
+    public double longitude;
+    public Marker marker;
 
-    public LocationListOption(String name, String address, long latitude, long longitude) {
+    public LocationListOption(String name, String address, double latitude, double longitude) {
         this.name = name;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.marker = null;
     }
 }
