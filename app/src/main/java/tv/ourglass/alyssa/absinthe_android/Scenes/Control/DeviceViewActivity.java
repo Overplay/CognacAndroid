@@ -39,6 +39,7 @@ public class DeviceViewActivity extends AppCompatActivity {
 
         final WebView webview = (WebView)findViewById(R.id.webview);
 
+        // Configure web view
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setBuiltInZoomControls(false);
 

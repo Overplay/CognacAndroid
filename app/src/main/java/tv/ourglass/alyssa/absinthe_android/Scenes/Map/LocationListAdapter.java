@@ -57,7 +57,7 @@ public class LocationListAdapter extends ArrayAdapter<LocationListOption> {
             @Override
             public void onClick(View view) {
                 Animation clickAnimation = new AlphaAnimation(1.0f, 0.3f);
-                clickAnimation.setDuration(200);
+                clickAnimation.setDuration(300);
                 view.startAnimation(clickAnimation);
                 LocationListOption location = (LocationListOption) view.getTag();
 

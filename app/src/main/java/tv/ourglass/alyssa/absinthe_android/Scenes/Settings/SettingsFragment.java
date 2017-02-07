@@ -15,7 +15,7 @@ import tv.ourglass.alyssa.absinthe_android.R;
 public class SettingsFragment extends Fragment {
 
     private ArrayList<SettingsListOption> options = new ArrayList<SettingsListOption>() {{
-        //add(new SettingsListOption("Invite Friends", R.drawable.ic_card_giftcard_black_36dp));
+        add(new SettingsListOption("Invite Friends", R.drawable.ic_card_giftcard_black_36dp));
         //add(new SettingsListOption("Edit Account", R.drawable.ic_person_outline_black_36dp));
         //add(new SettingsListOption("Add New Ourglass Device", R.drawable.ic_queue_play_next_black_36dp));
         //add(new SettingsListOption("Add/Manage Venues", R.drawable.ic_add_location_black_36dp));

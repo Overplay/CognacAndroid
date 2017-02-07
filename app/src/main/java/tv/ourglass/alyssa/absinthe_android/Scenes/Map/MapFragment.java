@@ -3,9 +3,11 @@ package tv.ourglass.alyssa.absinthe_android.Scenes.Map;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -42,7 +45,7 @@ import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.Networking.Applejack;
 import tv.ourglass.alyssa.absinthe_android.R;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener {
 
     String TAG = "MapFragment";
 
@@ -100,11 +103,6 @@ public class MapFragment extends Fragment {
                          String location = String.format("%s, %s, %s %s", addr.getString("street"),
                                  addr.getString("city"), addr.getString("state"), addr.getString("zip"));
 
-                         // Get coordinates
-                         /*JSONObject geoloc = (JSONObject)o.get("geolocation");
-                         long latitude = geoloc.getLong("latitude");
-                         long longitude = geoloc.getLong("longitude");*/
-
                          // Add to array
                          locationList.add(new LocationListOption(name, location, 0, 0));
                      }
@@ -152,6 +150,8 @@ public class MapFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
+
+                googleMap.setOnInfoWindowClickListener(MapFragment.this);
 
                 // For showing a move to my location button
                 try {
@@ -253,18 +253,20 @@ public class MapFragment extends Fragment {
         mMapView.onLowMemory();
     }
 
-    public void showAlert(String title, String message) {
-        AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
-        alert.setTitle(title);
-        alert.setMessage(message);
-        alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alert.show();
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Log.d(TAG, "marker clicked");
+        LatLng pos = marker.getPosition();
+
+        Uri mapIntentUri = Uri.parse(String.format("google.navigation:q=%f,%f", pos.latitude, pos.longitude));
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(mapIntent);
+        } else {
+            showAlert("Uh oh!", "We couldn't find a navigation app installed on your device.");
+        }
     }
 
     private void getGeolocation(String address, final Applejack.HttpCallback cb) {
@@ -295,5 +297,19 @@ public class MapFragment extends Fragment {
                 }
             }
         });
+    }
+
+    public void showAlert(String title, String message) {
+        AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
+        alert.setTitle(title);
+        alert.setMessage(message);
+        alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alert.show();
     }
 }
