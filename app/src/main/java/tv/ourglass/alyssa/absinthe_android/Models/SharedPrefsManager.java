@@ -12,6 +12,7 @@ public class SharedPrefsManager {
     private static final String PREF_FILE = "tv.ourglass.absinthe_ios";
 
     // properties
+    private static final String APP_OPENED = "APP_OPENED";
     private static final String USER_ID = "USER_ID";
     private static final String USER_FIRST_NAME = "USER_FIRST_NAME";
     private static final String USER_LAST_NAME = "USER_LAST_NAME";
@@ -24,6 +25,16 @@ public class SharedPrefsManager {
 
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
+    }
+
+    public static boolean getAppOpened(Context context) {
+        return getSharedPreferences(context).getBoolean(APP_OPENED, false);
+    }
+
+    public static void setAppOpened(Context context, boolean newValue) {
+        final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putBoolean(APP_OPENED, newValue);
+        editor.apply();
     }
 
     public static String getUserId(Context context) {

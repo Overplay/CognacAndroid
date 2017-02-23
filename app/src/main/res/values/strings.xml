@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Absinthe-Android</string>
 
+    <string name="get_started">Let\'s get started!</string>
+
     <string name="welcome_message">WELCOME!</string>
     <string name="welcome_text">To use Ourglass TV...</string>
     <string name="or">or</string>

@@ -49,18 +49,6 @@ public class WelcomeActivity extends AppCompatActivity {
         if (btn != null) {
             btn.setTypeface(font);
         }
-
-        // Disable account creation for alpha release
-        text = (TextView)findViewById(R.id.textView2);
-        if (text != null) {
-            text.setVisibility(View.GONE);
-        }
-
-        btn = (Button)findViewById(R.id.signupButton);
-        if (btn != null) {
-            btn.setVisibility(View.GONE);
-        }
-
     }
 
     @Override

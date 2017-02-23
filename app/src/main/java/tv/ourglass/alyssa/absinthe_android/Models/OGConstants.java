@@ -11,7 +11,8 @@ public class OGConstants {
     public static final String googleGeocodingRequestBase = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 
     // Dev mode
-    public static final boolean devMode = true;
+    public static final boolean devMode = true;  // if true, login isn't really done
+    public static final boolean alwaysShowIntro = true;
 
     // OG Cloud paths
     public static final String OGCloudBaseURL = "http://107.170.209.248";

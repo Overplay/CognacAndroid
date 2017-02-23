@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_intro_slides"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="tv.ourglass.alyssa.absinthe_android.Scenes.Introduction.IntroSlidesActivity">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/slides_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cancel_button"
+        android:clickable="true"
+        android:onClick="cancel"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/ic_clear_black_36dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/nextDescription" />
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/slides_tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:tabBackground="@drawable/tab_selector"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp" />
+
+</RelativeLayout>
