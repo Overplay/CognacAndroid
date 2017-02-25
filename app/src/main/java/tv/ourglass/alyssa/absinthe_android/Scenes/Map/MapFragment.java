@@ -1,12 +1,15 @@
 package tv.ourglass.alyssa.absinthe_android.Scenes.Map;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -43,6 +46,7 @@ import okhttp3.Response;
 import tv.ourglass.alyssa.absinthe_android.AbsintheApplication;
 import tv.ourglass.alyssa.absinthe_android.Models.OGConstants;
 import tv.ourglass.alyssa.absinthe_android.Networking.Applejack;
+import tv.ourglass.alyssa.absinthe_android.Networking.NetUtils;
 import tv.ourglass.alyssa.absinthe_android.R;
 
 public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener {
@@ -59,6 +63,73 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
 
     OkHttpClient okclient = AbsintheApplication.okclient;
 
+    private BroadcastReceiver mWifiBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "got network change!");
+
+            if (!intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {
+                getAndDisplayVenues();
+            }
+        }
+    };
+
+    Applejack.HttpCallback venue_cb = new Applejack.HttpCallback() {
+        @Override
+        public void onFailure(Call call, final IOException e) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        @Override
+        public void onSuccess(final Response response) {
+
+            try {
+                String jsonStr = response.body().string();
+                JSONArray locationArray = new JSONArray(jsonStr);
+
+                Log.d(TAG, String.format("%d venues found!", locationArray.length()));
+
+                for (int i = 0; i < locationArray.length(); i++) {
+                    JSONObject o = locationArray.getJSONObject(i);
+
+                    // Get name
+                    String name = o.getString("name");
+
+                    // Get location
+                    JSONObject addr = (JSONObject)o.get("address");
+                    String location = String.format("%s, %s, %s %s", addr.getString("street"),
+                            addr.getString("city"), addr.getString("state"), addr.getString("zip"));
+
+                    // Add to array
+                    locationList.add(new LocationListOption(name, location, 0, 0));
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        locationListAdapter.notifyDataSetChanged();
+                    }
+                });
+
+            } catch (Exception e) {
+                Log.e(TAG, e.getLocalizedMessage());
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            response.body().close();
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,65 +139,12 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_locations, container, false);
 
+        // get notified when network connectivity changes
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        getActivity().registerReceiver(mWifiBroadcastReceiver, intentFilter);
+
         this.locationListAdapter = new LocationListAdapter(getActivity(), locationList);
-
-        // TODO: if user connects to internet, try to get venues
-
-        Applejack.getInstance().getVenues(getActivity(), new Applejack.HttpCallback() {
-            @Override
-            public void onFailure(Call call, final IOException e) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onSuccess(final Response response) {
-
-                 try {
-                     String jsonStr = response.body().string();
-                     JSONArray locationArray = new JSONArray(jsonStr);
-
-                     Log.d(TAG, String.format("%d venues found!", locationArray.length()));
-
-                     for (int i = 0; i < locationArray.length(); i++) {
-                         JSONObject o = locationArray.getJSONObject(i);
-
-                         // Get name
-                         String name = o.getString("name");
-
-                         // Get location
-                         JSONObject addr = (JSONObject)o.get("address");
-                         String location = String.format("%s, %s, %s %s", addr.getString("street"),
-                                 addr.getString("city"), addr.getString("state"), addr.getString("zip"));
-
-                         // Add to array
-                         locationList.add(new LocationListOption(name, location, 0, 0));
-                     }
-
-                     getActivity().runOnUiThread(new Runnable() {
-                         @Override
-                         public void run() {
-                             locationListAdapter.notifyDataSetChanged();
-                         }
-                     });
-
-                 } catch (Exception e) {
-                     Log.e(TAG, e.getLocalizedMessage());
-                     getActivity().runOnUiThread(new Runnable() {
-                         @Override
-                         public void run() {
-                             Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
-                         }
-                     });
-                 }
-
-                response.body().close();
-            }
-        });
 
         // Attach the adapter to a ListView
         ListView listView = (ListView) rootView.findViewById(R.id.locationList);
@@ -145,6 +163,14 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        getAndDisplayVenues();
+
+        return rootView;
+    }
+
+    public void getAndDisplayVenues() {
+        Applejack.getInstance().getVenues(getActivity(), venue_cb);
 
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -225,8 +251,6 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
                 }*/
             }
         });
-
-        return rootView;
     }
 
     @Override
