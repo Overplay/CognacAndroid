@@ -1,4 +1,6 @@
 <resources>
+    <string name="google_maps_api_key">AIzaSyDNN76ROI05wdtzEm-u1UlBzP6utNkPMpU</string>
+
     <string name="app_name">Absinthe-Android</string>
 
     <string name="get_started">Let\'s get started!</string>

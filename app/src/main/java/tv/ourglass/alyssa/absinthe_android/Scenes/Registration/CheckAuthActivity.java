@@ -50,6 +50,7 @@ public class CheckAuthActivity extends AppCompatActivity {
 
                         @Override
                         public void onSuccess(Response response) {
+                            response.body().close();
                             Applejack.getInstance().getAuthStatus(CheckAuthActivity.this,
                                     new Applejack.HttpCallback() {
 
@@ -69,6 +70,7 @@ public class CheckAuthActivity extends AppCompatActivity {
 
                                         @Override
                                         public void onSuccess(Response response2) {  // authorized!
+                                            response2.body().close();
                                             CheckAuthActivity.this.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -78,7 +80,6 @@ public class CheckAuthActivity extends AppCompatActivity {
                                             });
                                         }
                                     });
-                            response.body().close();
                         }
                     });
         }

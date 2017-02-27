@@ -7,12 +7,11 @@ package tv.ourglass.alyssa.absinthe_android.Models;
 public class OGConstants {
 
     // Google Geocoding API
-    public static final String googleGeocodingAPIKey = "AIzaSyBWsJ9bNC8emnQGO-8iOehyNOAgmsOu-6A";
     public static final String googleGeocodingRequestBase = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 
     // Dev mode
-    public static final boolean devMode = true;  // if true, login isn't really done
-    public static final boolean alwaysShowIntro = true;
+    public static final boolean devMode = false;  // if true, login isn't really done
+    public static final boolean alwaysShowIntro = false;
 
     // OG Cloud paths
     public static final String OGCloudBaseURL = "http://107.170.209.248";

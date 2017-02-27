@@ -41,7 +41,7 @@ public class Applejack {
 
     public interface HttpCallback {
         void onFailure(Call call, IOException e);
-        void onSuccess(Response response);
+        void onSuccess(Response response);  // this must close the response body or it will leak
     }
 
     private void request(Request request, final HttpCallback cb) {

@@ -157,6 +157,7 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
                         goTo(WelcomeActivity.class);
                     }
                 });
+                response.body().close();
             }
         });
     }

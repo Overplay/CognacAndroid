@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -69,7 +71,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
             Log.d(TAG, "got network change!");
 
             if (!intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {
-                getAndDisplayVenues();
+                Applejack.getInstance().getVenues(getActivity(), venue_cb);
             }
         }
     };
@@ -116,6 +118,8 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
                     }
                 });
 
+                displayVenues();
+
             } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage());
                 getActivity().runOnUiThread(new Runnable() {
@@ -124,9 +128,10 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
                         Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
 
-            response.body().close();
+            } finally {
+                response.body().close();
+            }
         }
     };
 
@@ -164,91 +169,84 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
             e.printStackTrace();
         }
 
-        getAndDisplayVenues();
+        Applejack.getInstance().getVenues(getActivity(), venue_cb);
 
         return rootView;
     }
 
-    public void getAndDisplayVenues() {
-        Applejack.getInstance().getVenues(getActivity(), venue_cb);
+    public void displayVenues() {
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
+            public void run() {
+                mMapView.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap mMap) {
+                        googleMap = mMap;
 
-                googleMap.setOnInfoWindowClickListener(MapFragment.this);
+                        googleMap.setOnInfoWindowClickListener(MapFragment.this);
 
-                // For showing a move to my location button
-                try {
-                    googleMap.setMyLocationEnabled(true);
-                } catch (SecurityException e) {
-                    Log.d(TAG, e.getLocalizedMessage());
-                }
-
-                // Show markers for found venues
-                for (final LocationListOption loc : locationList) {
-                    getGeolocation(loc.address, new Applejack.HttpCallback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            Log.e(TAG, e.getLocalizedMessage());
+                        // For showing a move to my location button
+                        try {
+                            googleMap.setMyLocationEnabled(true);
+                        } catch (SecurityException e) {
+                            Log.d(TAG, e.getLocalizedMessage());
                         }
 
-                        @Override
-                        public void onSuccess(Response response) {
-                            try {
-                                String jsonStr = response.body().string();
-                                JSONObject responseObj = new JSONObject(jsonStr);
-                                JSONObject result = responseObj.getJSONArray("results").getJSONObject(0);
-                                JSONObject location = result.getJSONObject("geometry").getJSONObject("location");
+                        // Show markers for found venues
+                        for (final LocationListOption loc : locationList) {
+                            getGeolocation(loc.address, new Applejack.HttpCallback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    Log.e(TAG, e.getLocalizedMessage());
+                                }
 
-                                final double lat = location.getDouble("lat");
-                                final double lng = location.getDouble("lng");
+                                @Override
+                                public void onSuccess(Response response) {
+                                    try {
+                                        String jsonStr = response.body().string();
+                                        JSONObject responseObj = new JSONObject(jsonStr);
+                                        JSONObject result = responseObj.getJSONArray("results").getJSONObject(0);
+                                        JSONObject location = result.getJSONObject("geometry").getJSONObject("location");
 
-                                loc.latitude = lat;
-                                loc.longitude = lng;
+                                        final double lat = location.getDouble("lat");
+                                        final double lng = location.getDouble("lng");
 
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        LatLng markerLoc = new LatLng(lat, lng);
-                                        loc.marker = googleMap.addMarker(new MarkerOptions()
-                                                .position(markerLoc)
-                                                .title(loc.name)
-                                                .snippet(loc.address));
+                                        loc.latitude = lat;
+                                        loc.longitude = lng;
+
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                LatLng markerLoc = new LatLng(lat, lng);
+                                                loc.marker = googleMap.addMarker(new MarkerOptions()
+                                                        .position(markerLoc)
+                                                        .title(loc.name)
+                                                        .snippet(loc.address));
+                                            }
+                                        });
+
+                                    } catch (Exception e) {
+                                        Log.e(TAG, e.getLocalizedMessage());
+
+                                    } finally {
+                                        response.body().close();
                                     }
-                                });
-
-                            } catch (Exception e) {
-                                Log.e(TAG, e.getLocalizedMessage());
-                            }
-
-                            response.body().close();
+                                }
+                            });
                         }
-                    });
-                }
 
-                // Zoom into current location
-                /*LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-                Criteria criteria = new Criteria();
-
-                try {
-                    Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-
-                    if (location != null) {
-                        LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+                        // center map on US
+                        LatLng pos = new LatLng(37.0902, -95.7129);
 
                         CameraPosition cameraPosition = new CameraPosition.Builder()
                                 .target(pos)
-                                .zoom(12)
+                                .zoom(3.5f)
                                 .build();
 
                         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                     }
-
-                } catch (SecurityException e) {
-                    Log.d(TAG, e.getLocalizedMessage());
-                }*/
+                });
             }
         });
     }
@@ -296,15 +294,18 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
     private void getGeolocation(String address, final Applejack.HttpCallback cb) {
         String formattedAddr = address.replaceAll("\\s", "+");
 
+        String googleAPIKey = getResources().getString(R.string.google_maps_api_key);
+
         Request req = new Request.Builder()
                 .url(OGConstants.googleGeocodingRequestBase + formattedAddr
-                        + "&key=" + OGConstants.googleGeocodingAPIKey)
+                            + "&key=" + googleAPIKey)
                 .get()
                 .build();
 
         okclient.newCall(req).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Log.e(TAG, "geocoding request unsuccessful");
                 cb.onFailure(call, e);
             }
 
@@ -312,11 +313,12 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
             public void onResponse(Call call, Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
-                    Log.e(TAG, "geocoding request not successful");
+                    Log.e(TAG, "geocoding request unsuccessful");
                     cb.onFailure(call, null);
                     response.body().close();
 
                 } else {
+                    Log.d(TAG, "geocoding request successful");
                     cb.onSuccess(response);
                 }
             }
