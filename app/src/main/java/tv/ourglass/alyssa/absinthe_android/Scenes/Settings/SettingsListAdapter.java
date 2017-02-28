@@ -74,14 +74,17 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
             public void onClick(View view) {
                 SettingsListOption option = (SettingsListOption) view.getTag();
 
+                Intent intent;
+
                 switch (option.name) {
                     case "Invite Friends":
-                        Intent intent = new Intent(context, InviteFriendsActivity.class);
+                        intent = new Intent(context, InviteFriendsActivity.class);
                         context.startActivity(intent);
                         break;
 
                     case "Edit Account":
-                        Log.d("SettingsListAdapter", "edit account");
+                        intent = new Intent(context, EditAccountActivity.class);
+                        context.startActivity(intent);
                         break;
 
                     case "Add New Ourglass Device":

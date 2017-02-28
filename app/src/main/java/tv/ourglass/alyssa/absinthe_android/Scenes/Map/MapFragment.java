@@ -212,17 +212,19 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
                                         final double lat = location.getDouble("lat");
                                         final double lng = location.getDouble("lng");
 
-                                        loc.latitude = lat;
-                                        loc.longitude = lng;
-
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
+
+                                                loc.latitude = lat;
+                                                loc.longitude = lng;
                                                 LatLng markerLoc = new LatLng(lat, lng);
                                                 loc.marker = googleMap.addMarker(new MarkerOptions()
                                                         .position(markerLoc)
                                                         .title(loc.name)
                                                         .snippet(loc.address));
+
+                                                locationListAdapter.notifyDataSetChanged();
                                             }
                                         });
 

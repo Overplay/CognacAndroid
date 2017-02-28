@@ -50,6 +50,7 @@ public class CheckAuthActivity extends AppCompatActivity {
 
                         @Override
                         public void onSuccess(Response response) {
+
                             response.body().close();
                             Applejack.getInstance().getAuthStatus(CheckAuthActivity.this,
                                     new Applejack.HttpCallback() {
