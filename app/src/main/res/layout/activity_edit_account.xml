@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:background="@color/OGBackgroundGrey"
-    tools:context="tv.ourglass.alyssa.absinthe_android.Scenes.Settings.EditAccountActivity">
+    tools:context="tv.ourglass.alyssa.bourbon_android.Scenes.Settings.EditAccountActivity">
 
     <Button
         android:id="@+id/save"

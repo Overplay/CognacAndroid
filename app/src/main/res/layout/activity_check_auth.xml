@@ -5,6 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/OGBackgroundGrey"
-    tools:context="tv.ourglass.alyssa.absinthe_android.Scenes.Registration.CheckAuthActivity">
+    tools:context="tv.ourglass.alyssa.bourbon_android.Scenes.Registration.CheckAuthActivity">
 
 </RelativeLayout>
