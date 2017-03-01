@@ -299,7 +299,6 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
         okclient.newCall(req).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "geocoding request unsuccessful");
                 cb.onFailure(call, e);
             }
 
@@ -307,12 +306,10 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
             public void onResponse(Call call, Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
-                    Log.e(TAG, "geocoding request unsuccessful");
                     cb.onFailure(call, null);
                     response.body().close();
 
                 } else {
-                    Log.d(TAG, "geocoding request successful");
                     cb.onSuccess(response);
                 }
             }

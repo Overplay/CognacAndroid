@@ -45,6 +45,8 @@ public class EditAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_account);
 
+        progress = new ProgressDialog(EditAccountActivity.this);
+
         mSave = (Button) findViewById(R.id.save);
         mFirstName = (EditText) findViewById(R.id.firstName);
         mLastName = (EditText) findViewById(R.id.lastName);
@@ -104,6 +106,7 @@ public class EditAccountActivity extends AppCompatActivity {
     }
 
     private void displayUserInfo() {
+        progress.show();
         Applejack.getInstance().getAuthStatus(this,
                 new Applejack.HttpCallback() {
 
@@ -124,6 +127,7 @@ public class EditAccountActivity extends AppCompatActivity {
                                             }
                                         });
 
+                                progress.dismiss();
                                 AlertDialog alert = builder.create();
                                 alert.show();
                             }
@@ -138,6 +142,7 @@ public class EditAccountActivity extends AppCompatActivity {
                             SharedPrefsManager.setUserFirstName(EditAccountActivity.this, json.getString("firstName"));
                             SharedPrefsManager.setUserLastName(EditAccountActivity.this, json.getString("lastName"));
                             SharedPrefsManager.setUserEmail(EditAccountActivity.this, json.getString("email"));
+                            SharedPrefsManager.setUserId(EditAccountActivity.this, json.getString("id"));
 
                             EditAccountActivity.this.runOnUiThread(new Runnable() {
                                 @Override
@@ -145,6 +150,7 @@ public class EditAccountActivity extends AppCompatActivity {
                                     mFirstName.setText(SharedPrefsManager.getUserFirstName(EditAccountActivity.this));
                                     mLastName.setText(SharedPrefsManager.getUserLastName(EditAccountActivity.this));
                                     mEmail.setText(SharedPrefsManager.getUserEmail(EditAccountActivity.this));
+                                    progress.dismiss();
                                 }
                             });
 
@@ -155,10 +161,6 @@ public class EditAccountActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-        mFirstName.setText(SharedPrefsManager.getUserFirstName(this));
-        mLastName.setText(SharedPrefsManager.getUserLastName(this));
-        mEmail.setText(SharedPrefsManager.getUserEmail(this));
     }
 
     public void save(final View view) {
@@ -170,9 +172,8 @@ public class EditAccountActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        progress = new ProgressDialog(EditAccountActivity.this);
                         //progress.show();
-                        //saveAccountInfo();
+                        saveAccountInfo();
 
                         //TODO: actually save
                         Log.d(TAG, "clicked save, placeholder");
@@ -190,8 +191,13 @@ public class EditAccountActivity extends AppCompatActivity {
     }
 
     private void saveAccountInfo() {
-        Applejack.getInstance().changeAccountInfo(this, mFirstName.getText().toString(), mLastName.getText().toString(),
-                mEmail.getText().toString(), SharedPrefsManager.getUserId(this),
+        progress.show();
+
+        final String firstName = mFirstName.getText().toString();
+        final String lastName = mLastName.getText().toString();
+        final String email = mEmail.getText().toString();
+
+        Applejack.getInstance().changeAccountInfo(this, firstName, lastName, email, SharedPrefsManager.getUserId(this),
                 new Applejack.HttpCallback() {
 
                     @Override
@@ -223,10 +229,17 @@ public class EditAccountActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Response response) {
                         response.body().close();
+
+                        SharedPrefsManager.setUserFirstName(EditAccountActivity.this, firstName);
+                        SharedPrefsManager.setUserLastName(EditAccountActivity.this, lastName);
+                        SharedPrefsManager.setUserEmail(EditAccountActivity.this, email);
+
                         EditAccountActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                displayUserInfo();
+                                mFirstName.setText(firstName);
+                                mLastName.setText(lastName);
+                                mEmail.setText(email);
                                 progress.dismiss();
                             }
                         });

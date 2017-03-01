@@ -1,6 +1,7 @@
 package tv.ourglass.alyssa.bourbon_android.Networking;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -275,7 +276,7 @@ public class Applejack {
     }
 
     public void changeAccountInfo(final Context context, final String firstName, final String lastName, final String email,
-                                  String userId, final HttpCallback cb) {
+                                  final String userId, final HttpCallback cb) {
         try {
             JSONObject json = new JSONObject();
             json.put("email", email);

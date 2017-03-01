@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -12,6 +15,7 @@ import okhttp3.Response;
 import tv.ourglass.alyssa.bourbon_android.Models.SharedPrefsManager;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Settings.EditAccountActivity;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 public class CheckAuthActivity extends AppCompatActivity {
@@ -71,14 +75,27 @@ public class CheckAuthActivity extends AppCompatActivity {
 
                                         @Override
                                         public void onSuccess(Response response2) {  // authorized!
-                                            response2.body().close();
-                                            CheckAuthActivity.this.runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    Intent intent = new Intent(CheckAuthActivity.this, MainTabsActivity.class);
-                                                    startActivity(intent);
-                                                }
-                                            });
+                                            try {
+                                                String jsonData = response2.body().string();
+                                                JSONObject json = new JSONObject(jsonData);
+                                                SharedPrefsManager.setUserFirstName(CheckAuthActivity.this, json.getString("firstName"));
+                                                SharedPrefsManager.setUserLastName(CheckAuthActivity.this, json.getString("lastName"));
+                                                SharedPrefsManager.setUserEmail(CheckAuthActivity.this, json.getString("email"));
+                                                SharedPrefsManager.setUserId(CheckAuthActivity.this, json.getString("id"));
+
+                                            } catch (Exception e) {
+                                                Log.e(TAG, e.getLocalizedMessage());
+
+                                            } finally {
+                                                response2.body().close();
+                                                CheckAuthActivity.this.runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        Intent intent = new Intent(CheckAuthActivity.this, MainTabsActivity.class);
+                                                        startActivity(intent);
+                                                    }
+                                                });
+                                            }
                                         }
                                     });
                         }
