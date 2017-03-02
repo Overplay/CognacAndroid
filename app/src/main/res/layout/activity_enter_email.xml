@@ -7,7 +7,7 @@
     android:background="@color/OGOrange"
     tools:context=".Scenes.Registration.EnterEmailActivity">
 
-    <TextView
+    <tv.ourglass.alyssa.bourbon_android.Views.MediumTextView
         android:text="@string/enterEmailTitle"
         style="@style/PageHeader"
         android:id="@+id/textView" />
@@ -23,7 +23,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin" >
 
-        <TextView
+        <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
             android:text="@string/emailCaps"
             style="@style/InputHeader"
             android:layout_marginTop="20dp"
@@ -39,7 +39,7 @@
             android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
-            <EditText
+            <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
                 android:layout_width="0dp"
                 style="@style/EditTextCustom"
                 android:layout_height="match_parent"

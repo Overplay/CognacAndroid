@@ -53,29 +53,6 @@ public class EditAccountActivity extends AppCompatActivity {
         mEmail = (EditText) findViewById(R.id.email);
         mEmailCheck = (ImageView) findViewById(R.id.emailCheck);
 
-        // Set the fonts
-        Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.regularFont);
-
-        mSave.setTypeface(font);
-        mFirstName.setTypeface(font);
-        mLastName.setTypeface(font);
-        mEmail.setTypeface(font);
-
-        TextView text = (TextView) findViewById(R.id.firstNameLabel);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        text = (TextView) findViewById(R.id.lastNameLabel);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        text = (TextView) findViewById(R.id.emailLabel);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
         // Add text change listeners
         mEmail.addTextChangedListener(new TextWatcher() {
             @Override

@@ -1,10 +1,14 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Registration;
 
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +20,8 @@ import tv.ourglass.alyssa.bourbon_android.R;
  */
 
 public class RegistrationBaseActivity extends AppCompatActivity {
+
+    String TAG = "RegBaseActivity";
 
     public static boolean isValidEmail(String email) {
         return isMatch(email, OGConstants.emailRegEx);

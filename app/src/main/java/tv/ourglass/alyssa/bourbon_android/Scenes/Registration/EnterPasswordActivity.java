@@ -43,27 +43,6 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
 
         mNextButton = (ImageButton)findViewById(R.id.nextButton);
 
-        // Set fonts
-        TextView text = (TextView)findViewById(R.id.textView);
-        Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.mediumFont);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        font = Typeface.createFromAsset(getAssets(), OGConstants.lightFont);
-        text = (TextView)findViewById(R.id.passwordRequirements);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        font = Typeface.createFromAsset(getAssets(), OGConstants.regularFont);
-        text = (TextView)findViewById(R.id.passwordLabel);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        mPassword.setTypeface(font);
-
         // Add text change listeners
         mPassword.addTextChangedListener(new TextWatcher() {
             @Override

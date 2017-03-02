@@ -51,27 +51,6 @@ public class LoginActivity extends RegistrationBaseActivity {
 
         mLoginButton = (ImageButton) findViewById(R.id.loginButton);
 
-        // Set fonts
-        TextView text = (TextView) findViewById(R.id.textView);
-        Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.mediumFont);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        text = (TextView) findViewById(R.id.emailLabel);
-        font = Typeface.createFromAsset(getAssets(), OGConstants.regularFont);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        text = (TextView) findViewById(R.id.passwordLabel);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        mEmail.setTypeface(font);
-        mPassword.setTypeface(font);
-
         // Add text change listeners
         mEmail.addTextChangedListener(new TextWatcher() {
             @Override

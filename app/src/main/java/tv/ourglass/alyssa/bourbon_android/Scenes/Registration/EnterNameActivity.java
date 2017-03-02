@@ -31,27 +31,6 @@ public class EnterNameActivity extends RegistrationBaseActivity {
 
         mNextButton = (ImageButton)findViewById(R.id.nextButton);
 
-        // Set fonts
-        TextView text = (TextView)findViewById(R.id.textView);
-        Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.mediumFont);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        font = Typeface.createFromAsset(getAssets(), OGConstants.regularFont);
-        text = (TextView)findViewById(R.id.firstNameLabel);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        text = (TextView)findViewById(R.id.lastNameLabel);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        mFirstName.setTypeface(font);
-        mLastName.setTypeface(font);
-
         // Add text change listeners
         mFirstName.addTextChangedListener(new TextWatcher() {
             @Override

@@ -32,21 +32,6 @@ public class EnterEmailActivity extends RegistrationBaseActivity {
 
         mNextButton = (ImageButton)findViewById(R.id.nextButton);
 
-        // Set fonts
-        TextView text = (TextView)findViewById(R.id.textView);
-        Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.mediumFont);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        font = Typeface.createFromAsset(getAssets(), OGConstants.regularFont);
-        text = (TextView)findViewById(R.id.emailLabel);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        mEmail.setTypeface(font);
-
         // Add text change listeners
         mEmail.addTextChangedListener(new TextWatcher() {
             @Override

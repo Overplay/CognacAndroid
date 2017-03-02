@@ -2,7 +2,6 @@ package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,14 +54,6 @@ public class DevicesListAdapter extends ArrayAdapter<OGDevice> {
         if (device != null) {
             ipAddress.setText(device.ipAddress);
         }
-
-        Typeface font = Typeface.createFromAsset(context.getAssets(), OGConstants.semiBoldFont);
-        name.setTypeface(font);
-        number.setTypeface(font);
-
-        font = Typeface.createFromAsset(context.getAssets(), OGConstants.lightFont);
-        location.setTypeface(font);
-        ipAddress.setTypeface(font);
 
         view.setTag(device);
 

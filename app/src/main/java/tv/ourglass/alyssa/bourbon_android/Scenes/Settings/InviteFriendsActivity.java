@@ -1,6 +1,5 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Settings;
 
-import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -35,19 +34,9 @@ public class InviteFriendsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_invite_friends);
 
         mEmail = (EditText)findViewById(R.id.email);
-
         mEmailCheck = (ImageView)findViewById(R.id.emailCheck);
-
         mInvite = (TextView)findViewById(R.id.inviteFriend);
 
-        // Set fonts
-        Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.regularFont);
-        TextView text = (TextView)findViewById(R.id.emailLabel);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-        mInvite.setTypeface(font);
-        mEmail.setTypeface(font);
 
         // Add text change listeners
         mEmail.addTextChangedListener(new TextWatcher() {

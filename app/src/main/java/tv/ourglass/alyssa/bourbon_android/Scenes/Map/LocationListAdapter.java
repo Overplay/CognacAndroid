@@ -1,7 +1,6 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Map;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,9 +44,6 @@ public class LocationListAdapter extends ArrayAdapter<LocationListOption> {
         if (location != null) {
             icon.setText(location.address);
         }
-
-        Typeface font = Typeface.createFromAsset(context.getAssets(), OGConstants.regularFont);
-        name.setTypeface(font);
 
         view.setTag(location);
 

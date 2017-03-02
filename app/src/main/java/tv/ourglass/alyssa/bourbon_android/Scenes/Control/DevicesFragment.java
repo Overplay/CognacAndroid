@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -71,19 +70,9 @@ public class DevicesFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_devices, container, false);
 
-        // Set fonts
-        TextView text = (TextView)view.findViewById(R.id.networkLabel);
-        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), OGConstants.regularFont);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
+        // Set network name
         mNetworkName = (TextView)view.findViewById(R.id.networkName);
-        font = Typeface.createFromAsset(getActivity().getAssets(), OGConstants.semiBoldFont);
-        if (text != null) {
-            mNetworkName.setTypeface(font);
-            mNetworkName.setText(NetUtils.getCurrentSSID(getContext()));
-        }
+        mNetworkName.setText(NetUtils.getCurrentSSID(getContext()));
 
         // Get devices
         this.devicesListAdapter = new DevicesListAdapter(getActivity(), this.devices);
@@ -96,10 +85,7 @@ public class DevicesFragment extends Fragment {
         listView.setAdapter(devicesListAdapter);
 
         // Attach text to display when list is empty
-        TextView empty = (TextView) view.findViewById(R.id.empty);
-        font = Typeface.createFromAsset(getActivity().getAssets(), OGConstants.lightFont);
-        empty.setTypeface(font);
-        listView.setEmptyView(empty);
+        listView.setEmptyView(view.findViewById(R.id.empty));
 
         // Change network name display if needed
         IntentFilter intentFilter = new IntentFilter();

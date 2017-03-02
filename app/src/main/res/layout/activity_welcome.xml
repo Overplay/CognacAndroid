@@ -22,7 +22,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-        <TextView
+        <tv.ourglass.alyssa.bourbon_android.Views.BoldTextView
             android:text="@string/welcome_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,11 +30,10 @@
             android:layout_marginTop="50dp"
             android:layout_centerHorizontal="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:fontFamily="sans-serif-medium"
             android:textSize="50sp"
             android:textColor="@color/OGLightBlue"/>
 
-        <TextView
+        <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
             android:text="@string/welcome_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -48,7 +47,7 @@
             android:id="@+id/textView1"
             android:textAlignment="viewStart" />
 
-        <Button
+        <tv.ourglass.alyssa.bourbon_android.Views.RegularButton
             android:text="@string/login"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -60,11 +59,11 @@
             android:background="@color/OGLightBlue"
             android:id="@+id/loginButton"
             android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/OGWhite"
             android:textSize="20sp"
-            android:fontFamily="sans-serif"
             android:onClick="login" />
 
-        <TextView
+        <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
             android:text="@string/or"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -78,7 +77,7 @@
             android:id="@+id/textView2"
             android:textAlignment="viewStart" />
 
-        <Button
+        <tv.ourglass.alyssa.bourbon_android.Views.RegularButton
             android:text="@string/signup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -90,6 +89,7 @@
             android:background="@color/OGLightBlue"
             android:id="@+id/signupButton"
             android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/OGWhite"
             android:textSize="20sp"
             android:onClick="signup" />
 

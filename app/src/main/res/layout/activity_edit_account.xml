@@ -12,23 +12,24 @@
     android:background="@color/OGBackgroundGrey"
     tools:context="tv.ourglass.alyssa.bourbon_android.Scenes.Settings.EditAccountActivity">
 
-    <Button
+    <tv.ourglass.alyssa.bourbon_android.Views.RegularButton
         android:id="@+id/save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:onClick="save"
         android:background="@android:color/transparent"
+        android:textColor="@color/OGWhite"
         android:text="@string/save"/>
 
-    <TextView
+    <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
         android:text="@string/firstNameCaps"
         style="@style/InputHeader"
         android:layout_marginTop="20dp"
         android:labelFor="@+id/firstName"
         android:id="@+id/firstNameLabel" />
 
-    <EditText
+    <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
@@ -38,14 +39,14 @@
         android:id="@+id/firstName" />
 
 
-    <TextView
+    <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
         android:text="@string/lastNameCaps"
         style="@style/InputHeader"
         android:layout_marginTop="20dp"
         android:labelFor="@+id/lastName"
         android:id="@+id/lastNameLabel" />
 
-    <EditText
+    <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
@@ -55,7 +56,7 @@
         android:id="@+id/lastName" />
 
 
-    <TextView
+    <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
         android:text="@string/emailCaps"
         style="@style/InputHeader"
         android:layout_marginTop="20dp"
@@ -69,7 +70,7 @@
         android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
-        <EditText
+        <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

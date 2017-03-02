@@ -7,7 +7,7 @@
     android:background="@color/OGLightBlue"
     tools:context=".Scenes.Registration.EnterNameActivity">
 
-    <TextView
+    <tv.ourglass.alyssa.bourbon_android.Views.MediumTextView
         android:text="@string/enterNameTitle"
         style="@style/PageHeader"
         android:id="@+id/textView" />
@@ -23,14 +23,14 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin" >
 
-        <TextView
+        <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
             android:text="@string/firstNameCaps"
             style="@style/InputHeader"
             android:layout_marginTop="20dp"
             android:labelFor="@+id/firstName"
             android:id="@+id/firstNameLabel" />
 
-        <EditText
+        <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/EditTextCustom"
@@ -41,7 +41,7 @@
             android:layout_marginTop="5dp"
             android:id="@+id/firstName" />
 
-        <TextView
+        <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
             android:text="@string/lastNameCaps"
             style="@style/InputHeader"
             android:layout_below="@id/firstName"
@@ -49,7 +49,7 @@
             android:labelFor="@+id/lastName"
             android:id="@+id/lastNameLabel" />
 
-        <EditText
+        <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"

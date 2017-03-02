@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,9 +60,6 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
         if (option != null) {
             name.setText(option.name);
         }
-
-        Typeface font = Typeface.createFromAsset(context.getAssets(), OGConstants.regularFont);
-        name.setTypeface(font);
 
         view.setTag(option);
 

@@ -11,7 +11,7 @@
     android:background="@color/OGBackgroundGrey"
     tools:context="tv.ourglass.alyssa.bourbon_android.Scenes.Settings.InviteFriendsActivity">
 
-    <TextView
+    <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
         android:text="@string/friendEmail"
         style="@style/InputHeader"
         android:layout_marginTop="20dp"
@@ -27,7 +27,7 @@
         android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
-        <EditText
+        <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -48,7 +48,7 @@
 
     </LinearLayout>
 
-    <TextView
+    <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/inviteFriend"

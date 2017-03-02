@@ -17,7 +17,7 @@
     android:tint="@color/OGWhite"
     android:src="@drawable/ic_play_circle_outline_black_36dp" />
 
-<TextView
+<tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
     android:id="@+id/name"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

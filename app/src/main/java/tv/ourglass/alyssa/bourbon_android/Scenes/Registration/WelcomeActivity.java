@@ -11,39 +11,12 @@ import android.widget.TextView;
 import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
 import tv.ourglass.alyssa.bourbon_android.R;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends RegistrationBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-
-        TextView text = (TextView)findViewById(R.id.welcomeTextView);
-        Typeface font = Typeface.createFromAsset(getAssets(), OGConstants.boldFont);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        text = (TextView)findViewById(R.id.textView1);
-        font = Typeface.createFromAsset(getAssets(), OGConstants.regularFont);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        text = (TextView)findViewById(R.id.textView2);
-        if (text != null) {
-            text.setTypeface(font);
-        }
-
-        Button btn = (Button)findViewById(R.id.loginButton);
-        if (btn != null) {
-            btn.setTypeface(font);
-        }
-
-        btn = (Button)findViewById(R.id.signupButton);
-        if (btn != null) {
-            btn.setTypeface(font);
-        }
     }
 
     @Override
