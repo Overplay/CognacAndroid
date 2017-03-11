@@ -6,9 +6,6 @@ package tv.ourglass.alyssa.bourbon_android.Models;
 
 public class OGConstants {
 
-    // Google Geocoding API
-    public static final String googleGeocodingRequestBase = "https://maps.googleapis.com/maps/api/geocode/json?address=";
-
     // Dev mode
     public static final boolean devMode = false;  // if true, login isn't really done
     public static final boolean alwaysShowIntro = false;
@@ -19,7 +16,6 @@ public class OGConstants {
     public static final String registerPath = "/auth/addUser";
     public static final String loginPath = "/auth/login";
     public static final String changePwdPath = "/auth/changePwd";
-    public static final String getVenuesPath = "/api/v1/venue";
     public static final String getAuthStatusPath = "/auth/status";
     public static final String logoutPath = "/auth/logoutPage";
     public static final String changeAccountPath = "/api/v1/user/";
@@ -29,12 +25,6 @@ public class OGConstants {
     public static final String newOGCloudBaseURL = "http://138.68.230.239";
     public static final String newVenuesPath = ":2000/api/v1/venue";
     public static final String devicesPath = ":2001/venue/devices?atVenueUUID=";
-
-    // UDP constants
-    public static final Integer udpDiscoveryPort = 9091;
-    public static final Integer maxTTL = 6;
-    public static final Integer broadcastInterval = 10000; // ms
-    public static final long ttlInterval = 10000; // ms
 
     // Regex constants
     public static final String emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}";

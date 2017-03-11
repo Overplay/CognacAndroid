@@ -2,7 +2,6 @@ package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ListViewCompat;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,9 +16,8 @@ import java.util.ArrayList;
 import okhttp3.Call;
 import okhttp3.Response;
 import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
-import tv.ourglass.alyssa.bourbon_android.Models.OGVenue;
+import tv.ourglass.alyssa.bourbon_android.Models.OGDevice;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
-import tv.ourglass.alyssa.bourbon_android.Networking.OGDPService;
 import tv.ourglass.alyssa.bourbon_android.R;
 
 public class DevicesViewActivity extends AppCompatActivity {

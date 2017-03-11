@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
+package tv.ourglass.alyssa.bourbon_android.Models;
 
 import java.util.Locale;
 

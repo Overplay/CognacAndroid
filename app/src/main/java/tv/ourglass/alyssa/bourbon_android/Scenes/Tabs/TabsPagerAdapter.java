@@ -18,7 +18,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import tv.ourglass.alyssa.bourbon_android.Scenes.BlankFragment;
-import tv.ourglass.alyssa.bourbon_android.Scenes.Control.DevicesFragment;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Control.VenuesFragment;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Map.MapFragment;
 import tv.ourglass.alyssa.bourbon_android.R;

@@ -1,7 +1,6 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
+import tv.ourglass.alyssa.bourbon_android.Models.OGDevice;
 import tv.ourglass.alyssa.bourbon_android.R;
 
 /**

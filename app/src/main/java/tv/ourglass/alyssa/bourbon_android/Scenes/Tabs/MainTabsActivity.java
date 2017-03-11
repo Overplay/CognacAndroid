@@ -6,14 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
 
-import tv.ourglass.alyssa.bourbon_android.Networking.OGDPService;
 import tv.ourglass.alyssa.bourbon_android.R;
 
 public class MainTabsActivity extends AppCompatActivity {
@@ -24,15 +22,8 @@ public class MainTabsActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "got network change!");
-            restartOGDPService();
         }
     };
-
-    private void restartOGDPService() {
-        Intent intent = new Intent(this, OGDPService.class);
-        stopService(intent);
-        startService(intent);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +54,6 @@ public class MainTabsActivity extends AppCompatActivity {
                 }
             }
         }
-
-        // Start OG device finding service
-        Intent di = new Intent(this, OGDPService.class);
-        startService(di);
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
