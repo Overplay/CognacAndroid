@@ -21,6 +21,7 @@ public class IntroSlidesActivity extends AppCompatActivity {
 
     String TAG = "IntroSlidesActivity";
 
+    // slide image resources
     int [] mResources = {
             R.drawable.ic_add_location_black_36dp,
             R.drawable.ic_chevron_left_black_24dp,
@@ -29,14 +30,18 @@ public class IntroSlidesActivity extends AppCompatActivity {
     };
 
     ViewPager mSlidesViewPager;
+
     SlidesPagerAdapter mSlidesPagerAdapter;
+
     TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro_slides);
 
+        // set up slides view
         mSlidesViewPager = (ViewPager) findViewById(R.id.slides_viewpager);
         mSlidesPagerAdapter = new SlidesPagerAdapter(this);
         mSlidesViewPager.setAdapter(mSlidesPagerAdapter);
@@ -48,7 +53,7 @@ public class IntroSlidesActivity extends AppCompatActivity {
     }
 
     public void cancel(View view) {
-        Log.d(TAG, "cancel pressed");
+
         Intent intent = new Intent(this, CheckAuthActivity.class);
         startActivity(intent);
     }
@@ -56,6 +61,7 @@ public class IntroSlidesActivity extends AppCompatActivity {
     class SlidesPagerAdapter extends PagerAdapter {
 
         Context mContext;
+
         LayoutInflater mLayoutInflater;
 
         SlidesPagerAdapter(Context context) {

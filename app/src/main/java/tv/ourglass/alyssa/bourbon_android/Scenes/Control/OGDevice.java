@@ -22,6 +22,14 @@ public class OGDevice {
         this.ttl = ttl;
     }
 
+    public OGDevice(String name) {
+        this.systemName = name;
+        this.location = "";
+        this.ipAddress = "";
+        this.venue = "";
+        this.ttl = 0;
+    }
+
     public OGDevice() {
         this.systemName = "";
         this.location = "";

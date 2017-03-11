@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
+import tv.ourglass.alyssa.bourbon_android.Models.OGVenue;
 import tv.ourglass.alyssa.bourbon_android.R;
 
 
@@ -19,17 +20,17 @@ import tv.ourglass.alyssa.bourbon_android.R;
  * Created by atorres on 1/11/17.
  */
 
-public class LocationListAdapter extends ArrayAdapter<LocationListOption> {
+public class LocationListAdapter extends ArrayAdapter<OGVenue> {
     private Context context;
 
-    public LocationListAdapter(Context context, ArrayList<LocationListOption> locations) {
+    public LocationListAdapter(Context context, ArrayList<OGVenue> locations) {
         super(context, 0, locations);
         this.context = context;
     }
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        LocationListOption location = getItem(position);
+        OGVenue location = getItem(position);
 
         if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.location_option, parent, false);
@@ -54,7 +55,7 @@ public class LocationListAdapter extends ArrayAdapter<LocationListOption> {
                 Animation clickAnimation = new AlphaAnimation(1.0f, 0.3f);
                 clickAnimation.setDuration(300);
                 view.startAnimation(clickAnimation);
-                LocationListOption location = (LocationListOption) view.getTag();
+                OGVenue location = (OGVenue) view.getTag();
 
                 if (location.marker != null) {
                     location.marker.showInfoWindow();
@@ -65,4 +66,16 @@ public class LocationListAdapter extends ArrayAdapter<LocationListOption> {
         return view;
 
     }
+
+    /*@Override
+    public void notifyDataSetChanged() {
+        // TODO: sort
+        this.setNotifyOnChange(false);
+
+
+
+        this.setNotifyOnChange(true);
+
+        super.notifyDataSetChanged();
+    }*/
 }

@@ -25,6 +25,11 @@ public class OGConstants {
     public static final String changeAccountPath = "/api/v1/user/";
     public static final String inviteUserPath = "/user/inviteNewUser";
 
+    // New OG Cloud paths
+    public static final String newOGCloudBaseURL = "http://138.68.230.239";
+    public static final String newVenuesPath = ":2000/api/v1/venue";
+    public static final String devicesPath = ":2001/venue/devices?atVenueUUID=";
+
     // UDP constants
     public static final Integer udpDiscoveryPort = 9091;
     public static final Integer maxTTL = 6;
@@ -41,6 +46,8 @@ public class OGConstants {
     public static final String emailExtra = "INTENT_EXTRA_EMAIL";
     public static final String deviceUrlExtra = "INTENT_EXTRA_DEVICE_URL";
     public static final String deviceNameExtra = "INTENT_EXTRA_DEVICE_NAME";
+    public static final String venueUUIDExtra = "INTENT_EXTRA_VENUE_UUID";
+    public static final String venueNameExtra = "INTENT_EXTRA_VENUE_NAME";
 
     // Animations
     public static final int fadeInTime = 350;  // ms

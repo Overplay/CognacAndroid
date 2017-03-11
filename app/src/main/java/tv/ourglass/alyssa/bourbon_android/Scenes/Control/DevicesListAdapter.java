@@ -20,7 +20,7 @@ import tv.ourglass.alyssa.bourbon_android.R;
 
 public class DevicesListAdapter extends ArrayAdapter<OGDevice> {
 
-    Context context;
+    private Context context;
 
     public DevicesListAdapter(Context context, ArrayList<OGDevice> devices) {
         super(context, 0, devices);
@@ -62,20 +62,13 @@ public class DevicesListAdapter extends ArrayAdapter<OGDevice> {
             @Override
             public void onClick(View view) {
                 OGDevice device = (OGDevice) view.getTag();
-                Log.d("Device", "Chose device");
-                Intent intent = new Intent(context, DeviceViewActivity.class);
-                intent.putExtra(OGConstants.deviceUrlExtra, device.getUrl());
-                intent.putExtra(OGConstants.deviceNameExtra, device.systemName);
-                context.startActivity(intent);
+                Log.d("DeviceListAdapter", "device clicked");
+
+                // TODO: add in new device view upon selection of a device
             }
         });
 
         return view;
 
-    }
-
-    private void goTo(Class dest) {
-        Intent intent = new Intent(context, dest);
-        context.startActivity(intent);
     }
 }

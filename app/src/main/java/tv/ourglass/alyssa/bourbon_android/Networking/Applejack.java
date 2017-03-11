@@ -326,7 +326,11 @@ public class Applejack {
     }
 
     public void getVenues(Context context, HttpCallback cb) {
-        get(context, OGConstants.OGCloudBaseURL + OGConstants.getVenuesPath, cb);
+        get(context, OGConstants.newOGCloudBaseURL + OGConstants.newVenuesPath, cb);
+    }
+
+    public void getDevices(Context context, String venueUUID, HttpCallback cb) {
+        get(context, OGConstants.newOGCloudBaseURL + OGConstants.devicesPath + venueUUID, cb);
     }
 
     public void getAuthStatus(Context context, HttpCallback cb) {

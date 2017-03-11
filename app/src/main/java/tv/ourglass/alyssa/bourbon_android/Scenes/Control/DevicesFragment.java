@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
 import tv.ourglass.alyssa.bourbon_android.Networking.NetUtils;
 import tv.ourglass.alyssa.bourbon_android.Networking.OGDPService;
 import tv.ourglass.alyssa.bourbon_android.R;
@@ -32,6 +31,7 @@ public class DevicesFragment extends Fragment {
 
     TextView mNetworkName;
 
+    // allows us to get notified of network change
     private BroadcastReceiver mWifiBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -46,6 +46,7 @@ public class DevicesFragment extends Fragment {
         }
     };
 
+    // allows us to get notified of new devices
     private BroadcastReceiver mBroadcastRcvr = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -56,10 +57,6 @@ public class DevicesFragment extends Fragment {
         }
     };
 
-    /*private ArrayList<OGDevice> test_devices = new ArrayList<OGDevice>() {{
-        add(new OGDevice("System name", "location", "0.0.0.0", "venue", 6));
-    }};*/
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +65,7 @@ public class DevicesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_devices, container, false);
 
         // Set network name

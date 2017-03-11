@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -40,6 +43,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import tv.ourglass.alyssa.bourbon_android.BourbonApplication;
 import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
+import tv.ourglass.alyssa.bourbon_android.Models.OGVenue;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
 
@@ -47,7 +51,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
 
     String TAG = "MapFragment";
 
-    ArrayList<LocationListOption> locationList = new ArrayList<>();
+    ArrayList<OGVenue> locationList = new ArrayList<>();
 
     MapView mMapView;
 
@@ -55,20 +59,18 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
 
     LocationListAdapter locationListAdapter;
 
-    OkHttpClient okclient = BourbonApplication.okclient;
-
     private BroadcastReceiver mWifiBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "got network change!");
 
             if (!intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {
-                Applejack.getInstance().getVenues(getActivity(), venue_cb);
+                Applejack.getInstance().getVenues(getActivity(), venueCallback);
             }
         }
     };
 
-    Applejack.HttpCallback venue_cb = new Applejack.HttpCallback() {
+    Applejack.HttpCallback venueCallback = new Applejack.HttpCallback() {
         @Override
         public void onFailure(Call call, final IOException e) {
             getActivity().runOnUiThread(new Runnable() {
@@ -94,13 +96,26 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
                     // Get name
                     String name = o.getString("name");
 
-                    // Get location
-                    JSONObject addr = (JSONObject)o.get("address");
+                    // Get address
+                    JSONObject addr = o.getJSONObject("address");
                     String location = String.format("%s, %s, %s %s", addr.getString("street"),
                             addr.getString("city"), addr.getString("state"), addr.getString("zip"));
 
-                    // Add to array
-                    locationList.add(new LocationListOption(name, location, 0, 0));
+                    // Get uuid
+                    String uuid = o.getString("uuid");
+
+                    // Get geolocation
+                    try {
+                        JSONObject geoLoc = o.getJSONObject("geolocation");
+                        double lat = geoLoc.getDouble("latitude");
+                        double lng = geoLoc.getDouble("longitude");
+
+                        // Add to array
+                        locationList.add(new OGVenue(name, location, lat, lng, uuid));
+
+                    } catch (Exception e) {
+                        Log.e(TAG, "found venue with no geolocation, filtering out");
+                    }
                 }
 
                 getActivity().runOnUiThread(new Runnable() {
@@ -110,7 +125,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
                     }
                 });
 
-                displayVenues();
+                displayVenuesOnMap();
 
             } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage());
@@ -151,7 +166,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
-        // TDOD: pop up alert if google maps not available
+        // TODO: pop up alert if google maps not available
 
         mMapView.onResume(); // needed to get the map to display immediately
 
@@ -161,12 +176,12 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
             e.printStackTrace();
         }
 
-        Applejack.getInstance().getVenues(getActivity(), venue_cb);
+        Applejack.getInstance().getVenues(getActivity(), venueCallback);
 
         return rootView;
     }
 
-    public void displayVenues() {
+    public void displayVenuesOnMap() {
 
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -186,59 +201,58 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
                         }
 
                         // Show markers for found venues
-                        for (final LocationListOption loc : locationList) {
-                            getGeolocation(loc.address, new Applejack.HttpCallback() {
-                                @Override
-                                public void onFailure(Call call, IOException e) {
-                                    Log.e(TAG, e.getLocalizedMessage());
-                                }
+                        for (OGVenue loc : locationList) {
 
-                                @Override
-                                public void onSuccess(Response response) {
-                                    try {
-                                        String jsonStr = response.body().string();
-                                        JSONObject responseObj = new JSONObject(jsonStr);
-                                        JSONObject result = responseObj.getJSONArray("results").getJSONObject(0);
-                                        JSONObject location = result.getJSONObject("geometry").getJSONObject("location");
+                            LatLng markerLoc = new LatLng(loc.latitude, loc.longitude);
+                            loc.marker = googleMap.addMarker(new MarkerOptions()
+                                    .position(markerLoc)
+                                    .title(loc.name)
+                                    .snippet(loc.address));
 
-                                        final double lat = location.getDouble("lat");
-                                        final double lng = location.getDouble("lng");
-
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-
-                                                loc.latitude = lat;
-                                                loc.longitude = lng;
-                                                LatLng markerLoc = new LatLng(lat, lng);
-                                                loc.marker = googleMap.addMarker(new MarkerOptions()
-                                                        .position(markerLoc)
-                                                        .title(loc.name)
-                                                        .snippet(loc.address));
-
-                                                locationListAdapter.notifyDataSetChanged();
-                                            }
-                                        });
-
-                                    } catch (Exception e) {
-                                        Log.e(TAG, e.getLocalizedMessage());
-
-                                    } finally {
-                                        response.body().close();
-                                    }
-                                }
-                            });
+                            locationListAdapter.notifyDataSetChanged(); // because we added the marker
                         }
 
-                        // center map on US
-                        LatLng pos = new LatLng(37.0902, -95.7129);
+                        // try to center map on current location
+                        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+                        Criteria criteria = new Criteria();
 
-                        CameraPosition cameraPosition = new CameraPosition.Builder()
-                                .target(pos)
-                                .zoom(3.5f)
-                                .build();
+                        try {
+                            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
 
-                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                            if (location != null) {
+                                LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+
+                                CameraPosition cameraPosition = new CameraPosition.Builder()
+                                        .target(pos)
+                                        .zoom(12)
+                                        .build();
+
+                                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                            } else {
+                                // center map on US
+                                LatLng pos = new LatLng(37.0902, -95.7129);
+
+                                CameraPosition cameraPosition = new CameraPosition.Builder()
+                                        .target(pos)
+                                        .zoom(3.5f)
+                                        .build();
+
+                                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                            }
+
+                        } catch (SecurityException e) {
+                            Log.e(TAG, e.getLocalizedMessage());
+
+                            // center map on US
+                            LatLng pos = new LatLng(37.0902, -95.7129);
+
+                            CameraPosition cameraPosition = new CameraPosition.Builder()
+                                    .target(pos)
+                                    .zoom(3.5f)
+                                    .build();
+
+                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        }
                     }
                 });
             }
@@ -283,37 +297,6 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
         } else {
             showAlert("Uh oh!", "We couldn't find a navigation app installed on your device.");
         }
-    }
-
-    private void getGeolocation(String address, final Applejack.HttpCallback cb) {
-        String formattedAddr = address.replaceAll("\\s", "+");
-
-        String googleAPIKey = getResources().getString(R.string.google_maps_api_key);
-
-        Request req = new Request.Builder()
-                .url(OGConstants.googleGeocodingRequestBase + formattedAddr
-                            + "&key=" + googleAPIKey)
-                .get()
-                .build();
-
-        okclient.newCall(req).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                cb.onFailure(call, e);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                if (!response.isSuccessful()) {
-                    cb.onFailure(call, null);
-                    response.body().close();
-
-                } else {
-                    cb.onSuccess(response);
-                }
-            }
-        });
     }
 
     public void showAlert(String title, String message) {

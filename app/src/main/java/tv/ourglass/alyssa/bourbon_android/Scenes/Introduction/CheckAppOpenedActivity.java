@@ -21,8 +21,7 @@ public class CheckAppOpenedActivity extends AppCompatActivity {
 
         boolean appOpened = SharedPrefsManager.getAppOpened(this);
 
-        Log.d(TAG, String.valueOf(appOpened));
-
+        // check if we should show intro slides or not, and navigate appropriately
         if (!appOpened || OGConstants.alwaysShowIntro) {
             SharedPrefsManager.setAppOpened(this, true);
             Intent intent = new Intent(this, IntroSlidesActivity.class);

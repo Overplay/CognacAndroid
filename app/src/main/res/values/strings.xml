@@ -34,6 +34,7 @@
     <string name="networkLabel">Network:</string>
 
     <string name="emptyDeviceList">No Ourglass systems found. Please make sure you\'re connected to the correct Wi-Fi network.</string>
+    <string name="emptyVenueList">No Ourglass venues were found!</string>
 
     <string name="friendEmail">FRIEND\'S EMAIL ADDRESS</string>
     <string name="inviteFriend">Invite</string>
@@ -41,5 +42,10 @@
     <string name="notConnected">Not connected</string>
 
     <string name="save">Save</string>
+
+    <string name="pickVenue">Venues</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
