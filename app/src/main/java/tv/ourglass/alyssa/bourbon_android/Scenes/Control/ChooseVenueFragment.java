@@ -30,9 +30,9 @@ import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Map.LocationListAdapter;
 
 
-public class VenuesFragment extends Fragment {
+public class ChooseVenueFragment extends Fragment {
 
-    String TAG = "VenuesFragment";
+    String TAG = "ChooseVenueFragment";
 
     ArrayList<OGVenue> venues = new ArrayList<>();
 

@@ -18,7 +18,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import tv.ourglass.alyssa.bourbon_android.Scenes.BlankFragment;
-import tv.ourglass.alyssa.bourbon_android.Scenes.Control.VenuesFragment;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Control.ChooseVenueFragment;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Map.MapFragment;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Settings.SettingsFragment;
@@ -57,7 +57,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
         switch (tabs.get(position).title) {
             case "TV":
-                return new VenuesFragment();
+                return new ChooseVenueFragment();
             case "Locations":
                 return new MapFragment();
             case "Settings":

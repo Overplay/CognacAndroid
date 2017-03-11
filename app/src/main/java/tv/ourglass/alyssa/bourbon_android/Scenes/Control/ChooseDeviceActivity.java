@@ -20,9 +20,9 @@ import tv.ourglass.alyssa.bourbon_android.Models.OGDevice;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
 
-public class DevicesViewActivity extends AppCompatActivity {
+public class ChooseDeviceActivity extends AppCompatActivity {
 
-    String TAG = "DevicesViewActivity";
+    String TAG = "ChooseDeviceActivity";
 
     ArrayList<OGDevice> devices = new ArrayList<>();
 
@@ -31,10 +31,10 @@ public class DevicesViewActivity extends AppCompatActivity {
     Applejack.HttpCallback devicesCallback = new Applejack.HttpCallback() {
         @Override
         public void onFailure(Call call, final IOException e) {
-            DevicesViewActivity.this.runOnUiThread(new Runnable() {
+            ChooseDeviceActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(DevicesViewActivity.this, "Error retrieving devices", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChooseDeviceActivity.this, "Error retrieving devices", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -53,22 +53,22 @@ public class DevicesViewActivity extends AppCompatActivity {
 
                     // Get name
                     String name = device.getString("name");
-                    DevicesViewActivity.this.devices.add(new OGDevice(name));
+                    ChooseDeviceActivity.this.devices.add(new OGDevice(name));
                 }
 
-                DevicesViewActivity.this.runOnUiThread(new Runnable() {
+                ChooseDeviceActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        DevicesViewActivity.this.devicesListAdapter.notifyDataSetChanged();
+                        ChooseDeviceActivity.this.devicesListAdapter.notifyDataSetChanged();
                     }
                 });
 
             } catch (Exception e) {
                 Log.e(TAG, e.getLocalizedMessage());
-                DevicesViewActivity.this.runOnUiThread(new Runnable() {
+                ChooseDeviceActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(DevicesViewActivity.this, "Error retrieving venues", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ChooseDeviceActivity.this, "Error retrieving venues", Toast.LENGTH_SHORT).show();
                     }
                 });
 

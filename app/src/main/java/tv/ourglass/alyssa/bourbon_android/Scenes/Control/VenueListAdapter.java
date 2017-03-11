@@ -55,7 +55,7 @@ public class VenueListAdapter extends ArrayAdapter<OGVenue> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, DevicesViewActivity.class);
+                Intent intent = new Intent(context, ChooseDeviceActivity.class);
                 if (venue != null) {
                     intent.putExtra(OGConstants.venueUUIDExtra, venue.uuid);
                     intent.putExtra(OGConstants.venueNameExtra, venue.name);
