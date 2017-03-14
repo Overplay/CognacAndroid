@@ -51,9 +51,12 @@ public class ChooseDeviceActivity extends AppCompatActivity {
                 for (int i = 0; i < deviceArray.length(); i++) {
                     JSONObject device = deviceArray.getJSONObject(i);
 
-                    // Get name
+                    // Get device info
                     String name = device.getString("name");
-                    ChooseDeviceActivity.this.devices.add(new OGDevice(name));
+                    String venueUUID = device.getString("atVenueUUID");
+                    String udid = device.getString("deviceUDID");
+
+                    ChooseDeviceActivity.this.devices.add(new OGDevice(name, venueUUID, udid));
                 }
 
                 ChooseDeviceActivity.this.runOnUiThread(new Runnable() {
@@ -68,7 +71,7 @@ public class ChooseDeviceActivity extends AppCompatActivity {
                 ChooseDeviceActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(ChooseDeviceActivity.this, "Error retrieving venues", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ChooseDeviceActivity.this, "Error retrieving devices", Toast.LENGTH_SHORT).show();
                     }
                 });
 

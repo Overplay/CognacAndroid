@@ -25,6 +25,7 @@ public class OGConstants {
     public static final String newOGCloudBaseURL = "http://138.68.230.239";
     public static final String newVenuesPath = ":2000/api/v1/venue";
     public static final String devicesPath = ":2001/venue/devices?atVenueUUID=";
+    public static final String deviceControlPath = ":2001/blueline/control/?deviceUDID=";
 
     // Regex constants
     public static final String emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}";

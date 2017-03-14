@@ -41,17 +41,7 @@ public class DevicesListAdapter extends ArrayAdapter<OGDevice> {
 
         TextView name = (TextView) view.findViewById(R.id.name);
         if (device != null) {
-            name.setText(device.systemName);
-        }
-
-        TextView location = (TextView) view.findViewById(R.id.location);
-        if (device != null) {
-            location.setText(device.location);
-        }
-
-        TextView ipAddress = (TextView) view.findViewById(R.id.ipAddress);
-        if (device != null) {
-            ipAddress.setText(device.ipAddress);
+            name.setText(device.name);
         }
 
         view.setTag(device);

@@ -1,49 +1,28 @@
 package tv.ourglass.alyssa.bourbon_android.Models;
 
-import java.util.Locale;
-
 /**
  * Created by atorres on 11/8/16.
  */
 
 public class OGDevice {
 
-    public String systemName;
-    public String location;
-    public String ipAddress;
-    public String venue;
-    public int ttl;
+    public String name;
+    public String atVenueUUID;
+    public String udid;
 
-    public OGDevice(String systemName, String location, String ipAddress, String venue, int ttl) {
-        this.systemName = systemName;
-        this.location = location;
-        this.ipAddress = ipAddress;
-        this.venue = venue;
-        this.ttl = ttl;
-    }
-
-    public OGDevice(String name) {
-        this.systemName = name;
-        this.location = "";
-        this.ipAddress = "";
-        this.venue = "";
-        this.ttl = 0;
+    public OGDevice(String name, String atVenueUUID, String udid) {
+        this.name = name;
+        this.atVenueUUID = atVenueUUID;
+        this.udid = udid;
     }
 
     public OGDevice() {
-        this.systemName = "";
-        this.location = "";
-        this.ipAddress = "";
-        this.venue = "";
-        this.ttl = 0;
+        this.name = "";
+        this.atVenueUUID = "";
+        this.udid = "";
     }
 
     public String getUrl() {
-        return String.format("http://%s:9090/www/control/index.html", this.ipAddress);
-    }
-
-    public String description() {
-        return String.format(Locale.US, "systemName: %s\nlocation: %s\nipAddress: %s\nvenue: %s\nttl: %d\n",
-                this.systemName, this.location, this.ipAddress, this.venue, this.ttl);
+        return OGConstants.newOGCloudBaseURL + OGConstants.deviceControlPath + this.udid;
     }
 }
