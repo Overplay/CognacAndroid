@@ -91,16 +91,11 @@ public class ChooseDeviceActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.deviceList);
         listView.setAdapter(this.devicesListAdapter);
 
-        // set venue name at top
         TextView venueName = (TextView) findViewById(R.id.venueName);
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
             venueName.setText(extras.getString(OGConstants.venueNameExtra));
-        }
-
-        // get devices
-        if (extras != null) {
             String venueUUID = extras.getString(OGConstants.venueUUIDExtra);
 
             Applejack.getInstance().getDevices(this, venueUUID, devicesCallback);

@@ -56,10 +56,12 @@ public class VenueListAdapter extends ArrayAdapter<OGVenue> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ChooseDeviceActivity.class);
+
                 if (venue != null) {
                     intent.putExtra(OGConstants.venueUUIDExtra, venue.uuid);
                     intent.putExtra(OGConstants.venueNameExtra, venue.name);
                     context.startActivity(intent);
+
                 } else {
                     Log.e(TAG, "selected a venue that is null");
                 }

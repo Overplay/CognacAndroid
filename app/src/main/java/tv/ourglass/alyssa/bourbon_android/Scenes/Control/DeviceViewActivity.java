@@ -13,12 +13,14 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
+import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
 
 
 public class DeviceViewActivity extends AppCompatActivity {
 
-    private TextView mDeviceName;
+    String mDeviceName;
+    String mDeviceUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +31,16 @@ public class DeviceViewActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_device_view);
 
-        mDeviceName.setText(getIntent().getStringExtra(OGConstants.deviceNameExtra));
+        // set venue name at top
+        TextView deviceName = (TextView) findViewById(R.id.deviceName);
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null) {
+            mDeviceName = extras.getString(OGConstants.deviceNameExtra);
+            deviceName.setText(mDeviceName);
+
+            mDeviceUrl = extras.getString(OGConstants.deviceUrlExtra);
+        }
 
         final WebView webview = (WebView)findViewById(R.id.webview);
 
@@ -54,7 +65,7 @@ public class DeviceViewActivity extends AppCompatActivity {
             }
         });
 
-        webview.loadUrl(getIntent().getStringExtra(OGConstants.deviceUrlExtra));
+        webview.loadUrl(mDeviceUrl);
     }
 
     public void showAlert(String title, String message) {
