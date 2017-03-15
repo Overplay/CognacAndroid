@@ -145,7 +145,7 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
         ListView listView = (ListView) rootView.findViewById(R.id.venueList);
         listView.setAdapter(mVenueListAdapter);
 
-        Applejack.getInstance().getVenues(getActivity(), venueCallback);
+        this.getVenues();
 
         return rootView;
     }
@@ -162,6 +162,10 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
             mLocationClient.disconnect();
         }
         super.onStop();
+    }
+
+    private void getVenues() {
+        Applejack.getInstance().getVenues(getActivity(), venueCallback);
     }
 
     private void sortByLocationAndReload() {
@@ -213,6 +217,6 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        sortByLocationAndReload();
+        this.getVenues();
     }
 }
