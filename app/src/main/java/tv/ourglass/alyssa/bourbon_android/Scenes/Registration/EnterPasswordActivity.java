@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -83,11 +84,14 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
         Applejack.getInstance().register(this, email, password, firstName, lastName,
                 new Applejack.HttpCallback() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
+                    public void onFailure(Call call, final IOException e) {
+
                         EnterPasswordActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 progress.dismiss();
+                                if (e != null)
+                                    Log.d(TAG, e.getLocalizedMessage());
                                 showAlert("Uh oh!", "There was a problem signing you up. Do you already have an account with that email?");
                             }
                         });

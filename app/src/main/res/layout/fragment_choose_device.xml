@@ -1,0 +1,57 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="tv.ourglass.alyssa.bourbon_android.Scenes.Control.ChooseDeviceFragment">
+
+    <LinearLayout
+        android:id="@+id/activity_devices_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/OGBackgroundGrey"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/OGDockColor"
+            android:orientation="horizontal">
+
+            <View
+                android:background="@color/OGLightBlue"
+                android:layout_height="match_parent"
+                android:layout_width="10dp" />
+
+
+            <tv.ourglass.alyssa.bourbon_android.Views.SemiBoldTextView
+                android:id="@+id/venueName"
+                android:padding="20dp"
+                android:text=""
+                android:textColor="@color/OGWhite"
+                android:textSize="30sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/deviceList"
+            android:divider="@color/OGBackgroundGrey"
+            android:dividerHeight="20dp"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.4"
+            android:layout_marginTop="10dp" >
+
+        </ListView>
+
+    </LinearLayout>
+
+
+</FrameLayout>

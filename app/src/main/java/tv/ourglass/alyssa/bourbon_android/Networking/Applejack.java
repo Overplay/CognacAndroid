@@ -147,7 +147,7 @@ public class Applejack {
                 }
 
                 @Override
-                public void onSuccess(Response response) {
+                public void onSuccess(final Response loginResponse) {
                     SharedPrefsManager.setUserEmail(context, email);
                     SharedPrefsManager.setUserPassword(context, password);
 
@@ -161,13 +161,15 @@ public class Applejack {
                         }
 
                         @Override
-                        public void onSuccess(Response response) {
+                        public void onSuccess(Response tokenResponse) {
                             try {
-                                String jsonData = response.body().string();
+                                String jsonData = tokenResponse.body().string();
                                 JSONObject json = new JSONObject(jsonData);
                                 SharedPrefsManager.setUserApplejackJwt(context, json.getString("token"));
                                 SharedPrefsManager.setUserApplejackJwtExpiry(context, json.getInt("expires"));
-                                cb.onSuccess(response);
+                                tokenResponse.body().close();
+
+                                cb.onSuccess(loginResponse);
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -207,34 +209,15 @@ public class Applejack {
                 }
 
                 @Override
-                public void onSuccess(Response response) {
+                public void onSuccess(final Response regResponse) {
                     SharedPrefsManager.setUserFirstName(context, firstName);
                     SharedPrefsManager.setUserLastName(context, lastName);
                     SharedPrefsManager.setUserEmail(context, email);
                     SharedPrefsManager.setUserPassword(context, password);
 
-                    Applejack.getInstance().getToken(context, new Applejack.HttpCallback() {
+                    // TODO: how to get JWT if JWT response is delayed?
 
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            cb.onFailure(call, e);
-                        }
-
-                        @Override
-                        public void onSuccess(Response response) {
-                            try {
-                                String jsonData = response.body().string();
-                                JSONObject json = new JSONObject(jsonData);
-                                SharedPrefsManager.setUserApplejackJwt(context, json.getString("token"));
-                                SharedPrefsManager.setUserApplejackJwtExpiry(context, json.getInt("expires"));
-                                cb.onSuccess(response);
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                cb.onFailure(null, null);
-                            }
-                        }
-                    });
+                    cb.onSuccess(regResponse);
                 }
             };
 
@@ -243,6 +226,7 @@ public class Applejack {
 
         } catch (JSONException e) {
             e.printStackTrace();
+            Log.d(TAG, "error creating JSON object for registration");
             cb.onFailure(null, null);
         }
     }

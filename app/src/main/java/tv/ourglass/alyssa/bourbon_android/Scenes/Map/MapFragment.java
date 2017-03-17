@@ -94,36 +94,35 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
                     JSONObject o = locationArray.getJSONObject(i);
 
                     // Get name
-                    String name = o.getString("name");
+                    final String name = o.getString("name");
 
                     // Get address
                     JSONObject addr = o.getJSONObject("address");
-                    String location = String.format("%s, %s, %s %s", addr.getString("street"),
+                    final String location = String.format("%s, %s, %s %s", addr.getString("street"),
                             addr.getString("city"), addr.getString("state"), addr.getString("zip"));
 
                     // Get uuid
-                    String uuid = o.getString("uuid");
+                    final String uuid = o.getString("uuid");
 
                     // Get geolocation
                     try {
                         JSONObject geoLoc = o.getJSONObject("geolocation");
-                        double lat = geoLoc.getDouble("latitude");
-                        double lng = geoLoc.getDouble("longitude");
+                        final double lat = geoLoc.getDouble("latitude");
+                        final double lng = geoLoc.getDouble("longitude");
 
-                        // Add to array
-                        locationList.add(new OGVenue(name, location, lat, lng, uuid));
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Add to array
+                                locationList.add(new OGVenue(name, location, lat, lng, uuid));
+                                locationListAdapter.notifyDataSetChanged();
+                            }
+                        });
 
                     } catch (Exception e) {
                         Log.e(TAG, "found venue with no geolocation, filtering out");
                     }
                 }
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        locationListAdapter.notifyDataSetChanged();
-                    }
-                });
 
                 displayVenuesOnMap();
 

@@ -84,6 +84,7 @@ public class EditAccountActivity extends AppCompatActivity {
 
     private void displayUserInfo() {
         progress.show();
+
         Applejack.getInstance().getAuthStatus(this,
                 new Applejack.HttpCallback() {
 
@@ -92,6 +93,10 @@ public class EditAccountActivity extends AppCompatActivity {
                         EditAccountActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                mFirstName.setText(SharedPrefsManager.getUserFirstName(EditAccountActivity.this));
+                                mLastName.setText(SharedPrefsManager.getUserLastName(EditAccountActivity.this));
+                                mEmail.setText(SharedPrefsManager.getUserEmail(EditAccountActivity.this));
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
 
                                 builder
@@ -118,7 +123,7 @@ public class EditAccountActivity extends AppCompatActivity {
                             JSONObject json = new JSONObject(jsonData);
                             SharedPrefsManager.setUserFirstName(EditAccountActivity.this, json.getString("firstName"));
                             SharedPrefsManager.setUserLastName(EditAccountActivity.this, json.getString("lastName"));
-                            SharedPrefsManager.setUserEmail(EditAccountActivity.this, json.getString("email"));
+                            SharedPrefsManager.setUserEmail(EditAccountActivity.this, json.getJSONObject("auth").getString("email"));
                             SharedPrefsManager.setUserId(EditAccountActivity.this, json.getString("id"));
 
                             EditAccountActivity.this.runOnUiThread(new Runnable() {

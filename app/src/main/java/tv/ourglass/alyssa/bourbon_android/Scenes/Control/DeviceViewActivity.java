@@ -53,7 +53,7 @@ public class DeviceViewActivity extends AppCompatActivity {
         // show progress
         webview.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
-                activity.setProgress(progress * 1000);
+                activity.setProgress(progress * 100);
             }
         });
 

@@ -1,7 +1,9 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +57,7 @@ public class VenueListAdapter extends ArrayAdapter<OGVenue> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ChooseDeviceActivity.class);
+                /*Intent intent = new Intent(context, ChooseDeviceActivity.class);
 
                 if (venue != null) {
                     intent.putExtra(OGConstants.venueUUIDExtra, venue.uuid);
@@ -64,7 +66,7 @@ public class VenueListAdapter extends ArrayAdapter<OGVenue> {
 
                 } else {
                     Log.e(TAG, "selected a venue that is null");
-                }
+                }*/
             }
         });
 

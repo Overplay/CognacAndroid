@@ -7,15 +7,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.SparseArrayCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import tv.ourglass.alyssa.bourbon_android.Scenes.BlankFragment;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Control.ChooseVenueFragment;
@@ -46,6 +50,8 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         add(new TabOption("Locations", R.drawable.ic_map_black_24dp));
         add(new TabOption("Settings", R.drawable.ic_settings_black_24dp));
     }};
+
+    SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
     public TabsPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -95,5 +101,22 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         img.setImageResource(tabs.get(position).icon);
 
         return v;
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        Fragment fragment = (Fragment) super.instantiateItem(container, position);
+        registeredFragments.put(position, fragment);
+        return fragment;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        registeredFragments.remove(position);
+        super.destroyItem(container, position, object);
+    }
+
+    public Fragment getRegisteredFragment(int position) {
+        return registeredFragments.get(position);
     }
 }
