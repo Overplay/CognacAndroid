@@ -1,10 +1,15 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Settings;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,7 +25,8 @@ import tv.ourglass.alyssa.bourbon_android.R;
 
 import static tv.ourglass.alyssa.bourbon_android.Scenes.Registration.RegistrationBaseActivity.isValidEmail;
 
-public class InviteFriendsActivity extends AppCompatActivity {
+
+public class InviteFriendFragment extends Fragment {
 
     private EditText mEmail;
 
@@ -28,14 +34,23 @@ public class InviteFriendsActivity extends AppCompatActivity {
 
     private TextView mInvite;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_invite_friends);
 
-        mEmail = (EditText)findViewById(R.id.email);
-        mEmailCheck = (ImageView)findViewById(R.id.emailCheck);
-        mInvite = (TextView)findViewById(R.id.inviteFriend);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_invite_friend, container, false);
+
+        mEmail = (EditText) view.findViewById(R.id.email);
+        mEmailCheck = (ImageView) view.findViewById(R.id.emailCheck);
+        mInvite = (TextView) view.findViewById(R.id.inviteFriend);
+
+        mInvite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                invite();
+            }
+        });
 
 
         // Add text change listeners
@@ -63,30 +78,35 @@ public class InviteFriendsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        return view;
     }
 
-    public void invite(View view) {
+    public void invite() {
 
-        // TODO: include progress popup?
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isAcceptingText()) {
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }
 
-        Applejack.getInstance().inviteUser(this, this.mEmail.getText().toString(), new Applejack.HttpCallback() {
+        Applejack.getInstance().inviteUser(getActivity(), this.mEmail.getText().toString(), new Applejack.HttpCallback() {
             @Override
             public void onFailure(Call call, final IOException e) {
-                InviteFriendsActivity.this.runOnUiThread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(InviteFriendsActivity.this, "Unable to send invite", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Unable to send invite", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
 
             @Override
             public void onSuccess(final Response response) {
-                InviteFriendsActivity.this.runOnUiThread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(InviteFriendsActivity.this, "Invite sent!", Toast.LENGTH_SHORT).show();
-                        InviteFriendsActivity.super.onBackPressed();
+                        Toast.makeText(getActivity(), "Invite sent!", Toast.LENGTH_SHORT).show();
+                        getActivity().onBackPressed();
                     }
                 });
             }

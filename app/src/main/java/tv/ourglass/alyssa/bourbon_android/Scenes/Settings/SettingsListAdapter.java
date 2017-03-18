@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
 import tv.ourglass.alyssa.bourbon_android.Models.SharedPrefsManager;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
@@ -33,11 +32,11 @@ import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
 
-    String TAG = "SettingsListAdapter";
+    private String TAG = "SettingsListAdapter";
 
     private Context context;
 
-    ProgressDialog progress;
+    private ProgressDialog progress;
 
     public SettingsListAdapter(Context context, ArrayList<SettingsListOption> options) {
         super(context, 0, options);
@@ -70,12 +69,9 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
             public void onClick(View view) {
                 SettingsListOption option = (SettingsListOption) view.getTag();
 
-                Intent intent;
-
                 switch (option.name) {
                     case "Invite Friends":
-                        intent = new Intent(context, InviteFriendsActivity.class);
-                        context.startActivity(intent);
+                        ((MainTabsActivity) context).openNewFragment(new InviteFriendFragment());
                         break;
 
                     case "Edit Account":

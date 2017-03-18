@@ -26,7 +26,6 @@
         <activity android:name=".Scenes.Registration.EnterPasswordActivity" />
         <activity android:name=".Scenes.Tabs.MainTabsActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".Scenes.Settings.InviteFriendsActivity" />
         <activity android:name=".Scenes.Registration.CheckAuthActivity">
 
             <!--
