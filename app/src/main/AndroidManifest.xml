@@ -24,8 +24,8 @@
         <activity android:name=".Scenes.Registration.EnterNameActivity" />
         <activity android:name=".Scenes.Registration.EnterEmailActivity" />
         <activity android:name=".Scenes.Registration.EnterPasswordActivity" />
-        <activity android:name=".Scenes.Tabs.MainTabsActivity" />
-        <activity android:name=".Scenes.Control.DeviceViewActivity" />
+        <activity android:name=".Scenes.Tabs.MainTabsActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".Scenes.Settings.InviteFriendsActivity" />
         <activity android:name=".Scenes.Settings.EditAccountActivity" />
         <activity android:name=".Scenes.Registration.CheckAuthActivity">
@@ -51,7 +51,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_api_key" />
 
-        <activity android:name=".Scenes.Control.ChooseDeviceActivity"></activity>
     </application>
 
 </manifest>

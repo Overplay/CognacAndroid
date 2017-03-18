@@ -1,7 +1,5 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -27,11 +25,14 @@ import tv.ourglass.alyssa.bourbon_android.R;
 
 public class ChooseDeviceFragment extends Fragment {
 
-    String TAG = "ChooseDeviceActivity";
+    String TAG = "ChooseDeviceFragment";
 
-    ArrayList<OGDevice> devices = new ArrayList<>();
+    ArrayList<OGDevice> mDevices = new ArrayList<>();
 
     DevicesListAdapter devicesListAdapter;
+
+    String mVenueName;
+    String mVenueUUID;
 
     Applejack.HttpCallback devicesCallback = new Applejack.HttpCallback() {
         @Override
@@ -48,6 +49,8 @@ public class ChooseDeviceFragment extends Fragment {
         public void onSuccess(final Response response) {
 
             try {
+                final ArrayList<OGDevice> devices = new ArrayList<>();
+
                 String jsonStr = response.body().string();
                 JSONArray deviceArray = new JSONArray(jsonStr);
 
@@ -67,6 +70,8 @@ public class ChooseDeviceFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        mDevices.clear();
+                        mDevices.addAll(devices);
                         devicesListAdapter.notifyDataSetChanged();
                     }
                 });
@@ -89,27 +94,50 @@ public class ChooseDeviceFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle args = getArguments();
+
+        if (args != null) {
+
+            if (args.containsKey(OGConstants.venueNameExtra)) {
+                mVenueName = args.getString(OGConstants.venueNameExtra);
+            }
+            if (args.containsKey(OGConstants.venueUUIDExtra)) {
+                mVenueUUID = args.getString(OGConstants.venueUUIDExtra);
+            }
+
+        } else {
+            mVenueName = "";
+            mVenueUUID = "";
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_choose_device, container, false);
 
-        devicesListAdapter = new DevicesListAdapter(getActivity(), devices);
+        devicesListAdapter = new DevicesListAdapter(getActivity(), mDevices);
 
         ListView listView = (ListView) rootView.findViewById(R.id.deviceList);
         listView.setAdapter(this.devicesListAdapter);
 
-        TextView venueName = (TextView) rootView.findViewById(R.id.venueName);
-        Bundle extras = getActivity().getIntent().getExtras();
+        TextView venueNameLabel = (TextView) rootView.findViewById(R.id.venueName);
+        venueNameLabel.setText(mVenueName);
 
-        if (extras != null) {
-            venueName.setText(extras.getString(OGConstants.venueNameExtra));
-            String venueUUID = extras.getString(OGConstants.venueUUIDExtra);
-
-            Applejack.getInstance().getDevices(getActivity(), venueUUID, devicesCallback);
-        }
+        Applejack.getInstance().getDevices(getActivity(), mVenueUUID, devicesCallback);
 
         return rootView;
+    }
+
+    public static ChooseDeviceFragment newInstance(String venueName, String venueUUID) {
+        ChooseDeviceFragment chooseDeviceFragment = new ChooseDeviceFragment();
+
+        Bundle args = new Bundle();
+        args.putString(OGConstants.venueNameExtra, venueName);
+        args.putString(OGConstants.venueUUIDExtra, venueUUID);
+
+        chooseDeviceFragment.setArguments(args);
+
+        return chooseDeviceFragment;
     }
 }

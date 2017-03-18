@@ -85,8 +85,10 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
         public void onSuccess(final Response response) {
 
             try {
+                final ArrayList<OGVenue> venues = new ArrayList<>();
+
                 String jsonStr = response.body().string();
-                JSONArray locationArray = new JSONArray(jsonStr);
+                final JSONArray locationArray = new JSONArray(jsonStr);
 
                 Log.d(TAG, String.format("%d venues found!", locationArray.length()));
 
@@ -110,19 +112,21 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
                         final double lat = geoLoc.getDouble("latitude");
                         final double lng = geoLoc.getDouble("longitude");
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Add to array
-                                locationList.add(new OGVenue(name, location, lat, lng, uuid));
-                                locationListAdapter.notifyDataSetChanged();
-                            }
-                        });
+                        venues.add(new OGVenue(name, location, lat, lng, uuid));
 
                     } catch (Exception e) {
                         Log.e(TAG, "found venue with no geolocation, filtering out");
                     }
                 }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        locationList.clear();
+                        locationList.addAll(venues);
+                        locationListAdapter.notifyDataSetChanged();
+                    }
+                });
 
                 displayVenuesOnMap();
 

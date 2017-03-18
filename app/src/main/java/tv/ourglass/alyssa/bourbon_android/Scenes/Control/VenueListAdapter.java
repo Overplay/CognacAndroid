@@ -1,9 +1,6 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
-import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +11,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
 import tv.ourglass.alyssa.bourbon_android.Models.OGVenue;
 import tv.ourglass.alyssa.bourbon_android.R;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 /**
  * Created by atorres on 3/10/17.
@@ -53,20 +50,17 @@ public class VenueListAdapter extends ArrayAdapter<OGVenue> {
 
         view.setTag(venue);
 
-        // Add actions to the options
+        // show list of devices for venue when it is clicked
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent(context, ChooseDeviceActivity.class);
 
                 if (venue != null) {
-                    intent.putExtra(OGConstants.venueUUIDExtra, venue.uuid);
-                    intent.putExtra(OGConstants.venueNameExtra, venue.name);
-                    context.startActivity(intent);
-
+                    ((MainTabsActivity) context)
+                            .openNewFragment(ChooseDeviceFragment.newInstance(venue.name, venue.uuid));
                 } else {
                     Log.e(TAG, "selected a venue that is null");
-                }*/
+                }
             }
         });
 

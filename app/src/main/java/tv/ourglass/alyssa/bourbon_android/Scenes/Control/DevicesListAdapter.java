@@ -1,7 +1,6 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +10,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
 import tv.ourglass.alyssa.bourbon_android.Models.OGDevice;
 import tv.ourglass.alyssa.bourbon_android.R;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 /**
  * Created by atorres on 11/8/16.
@@ -50,19 +49,15 @@ public class DevicesListAdapter extends ArrayAdapter<OGDevice> {
 
         view.setTag(device);
 
-        // Add actions to the options
+        // go to device control view when a device is selected
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 OGDevice device = (OGDevice) view.getTag();
 
-                Intent intent = new Intent(context, DeviceViewActivity.class);
-
                 if (device != null) {
-                    intent.putExtra(OGConstants.deviceNameExtra, device.name);
-                    intent.putExtra(OGConstants.deviceUrlExtra, device.getUrl());
-                    context.startActivity(intent);
-
+                    ((MainTabsActivity) context)
+                            .openNewFragment(DeviceViewFragment.newInstance(device.name, device.getUrl()));
                 } else {
                     Log.e(TAG, "selected a device that is null");
                 }

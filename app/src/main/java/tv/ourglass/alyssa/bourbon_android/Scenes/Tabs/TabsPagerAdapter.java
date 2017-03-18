@@ -6,22 +6,19 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.SparseArrayCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.List;
 
-import tv.ourglass.alyssa.bourbon_android.Scenes.BlankFragment;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Control.ChooseVenueFragment;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Map.MapFragment;
 import tv.ourglass.alyssa.bourbon_android.R;
@@ -39,29 +36,36 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         String title;
         Integer icon;
 
-        public TabOption(String title, Integer icon) {
+        TabOption(String title, Integer icon) {
             this.title = title;
             this.icon = icon;
         }
     }
 
-    private ArrayList<TabOption> tabs = new ArrayList<TabOption>() {{
+    private ArrayList<TabOption> tabOptions = new ArrayList<TabOption>() {{
         add(new TabOption("TV", R.drawable.ic_tv_black_24dp));
         add(new TabOption("Locations", R.drawable.ic_map_black_24dp));
         add(new TabOption("Settings", R.drawable.ic_settings_black_24dp));
     }};
 
-    SparseArray<Fragment> registeredFragments = new SparseArray<>();
+    private List<Fragment> tabs = new ArrayList<>();
 
     public TabsPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
+        initializeTabs();
+    }
+
+    private void initializeTabs() {
+        tabs.add(HostFragment.newInstance(new ChooseVenueFragment()));
+        tabs.add(HostFragment.newInstance(new MapFragment()));
+        tabs.add(HostFragment.newInstance(new SettingsFragment()));
     }
 
     @Override
     public Fragment getItem(int position) {
-
-        switch (tabs.get(position).title) {
+        return tabs.get(position);
+        /*switch (tabOptions.get(position).title) {
             case "TV":
                 return new ChooseVenueFragment();
             case "Locations":
@@ -70,7 +74,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
                 return new SettingsFragment();
             default:
                 return new BlankFragment();
-        }
+        }*/
     }
 
     @Override
@@ -80,7 +84,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        Drawable image = ContextCompat.getDrawable(context, tabs.get(position).icon);
+        Drawable image = ContextCompat.getDrawable(context, tabOptions.get(position).icon);
         image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
         SpannableString sb = new SpannableString(" ");
         ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
@@ -88,35 +92,20 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         return sb;
     }
 
-    public View getTabView(int position) {
+    /* Returns the view with an icon and a title below for the tab at position.
+     */
+    View getTabView(int position) {
         View v = LayoutInflater.from(context).inflate(R.layout.custom_tab, null);
 
         TextView text = (TextView) v.findViewById(R.id.text);
-        text.setText(tabs.get(position).title);
+        text.setText(tabOptions.get(position).title);
 
         Typeface font = Typeface.createFromAsset(context.getAssets(), "Poppins-Regular.ttf");
         text.setTypeface(font);
 
         ImageView img = (ImageView) v.findViewById(R.id.image);
-        img.setImageResource(tabs.get(position).icon);
+        img.setImageResource(tabOptions.get(position).icon);
 
         return v;
-    }
-
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        Fragment fragment = (Fragment) super.instantiateItem(container, position);
-        registeredFragments.put(position, fragment);
-        return fragment;
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        registeredFragments.remove(position);
-        super.destroyItem(container, position, object);
-    }
-
-    public Fragment getRegisteredFragment(int position) {
-        return registeredFragments.get(position);
     }
 }

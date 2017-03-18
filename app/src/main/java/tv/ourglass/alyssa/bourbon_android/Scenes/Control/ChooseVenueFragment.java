@@ -1,14 +1,9 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
-import android.content.Context;
-import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,8 +15,6 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,7 +29,6 @@ import okhttp3.Response;
 import tv.ourglass.alyssa.bourbon_android.Models.OGVenue;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
-import tv.ourglass.alyssa.bourbon_android.Scenes.Map.LocationListAdapter;
 
 
 public class ChooseVenueFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
@@ -53,6 +45,7 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
     Location mLastLocation;
 
     Applejack.HttpCallback venueCallback = new Applejack.HttpCallback() {
+
         @Override
         public void onFailure(Call call, final IOException e) {
             getActivity().runOnUiThread(new Runnable() {
@@ -67,6 +60,8 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
         public void onSuccess(final Response response) {
 
             try {
+                final ArrayList<OGVenue> venues = new ArrayList<>();
+
                 String jsonStr = response.body().string();
                 JSONArray locationArray = new JSONArray(jsonStr);
 
@@ -76,24 +71,24 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
                     JSONObject o = locationArray.getJSONObject(i);
 
                     // Get name
-                    String name = o.getString("name");
+                    final String name = o.getString("name");
 
                     // Get address
                     JSONObject addr = o.getJSONObject("address");
-                    String location = String.format("%s, %s, %s %s", addr.getString("street"),
+                    final String location = String.format("%s, %s, %s %s", addr.getString("street"),
                             addr.getString("city"), addr.getString("state"), addr.getString("zip"));
 
                     // Get uuid
-                    String uuid = o.getString("uuid");
+                    final String uuid = o.getString("uuid");
 
                     // Get geolocation
                     try {
                         JSONObject geoLoc = o.getJSONObject("geolocation");
-                        double lat = geoLoc.getDouble("latitude");
-                        double lng = geoLoc.getDouble("longitude");
+                        final double lat = geoLoc.getDouble("latitude");
+                        final double lng = geoLoc.getDouble("longitude");
 
                         // Add to array
-                        mVenues.add(new OGVenue(name, location, lat, lng, uuid));
+                        venues.add(new OGVenue(name, location, lat, lng, uuid));
 
                     } catch (Exception e) {
                         Log.e(TAG, "found venue with no geolocation, filtering out");
@@ -103,6 +98,9 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        // Add to array
+                        mVenues.clear();
+                        mVenues.addAll(venues);
                         sortByLocationAndReload();
                     }
                 });
