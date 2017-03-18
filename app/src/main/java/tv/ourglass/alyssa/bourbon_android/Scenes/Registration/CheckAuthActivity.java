@@ -15,7 +15,6 @@ import okhttp3.Response;
 import tv.ourglass.alyssa.bourbon_android.Models.SharedPrefsManager;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
-import tv.ourglass.alyssa.bourbon_android.Scenes.Settings.EditAccountActivity;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 public class CheckAuthActivity extends AppCompatActivity {

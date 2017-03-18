@@ -25,6 +25,7 @@ import tv.ourglass.alyssa.bourbon_android.Models.SharedPrefsManager;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Registration.WelcomeActivity;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 /**
  * Created by alyssa on 11/6/16.
@@ -78,8 +79,7 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
                         break;
 
                     case "Edit Account":
-                        intent = new Intent(context, EditAccountActivity.class);
-                        context.startActivity(intent);
+                        ((MainTabsActivity) context).openNewFragment(new EditAccountFragment());
                         break;
 
                     case "Add New Ourglass Device":

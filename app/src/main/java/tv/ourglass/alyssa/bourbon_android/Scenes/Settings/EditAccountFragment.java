@@ -1,19 +1,20 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Settings;
 
+
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.json.JSONObject;
 
@@ -28,9 +29,10 @@ import tv.ourglass.alyssa.bourbon_android.R;
 
 import static tv.ourglass.alyssa.bourbon_android.Scenes.Registration.RegistrationBaseActivity.isValidEmail;
 
-public class EditAccountActivity extends AppCompatActivity {
 
-    String TAG = "EditAccountActivity";
+public class EditAccountFragment extends Fragment {
+
+    String TAG = "EditAccountFragment";
 
     EditText mFirstName;
     EditText mLastName;
@@ -40,18 +42,27 @@ public class EditAccountActivity extends AppCompatActivity {
 
     ProgressDialog progress;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_account);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-        progress = new ProgressDialog(EditAccountActivity.this);
+        View view = inflater.inflate(R.layout.fragment_edit_account, container, false);
 
-        mSave = (Button) findViewById(R.id.save);
-        mFirstName = (EditText) findViewById(R.id.firstName);
-        mLastName = (EditText) findViewById(R.id.lastName);
-        mEmail = (EditText) findViewById(R.id.email);
-        mEmailCheck = (ImageView) findViewById(R.id.emailCheck);
+        progress = new ProgressDialog(getActivity());
+
+        mSave = (Button) view.findViewById(R.id.save);
+        mFirstName = (EditText) view.findViewById(R.id.firstName);
+        mLastName = (EditText) view.findViewById(R.id.lastName);
+        mEmail = (EditText) view.findViewById(R.id.email);
+        mEmailCheck = (ImageView) view.findViewById(R.id.emailCheck);
+
+        mSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                save();
+            }
+        });
 
         // Add text change listeners
         mEmail.addTextChangedListener(new TextWatcher() {
@@ -80,24 +91,26 @@ public class EditAccountActivity extends AppCompatActivity {
         });
 
         displayUserInfo();
+
+        return view;
     }
 
     private void displayUserInfo() {
-        progress.show();
+        //progress.show();  // TODO: show delayed progress so it doesn't flash
 
-        Applejack.getInstance().getAuthStatus(this,
+        Applejack.getInstance().getAuthStatus(getActivity(),
                 new Applejack.HttpCallback() {
 
                     @Override
                     public void onFailure(Call call, final IOException e) { // not authorized
-                        EditAccountActivity.this.runOnUiThread(new Runnable() {
+                        getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mFirstName.setText(SharedPrefsManager.getUserFirstName(EditAccountActivity.this));
-                                mLastName.setText(SharedPrefsManager.getUserLastName(EditAccountActivity.this));
-                                mEmail.setText(SharedPrefsManager.getUserEmail(EditAccountActivity.this));
+                                mFirstName.setText(SharedPrefsManager.getUserFirstName(getActivity()));
+                                mLastName.setText(SharedPrefsManager.getUserLastName(getActivity()));
+                                mEmail.setText(SharedPrefsManager.getUserEmail(getActivity()));
 
-                                AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                                 builder
                                         .setTitle("Uh oh!")
@@ -121,17 +134,17 @@ public class EditAccountActivity extends AppCompatActivity {
                         try {
                             String jsonData = response.body().string();
                             JSONObject json = new JSONObject(jsonData);
-                            SharedPrefsManager.setUserFirstName(EditAccountActivity.this, json.getString("firstName"));
-                            SharedPrefsManager.setUserLastName(EditAccountActivity.this, json.getString("lastName"));
-                            SharedPrefsManager.setUserEmail(EditAccountActivity.this, json.getJSONObject("auth").getString("email"));
-                            SharedPrefsManager.setUserId(EditAccountActivity.this, json.getString("id"));
+                            SharedPrefsManager.setUserFirstName(getActivity(), json.getString("firstName"));
+                            SharedPrefsManager.setUserLastName(getActivity(), json.getString("lastName"));
+                            SharedPrefsManager.setUserEmail(getActivity(), json.getJSONObject("auth").getString("email"));
+                            SharedPrefsManager.setUserId(getActivity(), json.getString("id"));
 
-                            EditAccountActivity.this.runOnUiThread(new Runnable() {
+                            getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mFirstName.setText(SharedPrefsManager.getUserFirstName(EditAccountActivity.this));
-                                    mLastName.setText(SharedPrefsManager.getUserLastName(EditAccountActivity.this));
-                                    mEmail.setText(SharedPrefsManager.getUserEmail(EditAccountActivity.this));
+                                    mFirstName.setText(SharedPrefsManager.getUserFirstName(getActivity()));
+                                    mLastName.setText(SharedPrefsManager.getUserLastName(getActivity()));
+                                    mEmail.setText(SharedPrefsManager.getUserEmail(getActivity()));
                                     progress.dismiss();
                                 }
                             });
@@ -145,8 +158,8 @@ public class EditAccountActivity extends AppCompatActivity {
                 });
     }
 
-    public void save(final View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    public void save() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder
                 .setTitle("Save changes")
@@ -154,11 +167,7 @@ public class EditAccountActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //progress.show();
                         saveAccountInfo();
-
-                        //TODO: actually save
-                        Log.d(TAG, "clicked save, placeholder");
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -179,16 +188,17 @@ public class EditAccountActivity extends AppCompatActivity {
         final String lastName = mLastName.getText().toString();
         final String email = mEmail.getText().toString();
 
-        Applejack.getInstance().changeAccountInfo(this, firstName, lastName, email, SharedPrefsManager.getUserId(this),
+        Applejack.getInstance().changeAccountInfo(getActivity(), firstName, lastName, email,
+                SharedPrefsManager.getUserId(getActivity()),
                 new Applejack.HttpCallback() {
 
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.e(TAG, "save info failed");
-                        EditAccountActivity.this.runOnUiThread(new Runnable() {
+                        getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                                 progress.dismiss();
 
@@ -212,11 +222,11 @@ public class EditAccountActivity extends AppCompatActivity {
                     public void onSuccess(Response response) {
                         response.body().close();
 
-                        SharedPrefsManager.setUserFirstName(EditAccountActivity.this, firstName);
-                        SharedPrefsManager.setUserLastName(EditAccountActivity.this, lastName);
-                        SharedPrefsManager.setUserEmail(EditAccountActivity.this, email);
+                        SharedPrefsManager.setUserFirstName(getActivity(), firstName);
+                        SharedPrefsManager.setUserLastName(getActivity(), lastName);
+                        SharedPrefsManager.setUserEmail(getActivity(), email);
 
-                        EditAccountActivity.this.runOnUiThread(new Runnable() {
+                        getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 mFirstName.setText(firstName);

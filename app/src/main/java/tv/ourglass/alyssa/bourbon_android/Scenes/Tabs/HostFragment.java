@@ -37,6 +37,8 @@ public class HostFragment extends BackStackFragment {
     public void replaceFragment(Fragment fragment, boolean addToBackstack) {
         if (addToBackstack) {
             getChildFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.activity_in, R.anim.activity_out,
+                            R.anim.activity_back_in, R.anim.activity_back_out)
                     .replace(R.id.hosted_fragment, fragment)
                     .addToBackStack(null)
                     .commit();

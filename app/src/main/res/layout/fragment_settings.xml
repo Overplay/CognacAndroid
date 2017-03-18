@@ -11,12 +11,12 @@
     <ListView
         android:id="@+id/optionsList"
         android:divider="@color/OGBackgroundGrey"
-        android:dividerHeight="20dp"
+        android:dividerHeight="10dp"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="30dp" >
+        android:layout_marginTop="20dp" >
 
     </ListView>
 
