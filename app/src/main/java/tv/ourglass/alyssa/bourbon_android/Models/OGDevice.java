@@ -23,6 +23,6 @@ public class OGDevice {
     }
 
     public String getUrl() {
-        return OGConstants.newOGCloudBaseURL + OGConstants.deviceControlPath + this.udid;
+        return OGConstants.ourglassCloudBaseUrl + OGConstants.deviceControlPath + this.udid;
     }
 }

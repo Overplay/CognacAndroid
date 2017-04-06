@@ -180,7 +180,7 @@ public class Applejack {
                 }
             };
 
-            post(context, OGConstants.OGCloudBaseURL + OGConstants.loginPath, json.toString(), loginCb);
+            post(context, OGConstants.ourglassCloudBaseUrl + OGConstants.loginPath, json.toString(), loginCb);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -222,7 +222,7 @@ public class Applejack {
             };
 
 
-            post(context, OGConstants.OGCloudBaseURL + OGConstants.registerPath, json.toString(), registerCb);
+            post(context, OGConstants.ourglassCloudBaseUrl + OGConstants.registerPath, json.toString(), registerCb);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -251,7 +251,7 @@ public class Applejack {
                 }
             };
 
-            post(context, OGConstants.OGCloudBaseURL + OGConstants.changePwdPath, json.toString(), changePwdCb);
+            post(context, OGConstants.ourglassCloudBaseUrl + OGConstants.changePwdPath, json.toString(), changePwdCb);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -283,7 +283,7 @@ public class Applejack {
                 }
             };
 
-            put(context, OGConstants.OGCloudBaseURL + OGConstants.changeAccountPath + userId, json.toString(),
+            put(context, OGConstants.ourglassCloudBaseUrl + OGConstants.changeAccountPath + userId, json.toString(),
                     changeActCb);
 
         } catch (JSONException e) {
@@ -297,7 +297,7 @@ public class Applejack {
             JSONObject json = new JSONObject();
             json.put("email", email);
 
-            post(context, OGConstants.OGCloudBaseURL + OGConstants.inviteUserPath, json.toString(), cb);
+            post(context, OGConstants.ourglassCloudBaseUrl + OGConstants.inviteUserPath, json.toString(), cb);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -306,22 +306,22 @@ public class Applejack {
     }
 
     public void getToken(Context context, HttpCallback cb) {
-        get(context, OGConstants.OGCloudBaseURL + OGConstants.getTokenPath, cb);
+        get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.getTokenPath, cb);
     }
 
     public void getVenues(Context context, HttpCallback cb) {
-        get(context, OGConstants.newOGCloudBaseURL + OGConstants.newVenuesPath, cb);
+        get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.newVenuesPath, cb);
     }
 
     public void getDevices(Context context, String venueUUID, HttpCallback cb) {
-        get(context, OGConstants.newOGCloudBaseURL + OGConstants.devicesPath + venueUUID, cb);
+        get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.devicesPath + venueUUID, cb);
     }
 
     public void getAuthStatus(Context context, HttpCallback cb) {
-        get(context, OGConstants.OGCloudBaseURL + OGConstants.getAuthStatusPath, cb);
+        get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.getAuthStatusPath, cb);
     }
 
     public void logout(Context context, HttpCallback cb) {
-        get(context, OGConstants.OGCloudBaseURL + OGConstants.logoutPath, cb);
+        get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.logoutPath, cb);
     }
 }

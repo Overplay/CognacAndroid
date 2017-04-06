@@ -13,19 +13,18 @@ public class OGConstants {
     public static final boolean alwaysShowIntro = false;
 
     // OG Cloud paths
-    public static final String OGCloudBaseURL = "http://107.170.209.248";
-    public static final String getTokenPath = "/user/jwt";
-    public static final String registerPath = "/auth/addUser";
-    public static final String loginPath = "/auth/login";
-    public static final String changePwdPath = "/auth/changePwd";
-    public static final String getAuthStatusPath = "/auth/status";
-    public static final String logoutPath = "/auth/logoutPage";
-    public static final String changeAccountPath = "/api/v1/user/";
-    public static final String inviteUserPath = "/user/inviteNewUser";
+    public static final String ourglassCloudBaseUrl = "http://138.68.230.239";
+    public static final String ourglassBasePort = ":2000";
+    public static final String getTokenPath = ourglassBasePort + "/user/jwt";
+    public static final String registerPath = ourglassBasePort + "/auth/addUser";
+    public static final String loginPath = ourglassBasePort + "/auth/login";
+    public static final String changePwdPath = ourglassBasePort + "/auth/changePwd";
+    public static final String getAuthStatusPath = ourglassBasePort + "/auth/status";
+    public static final String logoutPath = ourglassBasePort + "/auth/logoutPage";
+    public static final String changeAccountPath = ourglassBasePort + "/api/v1/user/";
+    public static final String inviteUserPath = ourglassBasePort + "/user/inviteNewUser";
 
-    // New OG Cloud paths
-    public static final String newOGCloudBaseURL = "http://138.68.230.239";
-    public static final String newVenuesPath = ":2000/api/v1/venue";
+    public static final String newVenuesPath = ourglassBasePort + "/api/v1/venue";
     public static final String devicesPath = ":2001/venue/devices?atVenueUUID=";
     public static final String deviceControlPath = ":2001/blueline/control/?deviceUDID=";
     public static final String appControlPath = "app/control/index.html";
