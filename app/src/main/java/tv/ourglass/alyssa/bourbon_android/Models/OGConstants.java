@@ -1,5 +1,7 @@
 package tv.ourglass.alyssa.bourbon_android.Models;
 
+import tv.ourglass.alyssa.bourbon_android.Scenes.Settings.SettingsFragment;
+
 /**
  * Created by atorres on 11/11/16.
  */
@@ -26,6 +28,7 @@ public class OGConstants {
     public static final String newVenuesPath = ":2000/api/v1/venue";
     public static final String devicesPath = ":2001/venue/devices?atVenueUUID=";
     public static final String deviceControlPath = ":2001/blueline/control/?deviceUDID=";
+    public static final String appControlPath = "app/control/index.html";
 
     // Regex constants
     public static final String emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}";
@@ -39,6 +42,7 @@ public class OGConstants {
     public static final String deviceNameExtra = "INTENT_EXTRA_DEVICE_NAME";
     public static final String venueUUIDExtra = "INTENT_EXTRA_VENUE_UUID";
     public static final String venueNameExtra = "INTENT_EXTRA_VENUE_NAME";
+    public static final String appUrlExtra = "INTENT_EXTRA_APP_URL";
 
     // Animations
     public static final int fadeInTime = 350;  // ms

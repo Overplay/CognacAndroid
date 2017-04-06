@@ -1,30 +1,21 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
-
-import android.app.Activity;
-import android.content.DialogInterface;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 
 import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
-import tv.ourglass.alyssa.bourbon_android.R;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
-public class DeviceViewFragment extends Fragment {
+public class DeviceViewFragment extends WebViewBaseFragment {
 
     String TAG = "DeviceViewFragment";
-
-    String mDeviceName;
-
-    String mDeviceUrl;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,76 +23,58 @@ public class DeviceViewFragment extends Fragment {
 
         Bundle args = getArguments();
 
+        // set target url and display title
         if (args != null) {
 
             if (args.containsKey(OGConstants.deviceNameExtra)) {
-                mDeviceName = args.getString(OGConstants.deviceNameExtra);
+                title = args.getString(OGConstants.deviceNameExtra);
             }
             if (args.containsKey(OGConstants.deviceUrlExtra)) {
-                mDeviceUrl = args.getString(OGConstants.deviceUrlExtra);
+                targetUrlString = args.getString(OGConstants.deviceUrlExtra);
             }
 
         } else {
-            mDeviceName = "";
-            mDeviceUrl = "";
+            title = "";
+            targetUrlString = "";
         }
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            webViewClient = new WebViewClient() {
+                public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                    view.setVisibility(View.INVISIBLE);
+                    showAlert("Uh oh!", error.toString());
+                }
 
-        View view = inflater.inflate(R.layout.fragment_device_view, container, false);
+                @TargetApi(21)
+                public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                    String newUrl = request.getUrl().toString();
 
-        TextView deviceNameLabel = (TextView) view.findViewById(R.id.deviceName);
-        deviceNameLabel.setText(mDeviceName);
-
-        final WebView webview = (WebView) view.findViewById(R.id.webview);
-
-        // Configure web view
-        webview.getSettings().setJavaScriptEnabled(true);
-        webview.getSettings().setBuiltInZoomControls(false);
-
-        // Show progress bar as web view loads URL
-        /*getWindow().requestFeature(Window.FEATURE_PROGRESS);
-
-        setContentView(R.layout.activity_device_view);
-
-        final Activity activity = this;
-
-        // show progress
-        webview.setWebChromeClient(new WebChromeClient() {
-            public void onProgressChanged(WebView view, int progress) {
-                activity.setProgress(progress * 100);
-            }
-        });*/
-
-        // show alert on error loading page
-        webview.setWebViewClient(new WebViewClient() {
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                webview.setVisibility(View.INVISIBLE);
-                showAlert("Uh oh!", description);
-            }
-        });
-
-        webview.loadUrl(mDeviceUrl);
-
-        return view;
-    }
-
-    public void showAlert(String title, String message) {
-        AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
-        alert.setTitle(title);
-        alert.setMessage(message);
-        alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        getActivity().onBackPressed();
+                    if (newUrl.contains(OGConstants.appControlPath)) {
+                        ((MainTabsActivity) getActivity())
+                                .openNewFragment(AppControlViewFragment.newInstance(newUrl));
                     }
-                });
-        alert.show();
+
+                    return null;
+                }
+            };
+
+        } else {
+            webViewClient = new WebViewClient() {
+                public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                    view.setVisibility(View.INVISIBLE);
+                    showAlert("Uh oh!", description);
+                }
+
+                public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                    if (url.contains(OGConstants.appControlPath)) {
+                        ((MainTabsActivity) getActivity())
+                                .openNewFragment(AppControlViewFragment.newInstance(url));
+                    }
+
+                    return null;
+                }
+            };
+        }
     }
 
     public static DeviceViewFragment newInstance(String deviceName, String deviceUrl) {

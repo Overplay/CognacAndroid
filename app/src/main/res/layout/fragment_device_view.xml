@@ -21,7 +21,7 @@
 
             <tv.ourglass.alyssa.bourbon_android.Views.SemiBoldTextView
                 android:padding="10dp"
-                android:id="@+id/deviceName"
+                android:id="@+id/title"
                 android:text=""
                 android:textColor="@color/OGWhite"
                 android:textSize="30sp"
