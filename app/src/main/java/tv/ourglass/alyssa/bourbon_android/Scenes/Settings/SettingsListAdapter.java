@@ -124,8 +124,8 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
     }
 
     private void logout() {
-        SharedPrefsManager.setUserPassword(context, "");
-        SharedPrefsManager.setUserApplejackJwt(context, "");
+        SharedPrefsManager.setUserApplejackJwt(context, null);
+        SharedPrefsManager.setUserApplejackJwtExpiry(context, 0l);
 
         Applejack.getInstance().logout(context, new Applejack.HttpCallback() {
             @Override

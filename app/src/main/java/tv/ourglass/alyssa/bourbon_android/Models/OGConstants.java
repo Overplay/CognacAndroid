@@ -23,6 +23,7 @@ public class OGConstants {
     public static final String logoutPath = ourglassBasePort + "/auth/logoutPage";
     public static final String changeAccountPath = ourglassBasePort + "/api/v1/user/";
     public static final String inviteUserPath = ourglassBasePort + "/user/inviteNewUser";
+    public static final String checkJWTPath = ourglassBasePort + "/user/checkjwt";
 
     public static final String newVenuesPath = ourglassBasePort + "/api/v1/venue";
     public static final String devicesPath = ":2001/venue/devices?atVenueUUID=";

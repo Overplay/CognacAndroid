@@ -74,7 +74,7 @@ public class Applejack {
 
         if (jwt != null) {
             req = new Request.Builder()
-                    .addHeader("Authorization", "Bearer: " + jwt)
+                    .addHeader("Authorization", "Bearer " + jwt)
                     .url(url)
                     .post(body)
                     .build();
@@ -94,7 +94,7 @@ public class Applejack {
 
         if (jwt != null) {
             req = new Request.Builder()
-                    .addHeader("Authorization", "Bearer: " + jwt)
+                    .addHeader("Authorization", "Bearer " + jwt)
                     .url(url)
                     .get()
                     .build();
@@ -115,7 +115,7 @@ public class Applejack {
 
         if (jwt != null) {
             req = new Request.Builder()
-                    .addHeader("Authorization", "Bearer: " + jwt)
+                    .addHeader("Authorization", "Bearer " + jwt)
                     .url(url)
                     .put(body)
                     .build();
@@ -149,9 +149,6 @@ public class Applejack {
                 @Override
                 public void onSuccess(final Response loginResponse) {
                     SharedPrefsManager.setUserEmail(context, email);
-                    SharedPrefsManager.setUserPassword(context, password);
-
-                    // TODO: get and set user id?
 
                     Applejack.getInstance().getToken(context, new Applejack.HttpCallback() {
 
@@ -166,7 +163,7 @@ public class Applejack {
                                 String jsonData = tokenResponse.body().string();
                                 JSONObject json = new JSONObject(jsonData);
                                 SharedPrefsManager.setUserApplejackJwt(context, json.getString("token"));
-                                SharedPrefsManager.setUserApplejackJwtExpiry(context, json.getInt("expires"));
+                                SharedPrefsManager.setUserApplejackJwtExpiry(context, json.getLong("expires"));
                                 tokenResponse.body().close();
 
                                 cb.onSuccess(loginResponse);
@@ -213,7 +210,6 @@ public class Applejack {
                     SharedPrefsManager.setUserFirstName(context, firstName);
                     SharedPrefsManager.setUserLastName(context, lastName);
                     SharedPrefsManager.setUserEmail(context, email);
-                    SharedPrefsManager.setUserPassword(context, password);
 
                     // TODO: how to get JWT if JWT response is delayed?
 
@@ -246,7 +242,6 @@ public class Applejack {
 
                 @Override
                 public void onSuccess(Response response) {
-                    SharedPrefsManager.setUserPassword(context, newPassword);
                     cb.onSuccess(response);
                 }
             };
@@ -303,6 +298,10 @@ public class Applejack {
             e.printStackTrace();
             cb.onFailure(null, null);
         }
+    }
+
+    public void checkJWT(Context context, HttpCallback cb) {
+        get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.checkJWTPath, cb);
     }
 
     public void getToken(Context context, HttpCallback cb) {

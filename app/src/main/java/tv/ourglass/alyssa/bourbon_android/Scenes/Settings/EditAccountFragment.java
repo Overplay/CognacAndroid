@@ -96,7 +96,21 @@ public class EditAccountFragment extends Fragment {
     }
 
     private void displayUserInfo() {
-        //progress.show();  // TODO: show delayed progress so it doesn't flash
+        //progress.show();
+
+        Applejack.getInstance().checkJWT(getActivity(),
+                new Applejack.HttpCallback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.e(TAG, "bad JWT");
+                    }
+
+                    @Override
+                    public void onSuccess(Response response) {
+                        Log.d(TAG, "good JWT");
+                        response.body().close();
+                    }
+                });
 
         Applejack.getInstance().getAuthStatus(getActivity(),
                 new Applejack.HttpCallback() {
@@ -134,9 +148,10 @@ public class EditAccountFragment extends Fragment {
                         try {
                             String jsonData = response.body().string();
                             JSONObject json = new JSONObject(jsonData);
+
                             SharedPrefsManager.setUserFirstName(getActivity(), json.getString("firstName"));
                             SharedPrefsManager.setUserLastName(getActivity(), json.getString("lastName"));
-                            SharedPrefsManager.setUserEmail(getActivity(), json.getJSONObject("auth").getString("email"));
+                            SharedPrefsManager.setUserEmail(getActivity(), json.getString("email"));
                             SharedPrefsManager.setUserId(getActivity(), json.getString("id"));
 
                             getActivity().runOnUiThread(new Runnable() {

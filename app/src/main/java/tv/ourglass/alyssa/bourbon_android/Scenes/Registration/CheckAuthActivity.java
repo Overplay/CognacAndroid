@@ -28,80 +28,18 @@ public class CheckAuthActivity extends AppCompatActivity {
     }
 
     private void checkAuthStatus() {
-        String email = SharedPrefsManager.getUserEmail(this);
-        String pwd = SharedPrefsManager.getUserPassword(this);
 
-        if (email != null && !email.isEmpty() && pwd != null && !pwd.isEmpty()) {
+        Long expiry = SharedPrefsManager.getUserApplejackJwtExpiry(this);
 
-            Applejack.getInstance().login(this, email, pwd,
-                    new Applejack.HttpCallback() {
+        if (SharedPrefsManager.getUserApplejackJwt(this) != null &&
+                System.currentTimeMillis() < expiry) {  // if JWT is good
+            Log.d(TAG, "good jwt");
+            Intent intent = new Intent(CheckAuthActivity.this, MainTabsActivity.class);
+            startActivity(intent);
 
-                        @Override
-                        public void onFailure(Call call, final IOException e) {  // not authorized
-                            CheckAuthActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (e != null) {
-                                        Log.d(TAG, e.getLocalizedMessage());
-                                    }
-                                    Intent intent = new Intent(CheckAuthActivity.this, WelcomeActivity.class);
-                                    startActivity(intent);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onSuccess(Response response) {
-
-                            response.body().close();
-                            Applejack.getInstance().getAuthStatus(CheckAuthActivity.this,
-                                    new Applejack.HttpCallback() {
-
-                                        @Override
-                                        public void onFailure(Call call, final IOException e) { // not authorized
-                                            CheckAuthActivity.this.runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    if (e != null) {
-                                                        Log.d(TAG, e.getLocalizedMessage());
-                                                    }
-                                                    Intent intent = new Intent(CheckAuthActivity.this, WelcomeActivity.class);
-                                                    startActivity(intent);
-                                                }
-                                            });
-                                        }
-
-                                        @Override
-                                        public void onSuccess(Response response2) {  // authorized!
-                                            try {
-                                                String jsonData = response2.body().string();
-                                                JSONObject json = new JSONObject(jsonData);
-                                                SharedPrefsManager.setUserFirstName(CheckAuthActivity.this, json.getString("firstName"));
-                                                SharedPrefsManager.setUserLastName(CheckAuthActivity.this, json.getString("lastName"));
-                                                SharedPrefsManager.setUserEmail(CheckAuthActivity.this, json.getString("email"));
-                                                SharedPrefsManager.setUserId(CheckAuthActivity.this, json.getString("id"));
-
-                                            } catch (Exception e) {
-                                                Log.e(TAG, e.getLocalizedMessage());
-
-                                            } finally {
-                                                response2.body().close();
-                                                CheckAuthActivity.this.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        Intent intent = new Intent(CheckAuthActivity.this, MainTabsActivity.class);
-                                                        startActivity(intent);
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    });
-                        }
-                    });
-        }
-
-        else { // not authorized, take to welcome screen
-            Intent intent = new Intent(this, WelcomeActivity.class);
+        } else {  // JWT is bad
+            Log.e(TAG, "bad jwt, taking to login/register");
+            Intent intent = new Intent(CheckAuthActivity.this, WelcomeActivity.class);
             startActivity(intent);
         }
     }
