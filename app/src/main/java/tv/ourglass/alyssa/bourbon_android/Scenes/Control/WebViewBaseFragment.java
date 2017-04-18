@@ -22,6 +22,8 @@ public class WebViewBaseFragment extends Fragment {
     String targetUrlString;
     String title;
     WebViewClient webViewClient;
+    Boolean timeout;
+    Long webViewTimeout = 15000l;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,6 +39,8 @@ public class WebViewBaseFragment extends Fragment {
         // Configure web view
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setBuiltInZoomControls(false);
+        timeout = true;
+
 
         // Show progress bar as web view loads URL
         /*getWindow().requestFeature(Window.FEATURE_PROGRESS);

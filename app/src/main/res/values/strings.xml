@@ -24,7 +24,7 @@
 
     <string name="goodCheckDescription">good check</string>
 
-    <string name="passwordRequirements">Your password must be at least 5 characters long.</string>
+    <string name="passwordRequirements">Your password must be at least 8 characters long.</string>
 
     <string name="goBackDescription">go back</string>
     <string name="nextDescription">next</string>

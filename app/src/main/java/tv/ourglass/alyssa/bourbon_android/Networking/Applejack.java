@@ -1,7 +1,13 @@
 package tv.ourglass.alyssa.bourbon_android.Networking;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +24,7 @@ import okhttp3.Response;
 import tv.ourglass.alyssa.bourbon_android.BourbonApplication;
 import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
 import tv.ourglass.alyssa.bourbon_android.Models.SharedPrefsManager;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Registration.WelcomeActivity;
 
 /**
  * Created by atorres on 11/10/16.
@@ -39,12 +46,36 @@ public class Applejack {
         return instance;
     }
 
-    public interface HttpCallback {
-        void onFailure(Call call, IOException e);
-        void onSuccess(Response response);  // this must close the response body or it will leak
+    public static abstract class HttpCallback {
+
+        abstract public void onSuccess(Response response); // this must close the response body or it will leak
+        abstract public void onFailure(Call call, IOException e);
+
+        void onAuthFailure(final Context context) {
+            ((Activity)context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder
+                            .setTitle("Uh oh!")
+                            .setMessage("You aren't authorized to use this resource.")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    builder.create().show();
+                }
+            });
+        }
+
+        void onTokenInvalid(final Context context) {
+            Applejack.getInstance().logout(context);
+        }
     }
 
-    private void request(Request request, final HttpCallback cb) {
+    private void request(Request request, final HttpCallback cb, final Context context) {
 
         client.newCall(request).enqueue(new Callback() {
 
@@ -54,12 +85,69 @@ public class Applejack {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(final Call call, final Response response) throws IOException {
 
+                if (!response.isSuccessful()) {
+
+                    // if error 403, then perform checks for authorization
+                    if (response.code() == 403) {
+                        Applejack.getInstance().checkJWT(context, new HttpCallback() {
+                            @Override
+                            public void onFailure(Call jwtCall, IOException e) {
+                                Log.e(TAG, "JWT is invalid, prompting for login to continue");
+                                response.body().close();
+                                cb.onTokenInvalid(context);
+                            }
+
+                            @Override
+                            public void onSuccess(Response jwtResponse) {
+                                Log.e(TAG, "resource is not allowed for this user");
+                                jwtResponse.body().close();
+                                response.body().close();
+                                cb.onAuthFailure(context);
+                            }
+                        });
+
+                    } else {
+                        cb.onFailure(call, null);
+                        response.body().close();
+                    }
+
+                } else {
+                    cb.onSuccess(response);
+                }
+            }
+        });
+    }
+
+    private void getWithoutAuthCheck(Context context, String url, final HttpCallback cb) {
+        Request req;
+        String jwt = SharedPrefsManager.getUserApplejackJwt(context);
+
+        if (jwt != null) {
+            req = new Request.Builder()
+                    .addHeader("Authorization", "Bearer " + jwt)
+                    .url(url)
+                    .get()
+                    .build();
+        } else {
+            req = new Request.Builder()
+                    .url(url)
+                    .get()
+                    .build();
+        }
+
+        client.newCall(req).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                cb.onFailure(call, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     cb.onFailure(call, null);
                     response.body().close();
-
                 } else {
                     cb.onSuccess(response);
                 }
@@ -85,7 +173,7 @@ public class Applejack {
                     .build();
         }
 
-        request(req, cb);
+        request(req, cb, context);
     }
 
     public void get(Context context, String url, HttpCallback cb) {
@@ -105,7 +193,7 @@ public class Applejack {
                     .build();
         }
 
-        request(req, cb);
+        request(req, cb, context);
     }
 
     private void put(Context context, String url, String json, HttpCallback cb) {
@@ -126,12 +214,9 @@ public class Applejack {
                     .build();
         }
 
-        request(req, cb);
+        request(req, cb, context);
     }
 
-    /* Logs in with given credentials and gets the JWT. Returns a success if both login and get
-       token are successful, failure if not.
-    */
     public void login(final Context context, final String email, final String password, final HttpCallback cb) {
         try {
             JSONObject json = new JSONObject();
@@ -211,9 +296,30 @@ public class Applejack {
                     SharedPrefsManager.setUserLastName(context, lastName);
                     SharedPrefsManager.setUserEmail(context, email);
 
-                    // TODO: how to get JWT if JWT response is delayed?
+                    Applejack.getInstance().getToken(context, new Applejack.HttpCallback() {
 
-                    cb.onSuccess(regResponse);
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            cb.onFailure(call, e);
+                        }
+
+                        @Override
+                        public void onSuccess(Response tokenResponse) {
+                            try {
+                                String jsonData = tokenResponse.body().string();
+                                JSONObject json = new JSONObject(jsonData);
+                                SharedPrefsManager.setUserApplejackJwt(context, json.getString("token"));
+                                SharedPrefsManager.setUserApplejackJwtExpiry(context, json.getLong("expires"));
+                                tokenResponse.body().close();
+
+                                cb.onSuccess(regResponse);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                cb.onFailure(null, null);
+                            }
+                        }
+                    });
                 }
             };
 
@@ -301,7 +407,8 @@ public class Applejack {
     }
 
     public void checkJWT(Context context, HttpCallback cb) {
-        get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.checkJWTPath, cb);
+        // cannot use same get() as everyone else or we might end up in a loop
+        getWithoutAuthCheck(context, OGConstants.ourglassCloudBaseUrl + OGConstants.checkJWTPath, cb);
     }
 
     public void getToken(Context context, HttpCallback cb) {
@@ -320,7 +427,19 @@ public class Applejack {
         get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.getAuthStatusPath, cb);
     }
 
-    public void logout(Context context, HttpCallback cb) {
-        get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.logoutPath, cb);
+    // TODO: is there more we need to do here?
+    public void logout(final Context context) {
+        SharedPrefsManager.setUserApplejackJwt(context, null);
+        SharedPrefsManager.setUserApplejackJwtExpiry(context, 0l);
+        SharedPrefsManager.setUserId(context, null);
+
+        ((Activity)context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "Logged out!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, WelcomeActivity.class);
+                context.startActivity(intent);
+            }
+        });
     }
 }

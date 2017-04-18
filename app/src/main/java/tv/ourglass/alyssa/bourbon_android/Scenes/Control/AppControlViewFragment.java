@@ -1,6 +1,7 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
 import android.annotation.TargetApi;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.webkit.WebViewClient;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.nio.charset.Charset;
 
 import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
 
@@ -57,23 +57,46 @@ public class AppControlViewFragment extends WebViewBaseFragment {
             title = "";
         }
 
+        webViewClient = new WebViewClient() {
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            webViewClient = new WebViewClient() {
-                public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                    view.setVisibility(View.INVISIBLE);
-                    showAlert("Uh oh!", error.toString());
-                }
-            };
+            @TargetApi(android.os.Build.VERSION_CODES.M)
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                view.setVisibility(View.INVISIBLE);
+                showAlert("Uh oh!", error.getDescription().toString());
+            }
 
-        } else {
-            webViewClient = new WebViewClient() {
-                public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                    view.setVisibility(View.INVISIBLE);
-                    showAlert("Uh oh!", description);
-                }
-            };
-        }
+            @SuppressWarnings("deprecation")
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                view.setVisibility(View.INVISIBLE);
+                showAlert("Uh oh!", description);
+            }
+
+            // start timing to detect timeout
+            @Override
+            public void onPageStarted(final WebView view, String url, Bitmap favicon) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(webViewTimeout);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (timeout) {
+                            view.setVisibility(View.INVISIBLE);
+                            showAlert("Uh oh!", "We were unable to connect to this device.");
+                        }
+                    }
+                }).start();
+            }
+
+            // end timeout
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                timeout = false;
+            }
+        };
     }
 
     public static AppControlViewFragment newInstance(String appUrl) {

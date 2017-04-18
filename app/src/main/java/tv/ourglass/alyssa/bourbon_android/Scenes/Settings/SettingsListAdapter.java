@@ -36,8 +36,6 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
 
     private Context context;
 
-    private ProgressDialog progress;
-
     public SettingsListAdapter(Context context, ArrayList<SettingsListOption> options) {
         super(context, 0, options);
         this.context = context;
@@ -96,8 +94,8 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        progress = ProgressDialog.show(context, "Logging out...", "", true);
-                                        logout();
+                                        ProgressDialog.show(context, "Logging out...", "", true);
+                                        Applejack.getInstance().logout(context);
                                     }
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -121,43 +119,5 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
 
         return view;
 
-    }
-
-    private void logout() {
-        SharedPrefsManager.setUserApplejackJwt(context, null);
-        SharedPrefsManager.setUserApplejackJwtExpiry(context, 0l);
-
-        Applejack.getInstance().logout(context, new Applejack.HttpCallback() {
-            @Override
-            public void onFailure(Call call, final IOException e) {
-                ((Activity)context).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progress.dismiss();
-                        Log.d(TAG, "error logging out with Applejack");
-                        Toast.makeText(context, "Logged out!", Toast.LENGTH_SHORT).show();
-                        goTo(WelcomeActivity.class);
-                    }
-                });
-            }
-
-            @Override
-            public void onSuccess(final Response response) {
-                ((Activity)context).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progress.dismiss();
-                        Toast.makeText(context, "Logged out!", Toast.LENGTH_SHORT).show();
-                        goTo(WelcomeActivity.class);
-                    }
-                });
-                response.body().close();
-            }
-        });
-    }
-
-    private void goTo(Class dest) {
-        Intent intent = new Intent(context, dest);
-        context.startActivity(intent);
     }
 }

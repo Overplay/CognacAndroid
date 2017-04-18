@@ -98,6 +98,7 @@ public class EditAccountFragment extends Fragment {
     private void displayUserInfo() {
         //progress.show();
 
+        // this is not really doing anything right now, it is just here as a test
         Applejack.getInstance().checkJWT(getActivity(),
                 new Applejack.HttpCallback() {
                     @Override
@@ -117,6 +118,7 @@ public class EditAccountFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call call, final IOException e) { // not authorized
+                        Log.e(TAG, "not authorized");
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -145,13 +147,13 @@ public class EditAccountFragment extends Fragment {
 
                     @Override
                     public void onSuccess(Response response) {  // authorized!
+                        Log.d(TAG, "authorized");
                         try {
                             String jsonData = response.body().string();
                             JSONObject json = new JSONObject(jsonData);
 
                             SharedPrefsManager.setUserFirstName(getActivity(), json.getString("firstName"));
                             SharedPrefsManager.setUserLastName(getActivity(), json.getString("lastName"));
-                            SharedPrefsManager.setUserEmail(getActivity(), json.getString("email"));
                             SharedPrefsManager.setUserId(getActivity(), json.getString("id"));
 
                             getActivity().runOnUiThread(new Runnable() {
@@ -227,8 +229,7 @@ public class EditAccountFragment extends Fragment {
                                             }
                                         });
 
-                                AlertDialog alert = builder.create();
-                                alert.show();
+                                builder.create().show();
                             }
                         });
                     }

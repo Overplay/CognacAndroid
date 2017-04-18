@@ -32,7 +32,7 @@ public class CheckAuthActivity extends AppCompatActivity {
         Long expiry = SharedPrefsManager.getUserApplejackJwtExpiry(this);
 
         if (SharedPrefsManager.getUserApplejackJwt(this) != null &&
-                System.currentTimeMillis() < expiry) {  // if JWT is good
+                System.currentTimeMillis() + 86400000l < expiry) {  // if JWT is good within the next 24hrs
             Log.d(TAG, "good jwt");
             Intent intent = new Intent(CheckAuthActivity.this, MainTabsActivity.class);
             startActivity(intent);

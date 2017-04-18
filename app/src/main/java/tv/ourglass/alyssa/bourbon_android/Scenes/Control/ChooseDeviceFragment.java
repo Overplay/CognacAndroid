@@ -35,6 +35,7 @@ public class ChooseDeviceFragment extends Fragment {
     String mVenueUUID;
 
     Applejack.HttpCallback devicesCallback = new Applejack.HttpCallback() {
+
         @Override
         public void onFailure(Call call, final IOException e) {
             getActivity().runOnUiThread(new Runnable() {
