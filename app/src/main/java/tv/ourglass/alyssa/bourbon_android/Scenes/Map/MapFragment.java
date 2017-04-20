@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -72,7 +73,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
 
     Applejack.HttpCallback venueCallback = new Applejack.HttpCallback() {
         @Override
-        public void onFailure(Call call, final IOException e) {
+        public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -83,54 +84,12 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
 
         @Override
         public void onSuccess(final Response response) {
-
             try {
-                final ArrayList<OGVenue> venues = new ArrayList<>();
+                String venueStr = response.body().string();
+                JSONArray venues = new JSONArray(venueStr);
+                processVenues(venues);
 
-                String jsonStr = response.body().string();
-                final JSONArray locationArray = new JSONArray(jsonStr);
-
-                Log.d(TAG, String.format("%d venues found!", locationArray.length()));
-
-                for (int i = 0; i < locationArray.length(); i++) {
-                    JSONObject o = locationArray.getJSONObject(i);
-
-                    // Get name
-                    final String name = o.getString("name");
-
-                    // Get address
-                    JSONObject addr = o.getJSONObject("address");
-                    final String location = String.format("%s, %s, %s %s", addr.getString("street"),
-                            addr.getString("city"), addr.getString("state"), addr.getString("zip"));
-
-                    // Get uuid
-                    final String uuid = o.getString("uuid");
-
-                    // Get geolocation
-                    try {
-                        JSONObject geoLoc = o.getJSONObject("geolocation");
-                        final double lat = geoLoc.getDouble("latitude");
-                        final double lng = geoLoc.getDouble("longitude");
-
-                        venues.add(new OGVenue(name, location, lat, lng, uuid));
-
-                    } catch (Exception e) {
-                        Log.e(TAG, "found venue with no geolocation, filtering out");
-                    }
-                }
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        locationList.clear();
-                        locationList.addAll(venues);
-                        locationListAdapter.notifyDataSetChanged();
-                    }
-                });
-
-                displayVenuesOnMap();
-
-            } catch (Exception e) {
+            } catch (IOException | JSONException e) {
                 Log.e(TAG, e.getLocalizedMessage());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -261,6 +220,43 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
             }
         });
     }
+
+    private void processVenues(JSONArray venues) {
+        final ArrayList<OGVenue> venueList = new ArrayList<>();
+        for (int i = 0; i < venues.length(); i++) {
+            try {
+                JSONObject o = venues.getJSONObject(i);
+                String name = o.getString("name");
+
+                JSONObject addr = o.getJSONObject("address");
+                String location = String.format("%s, %s, %s %s", addr.getString("street"),
+                        addr.getString("city"), addr.getString("state"), addr.getString("zip"));
+
+                String uuid = o.getString("uuid");
+
+                JSONObject geoLoc = o.getJSONObject("geolocation");
+                double lat = geoLoc.getDouble("latitude");
+                double lng = geoLoc.getDouble("longitude");
+
+                venueList.add(new OGVenue(name, location, lat, lng, uuid));
+
+            } catch (JSONException e) {
+                Log.e(TAG, "found venue with missing info, filtering out");
+            }
+        }
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                locationList.clear();
+                locationList.addAll(venueList);
+                locationListAdapter.notifyDataSetChanged();
+            }
+        });
+
+        displayVenuesOnMap();
+    }
+
 
     @Override
     public void onResume() {

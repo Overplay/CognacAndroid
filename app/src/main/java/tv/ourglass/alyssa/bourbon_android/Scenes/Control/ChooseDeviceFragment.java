@@ -1,7 +1,9 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,13 +39,57 @@ public class ChooseDeviceFragment extends Fragment {
     Applejack.HttpCallback devicesCallback = new Applejack.HttpCallback() {
 
         @Override
-        public void onFailure(Call call, final IOException e) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getActivity(), "Error retrieving devices", Toast.LENGTH_SHORT).show();
-                }
-            });
+        public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
+
+            switch (error) {
+                case authFailure:
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder
+                                    .setTitle("Uh oh!")
+                                    .setMessage("You are not authorized to access this resource.")
+                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
+                    });
+
+                case tokenInvalid:
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder
+                                    .setTitle("Uh oh!")
+                                    .setMessage("It looks like your session has expired. Please log back in.")
+                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Applejack.getInstance().logout(getActivity());
+                                        }
+                                    });
+
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
+                    });
+
+                default:
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getActivity(), "Error retrieving devices", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            }
         }
 
         @Override

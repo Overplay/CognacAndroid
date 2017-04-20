@@ -84,7 +84,7 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
         Applejack.getInstance().register(this, email, password, firstName, lastName,
                 new Applejack.HttpCallback() {
                     @Override
-                    public void onFailure(Call call, final IOException e) {
+                    public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
 
                         EnterPasswordActivity.this.runOnUiThread(new Runnable() {
                             @Override

@@ -91,7 +91,7 @@ public class InviteFriendFragment extends Fragment {
 
         Applejack.getInstance().inviteUser(getActivity(), this.mEmail.getText().toString(), new Applejack.HttpCallback() {
             @Override
-            public void onFailure(Call call, final IOException e) {
+            public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

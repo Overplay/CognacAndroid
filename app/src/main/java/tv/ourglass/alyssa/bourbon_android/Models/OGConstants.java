@@ -20,7 +20,6 @@ public class OGConstants {
     public static final String loginPath = ourglassBasePort + "/auth/login";
     public static final String changePwdPath = ourglassBasePort + "/auth/changePwd";
     public static final String getAuthStatusPath = ourglassBasePort + "/auth/status";
-    public static final String logoutPath = ourglassBasePort + "/auth/logoutPage";
     public static final String changeAccountPath = ourglassBasePort + "/api/v1/user/";
     public static final String inviteUserPath = ourglassBasePort + "/user/inviteNewUser";
     public static final String checkJWTPath = ourglassBasePort + "/user/checkjwt";

@@ -38,6 +38,10 @@ public class Applejack {
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
+    public enum ApplejackError {
+        authFailure, tokenInvalid, jsonError, defaultError
+    }
+
     private static Applejack instance = new Applejack();
 
     private Applejack() { }
@@ -49,9 +53,9 @@ public class Applejack {
     public static abstract class HttpCallback {
 
         abstract public void onSuccess(Response response); // this must close the response body or it will leak
-        abstract public void onFailure(Call call, IOException e);
+        abstract public void onFailure(Call call, IOException e, ApplejackError error);
 
-        void onAuthFailure(final Context context) {
+        /*void onAuthFailure(final Context context) {
             ((Activity)context).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -72,7 +76,7 @@ public class Applejack {
 
         void onTokenInvalid(final Context context) {
             Applejack.getInstance().logout(context);
-        }
+        }*/
     }
 
     private void request(Request request, final HttpCallback cb, final Context context) {
@@ -81,7 +85,7 @@ public class Applejack {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                cb.onFailure(call, e);
+                cb.onFailure(call, e, ApplejackError.defaultError);
             }
 
             @Override
@@ -93,10 +97,10 @@ public class Applejack {
                     if (response.code() == 403) {
                         Applejack.getInstance().checkJWT(context, new HttpCallback() {
                             @Override
-                            public void onFailure(Call jwtCall, IOException e) {
-                                Log.e(TAG, "JWT is invalid, prompting for login to continue");
+                            public void onFailure(Call jwtCall, IOException e, ApplejackError error) {
+                                Log.e(TAG, "JWT is invalid");
                                 response.body().close();
-                                cb.onTokenInvalid(context);
+                                cb.onFailure(jwtCall, e, ApplejackError.tokenInvalid);
                             }
 
                             @Override
@@ -104,12 +108,12 @@ public class Applejack {
                                 Log.e(TAG, "resource is not allowed for this user");
                                 jwtResponse.body().close();
                                 response.body().close();
-                                cb.onAuthFailure(context);
+                                cb.onFailure(call, null, ApplejackError.authFailure);
                             }
                         });
 
                     } else {
-                        cb.onFailure(call, null);
+                        cb.onFailure(call, null, ApplejackError.defaultError);
                         response.body().close();
                     }
 
@@ -140,13 +144,13 @@ public class Applejack {
         client.newCall(req).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                cb.onFailure(call, e);
+                cb.onFailure(call, e, ApplejackError.defaultError);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    cb.onFailure(call, null);
+                    cb.onFailure(call, null, ApplejackError.defaultError);
                     response.body().close();
                 } else {
                     cb.onSuccess(response);
@@ -227,8 +231,8 @@ public class Applejack {
             HttpCallback loginCb = new HttpCallback() {
 
                 @Override
-                public void onFailure(Call call, IOException e) {
-                    cb.onFailure(call, e);
+                public void onFailure(Call call, IOException e, ApplejackError error) {
+                    cb.onFailure(call, e, error);
                 }
 
                 @Override
@@ -238,8 +242,8 @@ public class Applejack {
                     Applejack.getInstance().getToken(context, new Applejack.HttpCallback() {
 
                         @Override
-                        public void onFailure(Call call, IOException e) {
-                            cb.onFailure(call, e);
+                        public void onFailure(Call call, IOException e, ApplejackError error) {
+                            cb.onFailure(call, e, error);
                         }
 
                         @Override
@@ -255,7 +259,7 @@ public class Applejack {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                cb.onFailure(null, null);
+                                cb.onFailure(null, null, ApplejackError.tokenInvalid);
                             }
                         }
                     });
@@ -266,7 +270,7 @@ public class Applejack {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            cb.onFailure(null, null);
+            cb.onFailure(null, null, ApplejackError.jsonError);
         }
     }
 
@@ -286,8 +290,8 @@ public class Applejack {
             HttpCallback registerCb = new HttpCallback() {
 
                 @Override
-                public void onFailure(Call call, IOException e) {
-                    cb.onFailure(call, e);
+                public void onFailure(Call call, IOException e, ApplejackError error) {
+                    cb.onFailure(call, e, error);
                 }
 
                 @Override
@@ -299,8 +303,8 @@ public class Applejack {
                     Applejack.getInstance().getToken(context, new Applejack.HttpCallback() {
 
                         @Override
-                        public void onFailure(Call call, IOException e) {
-                            cb.onFailure(call, e);
+                        public void onFailure(Call call, IOException e, ApplejackError error) {
+                            cb.onFailure(call, e, error);
                         }
 
                         @Override
@@ -316,7 +320,7 @@ public class Applejack {
 
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                cb.onFailure(null, null);
+                                cb.onFailure(null, null, ApplejackError.tokenInvalid);
                             }
                         }
                     });
@@ -329,7 +333,7 @@ public class Applejack {
         } catch (JSONException e) {
             e.printStackTrace();
             Log.d(TAG, "error creating JSON object for registration");
-            cb.onFailure(null, null);
+            cb.onFailure(null, null, ApplejackError.jsonError);
         }
     }
 
@@ -342,8 +346,8 @@ public class Applejack {
             HttpCallback changePwdCb = new HttpCallback() {
 
                 @Override
-                public void onFailure(Call call, IOException e) {
-                    cb.onFailure(call, e);
+                public void onFailure(Call call, IOException e, ApplejackError error) {
+                    cb.onFailure(call, e, error);
                 }
 
                 @Override
@@ -356,7 +360,7 @@ public class Applejack {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            cb.onFailure(null, null);
+            cb.onFailure(null, null, ApplejackError.jsonError);
         }
     }
 
@@ -371,8 +375,8 @@ public class Applejack {
             HttpCallback changeActCb = new HttpCallback() {
 
                 @Override
-                public void onFailure(Call call, IOException e) {
-                    cb.onFailure(call, e);
+                public void onFailure(Call call, IOException e, ApplejackError error) {
+                    cb.onFailure(call, e, error);
                 }
 
                 @Override
@@ -389,7 +393,7 @@ public class Applejack {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            cb.onFailure(null, null);
+            cb.onFailure(null, null, ApplejackError.jsonError);
         }
     }
 
@@ -402,7 +406,7 @@ public class Applejack {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            cb.onFailure(null, null);
+            cb.onFailure(null, null, ApplejackError.jsonError);
         }
     }
 

@@ -97,44 +97,24 @@ public class EditAccountFragment extends Fragment {
 
     private void displayUserInfo() {
         //progress.show();
-
-        // this is not really doing anything right now, it is just here as a test
         Applejack.getInstance().checkJWT(getActivity(),
                 new Applejack.HttpCallback() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
+                    public void onFailure(Call call, IOException ex, Applejack.ApplejackError error) {
                         Log.e(TAG, "bad JWT");
-                    }
 
-                    @Override
-                    public void onSuccess(Response response) {
-                        Log.d(TAG, "good JWT");
-                        response.body().close();
-                    }
-                });
-
-        Applejack.getInstance().getAuthStatus(getActivity(),
-                new Applejack.HttpCallback() {
-
-                    @Override
-                    public void onFailure(Call call, final IOException e) { // not authorized
-                        Log.e(TAG, "not authorized");
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mFirstName.setText(SharedPrefsManager.getUserFirstName(getActivity()));
-                                mLastName.setText(SharedPrefsManager.getUserLastName(getActivity()));
-                                mEmail.setText(SharedPrefsManager.getUserEmail(getActivity()));
-
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                                 builder
                                         .setTitle("Uh oh!")
-                                        .setMessage("There was an issue getting your account information.")
+                                        .setMessage("It looks like your session has expired. Please log back in.")
                                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                dialog.cancel();
+                                                Applejack.getInstance().logout(getActivity());
                                             }
                                         });
 
@@ -146,14 +126,15 @@ public class EditAccountFragment extends Fragment {
                     }
 
                     @Override
-                    public void onSuccess(Response response) {  // authorized!
-                        Log.d(TAG, "authorized");
+                    public void onSuccess(Response response) {
+                        Log.d(TAG, "good JWT");
                         try {
                             String jsonData = response.body().string();
                             JSONObject json = new JSONObject(jsonData);
 
                             SharedPrefsManager.setUserFirstName(getActivity(), json.getString("firstName"));
                             SharedPrefsManager.setUserLastName(getActivity(), json.getString("lastName"));
+                            //SharedPrefsManager.setUserEmail(getActivity(), json.getString("email"));
                             SharedPrefsManager.setUserId(getActivity(), json.getString("id"));
 
                             getActivity().runOnUiThread(new Runnable() {
@@ -210,7 +191,7 @@ public class EditAccountFragment extends Fragment {
                 new Applejack.HttpCallback() {
 
                     @Override
-                    public void onFailure(Call call, IOException e) {
+                    public void onFailure(Call call, IOException e, Applejack.ApplejackError error) {
                         Log.e(TAG, "save info failed");
                         getActivity().runOnUiThread(new Runnable() {
                             @Override

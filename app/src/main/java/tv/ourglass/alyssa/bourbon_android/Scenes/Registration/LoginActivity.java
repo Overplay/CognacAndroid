@@ -117,7 +117,7 @@ public class LoginActivity extends RegistrationBaseActivity {
             Applejack.getInstance().login(this, email, password,
                     new Applejack.HttpCallback() {
                         @Override
-                        public void onFailure(Call call, final IOException e) {
+                        public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
                             LoginActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
