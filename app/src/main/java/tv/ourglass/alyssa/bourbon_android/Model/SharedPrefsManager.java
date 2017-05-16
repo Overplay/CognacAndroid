@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.bourbon_android.Models;
+package tv.ourglass.alyssa.bourbon_android.Model;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.bourbon_android.Scenes.Settings;
+package tv.ourglass.alyssa.bourbon_android.Scenes.Settings.EditAccount;
 
 
 import android.app.ProgressDialog;
@@ -22,8 +22,8 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
-import tv.ourglass.alyssa.bourbon_android.Models.SharedPrefsManager;
+import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
+import tv.ourglass.alyssa.bourbon_android.Model.SharedPrefsManager;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
 
@@ -31,8 +31,7 @@ import static tv.ourglass.alyssa.bourbon_android.Scenes.Registration.Registratio
 
 
 public class EditAccountFragment extends Fragment {
-
-    String TAG = "EditAccountFragment";
+    final String TAG = "EditAccountFragment";
 
     EditText mFirstName;
     EditText mLastName;
@@ -41,7 +40,6 @@ public class EditAccountFragment extends Fragment {
     Button mSave;
 
     ProgressDialog progress;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -134,7 +132,7 @@ public class EditAccountFragment extends Fragment {
 
                             SharedPrefsManager.setUserFirstName(getActivity(), json.getString("firstName"));
                             SharedPrefsManager.setUserLastName(getActivity(), json.getString("lastName"));
-                            //SharedPrefsManager.setUserEmail(getActivity(), json.getString("email"));
+                            SharedPrefsManager.setUserEmail(getActivity(), json.getString("email"));
                             SharedPrefsManager.setUserId(getActivity(), json.getString("id"));
 
                             getActivity().runOnUiThread(new Runnable() {

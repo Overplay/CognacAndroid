@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:paddingBottom="8dp">
+
+    <tv.ourglass.alyssa.bourbon_android.Views.LightTextView
+        android:id="@+id/sectionHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        style="@android:style/TextAppearance.Small"
+        android:background="@color/OGDockColor"
+        android:textColor="@color/OGWhite"
+        android:visibility="gone"/>
+
+    <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        style="@android:style/TextAppearance.Medium"
+        android:textColor="@color/OGWhite" />
+
+    <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
+        android:id="@+id/address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        style="@android:style/TextAppearance.Small"
+        android:textColor="@color/OGLightGrey"
+        android:paddingTop="5dp" />
+
+</LinearLayout>

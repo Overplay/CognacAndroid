@@ -1,6 +1,7 @@
 package tv.ourglass.alyssa.bourbon_android;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
@@ -15,7 +16,13 @@ import okhttp3.OkHttpClient;
 
 public class BourbonApplication extends Application {
 
+    private static BourbonApplication instance;
+
     public static OkHttpClient okclient;
+
+    public static Context getContext() {
+        return instance;
+    }
 
     @Override
     public void onCreate() {
@@ -26,5 +33,7 @@ public class BourbonApplication extends Application {
         okclient = new OkHttpClient.Builder()
                 .cookieJar(cookieJar)
                 .build();
+
+        instance = this;
     }
 }

@@ -5,14 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Response;
-import tv.ourglass.alyssa.bourbon_android.Models.SharedPrefsManager;
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Model.SharedPrefsManager;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 

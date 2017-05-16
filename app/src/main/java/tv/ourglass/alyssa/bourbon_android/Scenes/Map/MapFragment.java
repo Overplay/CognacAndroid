@@ -12,14 +12,20 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -36,15 +42,15 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
-import tv.ourglass.alyssa.bourbon_android.BourbonApplication;
-import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
-import tv.ourglass.alyssa.bourbon_android.Models.OGVenue;
+import tv.ourglass.alyssa.bourbon_android.Model.BourbonNotification;
+import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenue;
+import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenueListAdapter;
+import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenueType;
+import tv.ourglass.alyssa.bourbon_android.Model.StateController;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
 
@@ -52,145 +58,186 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
 
     String TAG = "MapFragment";
 
-    ArrayList<OGVenue> locationList = new ArrayList<>();
+    //ArrayList<OGVenue> locationList = new ArrayList<>();
 
-    MapView mMapView;
+    MapView mMapView = null;
 
     private GoogleMap googleMap;
 
-    LocationListAdapter locationListAdapter;
+    OGVenueListAdapter mVenueListAdapter = null;
 
-    private BroadcastReceiver mWifiBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "got network change!");
-
-            if (!intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {
-                Applejack.getInstance().getVenues(getActivity(), venueCallback);
-            }
-        }
-    };
+    BroadcastReceiver mBroadcastReceiver;
 
     Applejack.HttpCallback venueCallback = new Applejack.HttpCallback() {
+
+        @Override
+        public void onSuccess(final Response response) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mVenueListAdapter != null) {
+                        mVenueListAdapter.notifyDataSetChanged();
+                        displayVenuesOnMap();
+                    }
+                }
+            });
+            response.body().close();
+        }
+
         @Override
         public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT)
+                            .show();
                 }
             });
-        }
-
-        @Override
-        public void onSuccess(final Response response) {
-            try {
-                String venueStr = response.body().string();
-                JSONArray venues = new JSONArray(venueStr);
-                processVenues(venues);
-
-            } catch (IOException | JSONException e) {
-                Log.e(TAG, e.getLocalizedMessage());
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            } finally {
-                response.body().close();
-            }
         }
     };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mVenueListAdapter != null) {
+                            mVenueListAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+            }
+        };
+
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(mBroadcastReceiver,
+                        new IntentFilter(BourbonNotification.allVenuesUpdated.name()));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_locations, container, false);
 
-        // get notified when network connectivity changes
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        getActivity().registerReceiver(mWifiBroadcastReceiver, intentFilter);
+        // check if google play services is available
+        GoogleApiAvailability api = GoogleApiAvailability.getInstance();
+        int code = api.isGooglePlayServicesAvailable(getActivity());
 
-        this.locationListAdapter = new LocationListAdapter(getActivity(), locationList);
+        if (code != ConnectionResult.SUCCESS) {
+            Log.d(TAG, "Google Play Services unavailable.");
+            TextView tv = (TextView) rootView.findViewById(R.id.error);
+            tv.setVisibility(View.VISIBLE);
 
-        // Attach the adapter to a ListView
-        ListView listView = (ListView) rootView.findViewById(R.id.locationList);
-        listView.setAdapter(this.locationListAdapter);
+        } else {
+            mVenueListAdapter = new OGVenueListAdapter(getActivity(), OGVenueType.ALL,
+                    new OGVenueListAdapter.OnClickVenue() {
+                        @Override
+                        public void onClick(View view, OGVenue venue) {
+                            Animation clickAnimation = new AlphaAnimation(1.0f, 0.3f);
+                            clickAnimation.setDuration(300);
+                            view.startAnimation(clickAnimation);
 
-        // Set up map
-        mMapView = (MapView) rootView.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
+                            if (venue.marker != null) {
+                                venue.marker.showInfoWindow();
+                            }
+                        }
+                    });
 
-        // TODO: pop up alert if google maps not available
+            // attach the adapter to the list view
+            ListView listView = (ListView) rootView.findViewById(R.id.locationList);
+            listView.setAdapter(mVenueListAdapter);
 
-        mMapView.onResume(); // needed to get the map to display immediately
+            // Set up map
+            mMapView = (MapView) rootView.findViewById(R.id.mapView);
+            mMapView.onCreate(savedInstanceState);
 
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
+            mMapView.onResume(); // needed to get the map to display immediately
+
+            try {
+                MapsInitializer.initialize(getActivity().getApplicationContext());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            StateController.getInstance().findAllVenues(venueCallback);
         }
-
-        Applejack.getInstance().getVenues(getActivity(), venueCallback);
 
         return rootView;
     }
 
     public void displayVenuesOnMap() {
+        if (mMapView != null && mVenueListAdapter != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mMapView.getMapAsync(new OnMapReadyCallback() {
+                        @Override
+                        public void onMapReady(GoogleMap mMap) {
+                            googleMap = mMap;
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mMapView.getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(GoogleMap mMap) {
-                        googleMap = mMap;
+                            googleMap.setOnInfoWindowClickListener(MapFragment.this);
 
-                        googleMap.setOnInfoWindowClickListener(MapFragment.this);
+                            // for showing a "move to my location" button
+                            try {
+                                googleMap.setMyLocationEnabled(true);
+                            } catch (SecurityException e) {
+                                Log.d(TAG, e.getLocalizedMessage());
+                            }
 
-                        // For showing a move to my location button
-                        try {
-                            googleMap.setMyLocationEnabled(true);
-                        } catch (SecurityException e) {
-                            Log.d(TAG, e.getLocalizedMessage());
-                        }
+                            // show markers for the venues
+                            for (OGVenue venue : StateController.getInstance().getAllVenues()) {
 
-                        // Show markers for found venues
-                        for (OGVenue loc : locationList) {
+                                LatLng markerLoc = new LatLng(venue.latitude, venue.longitude);
+                                venue.marker = googleMap.addMarker(new MarkerOptions()
+                                        .position(markerLoc)
+                                        .title(venue.name)
+                                        .snippet(venue.getAddress()));
 
-                            LatLng markerLoc = new LatLng(loc.latitude, loc.longitude);
-                            loc.marker = googleMap.addMarker(new MarkerOptions()
-                                    .position(markerLoc)
-                                    .title(loc.name)
-                                    .snippet(loc.address));
+                                // because we added the marker
+                                mVenueListAdapter.notifyDataSetChanged();
+                            }
 
-                            locationListAdapter.notifyDataSetChanged(); // because we added the marker
-                        }
+                            // try to center map on current location
+                            LocationManager locationManager = (LocationManager) getContext()
+                                    .getSystemService(Context.LOCATION_SERVICE);
+                            Criteria criteria = new Criteria();
 
-                        // try to center map on current location
-                        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-                        Criteria criteria = new Criteria();
+                            try {
+                                Location location = locationManager.getLastKnownLocation(
+                                        locationManager.getBestProvider(criteria, false));
 
-                        try {
-                            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+                                if (location != null) {
+                                    LatLng pos = new LatLng(
+                                            location.getLatitude(),
+                                            location.getLongitude());
 
-                            if (location != null) {
-                                LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+                                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                                            .target(pos)
+                                            .zoom(12)
+                                            .build();
 
-                                CameraPosition cameraPosition = new CameraPosition.Builder()
-                                        .target(pos)
-                                        .zoom(12)
-                                        .build();
+                                    googleMap.animateCamera(CameraUpdateFactory
+                                            .newCameraPosition(cameraPosition));
 
-                                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                            } else {
+                                } else { // center map on US
+                                    LatLng pos = new LatLng(37.0902, -95.7129);
+
+                                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                                            .target(pos)
+                                            .zoom(3.5f)
+                                            .build();
+
+                                    googleMap.animateCamera(CameraUpdateFactory
+                                            .newCameraPosition(cameraPosition));
+                                }
+
+                            } catch (SecurityException e) {
+                                Log.e(TAG, e.getLocalizedMessage());
+
                                 // center map on US
                                 LatLng pos = new LatLng(37.0902, -95.7129);
 
@@ -199,87 +246,47 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
                                         .zoom(3.5f)
                                         .build();
 
-                                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                                googleMap.animateCamera(CameraUpdateFactory
+                                        .newCameraPosition(cameraPosition));
                             }
-
-                        } catch (SecurityException e) {
-                            Log.e(TAG, e.getLocalizedMessage());
-
-                            // center map on US
-                            LatLng pos = new LatLng(37.0902, -95.7129);
-
-                            CameraPosition cameraPosition = new CameraPosition.Builder()
-                                    .target(pos)
-                                    .zoom(3.5f)
-                                    .build();
-
-                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         }
-                    }
-                });
-            }
-        });
-    }
-
-    private void processVenues(JSONArray venues) {
-        final ArrayList<OGVenue> venueList = new ArrayList<>();
-        for (int i = 0; i < venues.length(); i++) {
-            try {
-                JSONObject o = venues.getJSONObject(i);
-                String name = o.getString("name");
-
-                JSONObject addr = o.getJSONObject("address");
-                String location = String.format("%s, %s, %s %s", addr.getString("street"),
-                        addr.getString("city"), addr.getString("state"), addr.getString("zip"));
-
-                String uuid = o.getString("uuid");
-
-                JSONObject geoLoc = o.getJSONObject("geolocation");
-                double lat = geoLoc.getDouble("latitude");
-                double lng = geoLoc.getDouble("longitude");
-
-                venueList.add(new OGVenue(name, location, lat, lng, uuid));
-
-            } catch (JSONException e) {
-                Log.e(TAG, "found venue with missing info, filtering out");
-            }
+                    });
+                }
+            });
         }
-
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                locationList.clear();
-                locationList.addAll(venueList);
-                locationListAdapter.notifyDataSetChanged();
-            }
-        });
-
-        displayVenuesOnMap();
     }
-
 
     @Override
     public void onResume() {
         super.onResume();
-        mMapView.onResume();
+        if (mMapView != null) {
+            mMapView.onResume();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mMapView.onPause();
+        if (mMapView != null) {
+            mMapView.onPause();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mMapView.onDestroy();
+        if (mMapView != null) {
+            mMapView.onDestroy();
+        }
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mMapView.onLowMemory();
+        if (mMapView != null) {
+            mMapView.onLowMemory();
+        }
     }
 
     @Override
@@ -287,7 +294,8 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
         Log.d(TAG, "marker clicked");
         LatLng pos = marker.getPosition();
 
-        Uri mapIntentUri = Uri.parse(String.format("google.navigation:q=%f,%f", pos.latitude, pos.longitude));
+        Uri mapIntentUri = Uri.parse(String.format(Locale.ENGLISH, "google.navigation:q=%f,%f",
+                pos.latitude, pos.longitude));
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
 

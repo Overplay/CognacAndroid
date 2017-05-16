@@ -2,19 +2,17 @@ package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
+import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
 
 /**
  * Created by atorres on 4/5/17.

@@ -1,7 +1,6 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Settings;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -19,7 +18,7 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
+import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
 

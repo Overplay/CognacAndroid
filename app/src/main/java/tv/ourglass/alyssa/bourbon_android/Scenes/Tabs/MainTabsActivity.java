@@ -70,6 +70,12 @@ public class MainTabsActivity extends AppCompatActivity {
         BackStackFragment.handleBackPressed(getSupportFragmentManager());
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.unregisterReceiver(mWifiBroadcastReceiver);
+    }
+
     public void openNewFragment(Fragment fragment) {
         HostFragment hostFragment = (HostFragment) tabsPagerAdapter.getItem(viewPager.getCurrentItem());
         hostFragment.replaceFragment(fragment, true);

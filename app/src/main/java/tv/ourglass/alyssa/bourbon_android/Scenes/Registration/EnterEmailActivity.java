@@ -1,8 +1,6 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Registration;
 
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,9 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
+import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
 import tv.ourglass.alyssa.bourbon_android.R;
 
 public class EnterEmailActivity extends RegistrationBaseActivity {

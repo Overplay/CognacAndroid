@@ -1,10 +1,9 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Settings;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,17 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import okhttp3.Call;
-import okhttp3.Response;
-import tv.ourglass.alyssa.bourbon_android.Models.SharedPrefsManager;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
-import tv.ourglass.alyssa.bourbon_android.Scenes.Registration.WelcomeActivity;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Settings.EditAccount.EditAccountFragment;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Settings.MyVenues.MyVenuesFragment;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Settings.SetupDevice.PickVenueFragment;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 /**
@@ -42,21 +38,23 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    @NonNull public View getView(int position, View view, @NonNull ViewGroup parent) {
         SettingsListOption option = getItem(position);
 
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.settings_option, parent, false);
         }
 
-        ImageView icon = (ImageView) view.findViewById(R.id.icon);
-        if (option != null) {
-            icon.setImageResource(option.iconId);
-        }
-
         TextView name = (TextView) view.findViewById(R.id.name);
         if (option != null) {
             name.setText(option.name);
+        }
+
+        ImageView img = (ImageView) view.findViewById(R.id.rightArrow);
+        if (option != null) {
+            if (option.name.equals("Log Out")) {
+                img.setVisibility(View.INVISIBLE);
+            }
         }
 
         view.setTag(option);
@@ -76,12 +74,12 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
                         ((MainTabsActivity) context).openNewFragment(new EditAccountFragment());
                         break;
 
-                    case "Add New Ourglass Device":
-                        Log.d("SettingsListAdapter", "add new device");
+                    case "Setup OG Device":
+                        ((MainTabsActivity) context).openNewFragment(new PickVenueFragment());
                         break;
 
-                    case "Add/Manage Venues":
-                        Log.d("SettingsListAdapter", "add/manage venues");
+                    case "My Venues":
+                        ((MainTabsActivity) context).openNewFragment(new MyVenuesFragment());
                         break;
 
                     case "Log Out":

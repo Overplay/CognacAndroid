@@ -1,24 +1,26 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,9 +29,14 @@ import java.util.Comparator;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import tv.ourglass.alyssa.bourbon_android.Models.OGVenue;
+import tv.ourglass.alyssa.bourbon_android.Model.BourbonNotification;
+import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenue;
+import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenueListAdapter;
+import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenueType;
+import tv.ourglass.alyssa.bourbon_android.Model.StateController;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 
 public class ChooseVenueFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
@@ -39,7 +46,9 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
 
     ArrayList<OGVenue> mVenues = new ArrayList<>();
 
-    VenueListAdapter mVenueListAdapter;
+    OGVenueListAdapter mVenueListAdapter;
+
+    BroadcastReceiver mBroadcastReceiver;
 
     GoogleApiClient mLocationClient;  // used to get user's location
 
@@ -48,34 +57,25 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
     Applejack.HttpCallback venueCallback = new Applejack.HttpCallback() {
 
         @Override
+        public void onSuccess(final Response response) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mVenueListAdapter.notifyDataSetChanged();
+                }
+            });
+            response.body().close();
+        }
+
+        @Override
         public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT)
+                            .show();
                 }
             });
-        }
-
-        @Override
-        public void onSuccess(final Response response) {
-            try {
-                String venueStr = response.body().string();
-                JSONArray venues = new JSONArray(venueStr);
-                processVenues(venues);
-
-            } catch (IOException | JSONException e) {
-                Log.e(TAG, e.getLocalizedMessage());
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            } finally {
-                response.body().close();
-            }
         }
     };
 
@@ -89,6 +89,22 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
                     .build();
         }
 
+        mBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mVenueListAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        };
+
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(mBroadcastReceiver,
+                        new IntentFilter(BourbonNotification.allVenuesUpdated.name()));
+
         super.onCreate(savedInstanceState);
     }
 
@@ -96,11 +112,24 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_venues, container, false);
 
-        mVenueListAdapter = new VenueListAdapter(getActivity(), mVenues);
+        mVenueListAdapter = new OGVenueListAdapter(getActivity(), OGVenueType.ALL,
+                new OGVenueListAdapter.OnClickVenue() {
+                    @Override
+                    public void onClick(View view, OGVenue venue) {
+                        if (venue != null) {
+                            ((MainTabsActivity) getActivity()).openNewFragment(
+                                    ChooseDeviceFragment.newInstance(venue.name, venue.uuid));
+                        }
+                    }
+                });
 
-        // Attach the adapter to a ListView
+        // attach the adapter to the list view
         ListView listView = (ListView) rootView.findViewById(R.id.venueList);
         listView.setAdapter(mVenueListAdapter);
+
+        // set empty view
+        TextView empty = (TextView) rootView.findViewById(R.id.empty);
+        listView.setEmptyView(empty);
 
         this.getVenues();
 
@@ -109,8 +138,9 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
 
     @Override
     public void onStart() {
-        mLocationClient.connect();
         super.onStart();
+        mLocationClient.connect();
+
     }
 
     @Override
@@ -121,8 +151,20 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
         super.onStop();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.getVenues();
+    }
+
+    @Override
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
+    }
+
     private void getVenues() {
-        Applejack.getInstance().getVenues(getActivity(), venueCallback);
+        StateController.getInstance().findAllVenues(venueCallback);
     }
 
     private void sortByLocationAndReload() {
@@ -147,40 +189,6 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
         }
 
         mVenueListAdapter.notifyDataSetChanged();
-    }
-
-    private void processVenues(JSONArray venues) {
-        final ArrayList<OGVenue> venueList = new ArrayList<>();
-        for (int i = 0; i < venues.length(); i++) {
-            try {
-                JSONObject o = venues.getJSONObject(i);
-                String name = o.getString("name");
-
-                JSONObject addr = o.getJSONObject("address");
-                String location = String.format("%s, %s, %s %s", addr.getString("street"),
-                        addr.getString("city"), addr.getString("state"), addr.getString("zip"));
-
-                String uuid = o.getString("uuid");
-
-                JSONObject geoLoc = o.getJSONObject("geolocation");
-                double lat = geoLoc.getDouble("latitude");
-                double lng = geoLoc.getDouble("longitude");
-
-                venueList.add(new OGVenue(name, location, lat, lng, uuid));
-
-            } catch (JSONException e) {
-                Log.e(TAG, "found venue with missing info, filtering out");
-            }
-        }
-
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mVenues.clear();
-                mVenues.addAll(venueList);
-                sortByLocationAndReload();
-            }
-        });
     }
 
     @Override

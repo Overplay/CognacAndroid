@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/option"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
 
-<ImageView
-    android:id="@+id/icon"
-    android:contentDescription="@string/iconDescription"
-    android:layout_width="36dp"
-    android:layout_height="36dp"
-    android:layout_marginBottom="5dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
-    android:layout_marginTop="5dp"
-    android:tint="@color/OGWhite"
-    android:src="@drawable/ic_play_circle_outline_black_36dp" />
+    <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
+        android:id="@+id/name"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_toLeftOf="@+id/rightArrow"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"/>
 
-<tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
-    android:id="@+id/name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    style="@android:style/TextAppearance.Medium"
-    android:textColor="@color/OGWhite"
-    android:paddingTop="10dp"
-    android:paddingStart="15dp" />
+    <ImageView
+        android:id="@+id/rightArrow"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tint="@color/OGWhite"
+        android:contentDescription="@string/settingsOption"
+        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true" />
 
-</LinearLayout>
+</RelativeLayout>

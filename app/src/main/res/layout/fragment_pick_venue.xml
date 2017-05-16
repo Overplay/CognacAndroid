@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="tv.ourglass.alyssa.bourbon_android.Scenes.Settings.SetupDevice.PickVenueFragment"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/venueList"
+        android:divider="@color/OGMediumGrey"
+        android:dividerHeight="0.5dp"
+        android:clipToPadding="false"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.4">
+
+    </ListView>
+
+    <tv.ourglass.alyssa.bourbon_android.Views.LightTextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="@dimen/activity_vertical_margin"
+        android:text="@string/emptyVenueList"
+        style="@android:style/TextAppearance.DeviceDefault"/>
+
+</LinearLayout>

@@ -33,8 +33,8 @@
 
     <string name="networkLabel">Network:</string>
 
-    <string name="emptyDeviceList">No Ourglass systems found. Please make sure you\'re connected to the correct Wi-Fi network.</string>
-    <string name="emptyVenueList">No Ourglass venues were found!</string>
+    <string name="emptyDeviceList">No devices found!</string>
+    <string name="emptyVenueList">No venues were found!</string>
 
     <string name="friendEmail">FRIEND\'S EMAIL ADDRESS</string>
     <string name="inviteFriend">Invite</string>
@@ -45,7 +45,10 @@
 
     <string name="pickVenue">Venues</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="settingsOption">Select this settings option.</string>
+
+    <string name="noGooglePlay">Oh no! It looks like your device does not support Google Play Services, so we are unable to show this page.</string>
 
 </resources>

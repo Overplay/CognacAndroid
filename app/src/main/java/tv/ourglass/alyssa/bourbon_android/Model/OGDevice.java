@@ -1,4 +1,4 @@
-package tv.ourglass.alyssa.bourbon_android.Models;
+package tv.ourglass.alyssa.bourbon_android.Model;
 
 /**
  * Created by atorres on 11/8/16.

@@ -1,6 +1,4 @@
-package tv.ourglass.alyssa.bourbon_android.Models;
-
-import tv.ourglass.alyssa.bourbon_android.Scenes.Settings.SettingsFragment;
+package tv.ourglass.alyssa.bourbon_android.Model;
 
 /**
  * Created by atorres on 11/11/16.
@@ -20,14 +18,20 @@ public class OGConstants {
     public static final String loginPath = ourglassBasePort + "/auth/login";
     public static final String changePwdPath = ourglassBasePort + "/auth/changePwd";
     public static final String getAuthStatusPath = ourglassBasePort + "/auth/status";
-    public static final String changeAccountPath = ourglassBasePort + "/api/v1/user/";
+    public static final String changeAccountPath = ourglassBasePort + "/user/";
     public static final String inviteUserPath = ourglassBasePort + "/user/inviteNewUser";
     public static final String checkJWTPath = ourglassBasePort + "/user/checkjwt";
 
-    public static final String newVenuesPath = ourglassBasePort + "/api/v1/venue";
+    public static final String venuesPath = ourglassBasePort + "/venue/all";
+    public static final String userVenuesPath = ourglassBasePort + "/venue/myvenues";
     public static final String devicesPath = ":2001/venue/devices?atVenueUUID=";
     public static final String deviceControlPath = ":2001/blueline/control/?deviceUDID=";
     public static final String appControlPath = "app/control/index.html";
+    public static final String findByRegCodePath = ":2001/ogdevice/findByRegCode?regCode=";
+    public static final String changeDeviceNamePath = ":2001/ogdevice/changeName";
+    public static final String associateWithVenuePath = ":2001/ogdevice/associateWithVenue";
+    public static final String addVenuePath = ourglassBasePort + "/venue";
+    public static final String yelpSearchPath = ourglassBasePort + "/venue/yelpSearch";
 
     // Regex constants
     public static final String emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}";

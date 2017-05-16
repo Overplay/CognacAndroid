@@ -20,8 +20,8 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import tv.ourglass.alyssa.bourbon_android.Models.OGConstants;
-import tv.ourglass.alyssa.bourbon_android.Models.OGDevice;
+import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
+import tv.ourglass.alyssa.bourbon_android.Model.OGDevice;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
 
@@ -42,6 +42,7 @@ public class ChooseDeviceFragment extends Fragment {
         public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
 
             switch (error) {
+
                 case authFailure:
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -61,6 +62,7 @@ public class ChooseDeviceFragment extends Fragment {
                             alert.show();
                         }
                     });
+                    break;
 
                 case tokenInvalid:
                     getActivity().runOnUiThread(new Runnable() {
@@ -81,6 +83,7 @@ public class ChooseDeviceFragment extends Fragment {
                             alert.show();
                         }
                     });
+                    break;
 
                 default:
                     getActivity().runOnUiThread(new Runnable() {
@@ -167,6 +170,10 @@ public class ChooseDeviceFragment extends Fragment {
 
         ListView listView = (ListView) rootView.findViewById(R.id.deviceList);
         listView.setAdapter(this.devicesListAdapter);
+
+        // set empty view
+        TextView empty = (TextView) rootView.findViewById(R.id.empty);
+        listView.setEmptyView(empty);
 
         TextView venueNameLabel = (TextView) rootView.findViewById(R.id.venueName);
         venueNameLabel.setText(mVenueName);

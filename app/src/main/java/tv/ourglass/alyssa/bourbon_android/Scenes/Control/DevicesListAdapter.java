@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import tv.ourglass.alyssa.bourbon_android.Models.OGDevice;
+import tv.ourglass.alyssa.bourbon_android.Model.OGDevice;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
