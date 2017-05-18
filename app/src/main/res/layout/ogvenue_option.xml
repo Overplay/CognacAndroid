@@ -1,42 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:orientation="vertical"
     android:paddingBottom="8dp">
 
     <tv.ourglass.alyssa.bourbon_android.Views.LightTextView
         android:id="@+id/sectionHeader"
+        style="@android:style/TextAppearance.Small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingTop="8dp"
+        android:background="@color/OGDarkGrey"
         android:paddingBottom="8dp"
-        style="@android:style/TextAppearance.Small"
-        android:background="@color/OGDockColor"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingTop="8dp"
         android:textColor="@color/OGWhite"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
-    <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        style="@android:style/TextAppearance.Medium"
-        android:textColor="@color/OGWhite" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
-        android:id="@+id/address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        style="@android:style/TextAppearance.Small"
-        android:textColor="@color/OGLightGrey"
-        android:paddingTop="5dp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/indicator"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true">
+
+            <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
+                android:id="@+id/name"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:textColor="@color/OGWhite" />
+
+            <tv.ourglass.alyssa.bourbon_android.Views.LightTextView
+                android:id="@+id/address"
+                style="@android:style/TextAppearance.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingTop="5dp"
+                android:textColor="@color/OGLightGrey" />
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/settingsOption"
+            android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:tint="@color/OGWhite" />
+
+    </RelativeLayout>
 
 </LinearLayout>

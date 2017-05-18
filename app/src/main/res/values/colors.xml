@@ -4,8 +4,10 @@
     <color name="OGLightBlue">#20b8eb</color>
     <color name="OGOrange">#ff8000</color>
     <color name="OGGreen">#51b85e</color>
-    <color name="OGDockColor">#4d4d4d</color>
-    <color name="OGMediumGrey">#808080</color>
+    <color name="OGDarkGrey">#262626</color>
     <color name="OGBackgroundGrey">#333333</color>
     <color name="OGLightGrey">#c7c5c5</color>
+
+    <color name="OGDockColor">#4d4d4d</color>
+    <color name="colorPrimaryDark">#4d4d4d</color>
 </resources>

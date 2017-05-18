@@ -4,8 +4,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -24,6 +28,7 @@ import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
 import tv.ourglass.alyssa.bourbon_android.Model.OGDevice;
 import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
 import tv.ourglass.alyssa.bourbon_android.R;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 public class ChooseDeviceFragment extends Fragment {
 
@@ -160,27 +165,42 @@ public class ChooseDeviceFragment extends Fragment {
             mVenueName = "";
             mVenueUUID = "";
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_choose_device, container, false);
 
-        devicesListAdapter = new DevicesListAdapter(getActivity(), mDevices);
+        // set up top toolbar
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolbar.setTitle(mVenueName);
+        ((MainTabsActivity) getActivity()).setSupportActionBar(toolbar);
 
+        // set up devices list
+        devicesListAdapter = new DevicesListAdapter(getActivity(), mDevices);
         ListView listView = (ListView) rootView.findViewById(R.id.deviceList);
         listView.setAdapter(this.devicesListAdapter);
 
-        // set empty view
+        // set empty view for list
         TextView empty = (TextView) rootView.findViewById(R.id.empty);
         listView.setEmptyView(empty);
-
-        TextView venueNameLabel = (TextView) rootView.findViewById(R.id.venueName);
-        venueNameLabel.setText(mVenueName);
 
         Applejack.getInstance().getDevices(getActivity(), mVenueUUID, devicesCallback);
 
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+
+        // hide menu items we don't want here
+        MenuItem add = menu.findItem(R.id.action_add);
+        add.setVisible(false);
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     public static ChooseDeviceFragment newInstance(String venueName, String venueUUID) {

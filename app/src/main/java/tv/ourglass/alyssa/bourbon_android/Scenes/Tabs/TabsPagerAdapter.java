@@ -65,16 +65,6 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         return tabs.get(position);
-        /*switch (tabOptions.get(position).title) {
-            case "TV":
-                return new ChooseVenueFragment();
-            case "Locations":
-                return new MapFragment();
-            case "Settings":
-                return new SettingsFragment();
-            default:
-                return new BlankFragment();
-        }*/
     }
 
     @Override
@@ -92,7 +82,11 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         return sb;
     }
 
-    /* Returns the view with an icon and a title below for the tab at position.
+    /**
+     * Returns the view with an icon and a title below for the tab at position.
+     *
+     * @param position tab position
+     * @return the tab view
      */
     View getTabView(int position) {
         View v = LayoutInflater.from(context).inflate(R.layout.custom_tab, null);

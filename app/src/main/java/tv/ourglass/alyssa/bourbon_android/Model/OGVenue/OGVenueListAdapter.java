@@ -1,10 +1,12 @@
 package tv.ourglass.alyssa.bourbon_android.Model.OGVenue;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,12 +30,22 @@ public class OGVenueListAdapter extends BaseAdapter {
 
     private OGVenueType type;
 
-    final private OnClickVenue onClickVenue;
+    private OnClickVenue onClickVenue;
+
+    private int indicatorVisibility = View.GONE;
 
     public OGVenueListAdapter(Context context, OGVenueType type, OnClickVenue onClickVenue) {
         this.context = context;
         this.type = type;
         this.onClickVenue = onClickVenue;
+    }
+
+    public OGVenueListAdapter(Context context, OGVenueType type, OnClickVenue onClickVenue,
+                              int indicatorVisibility) {
+        this.context = context;
+        this.type = type;
+        this.onClickVenue = onClickVenue;
+        this.indicatorVisibility = indicatorVisibility;
     }
 
     @Override
@@ -87,13 +99,19 @@ public class OGVenueListAdapter extends BaseAdapter {
             } else if (position == myVenues.get(0).venues.size()) {  // first entry of second section
                 header.setText(myVenues.get(1).label);
                 header.setVisibility(View.VISIBLE);
+
             } else {
                 header.setVisibility(View.GONE);
             }
         }
 
+        // set visibility of arrow indicator
+        ImageView indicator = (ImageView) view.findViewById(R.id.indicator);
+        indicator.setVisibility(indicatorVisibility);
+
         view.setTag(venue);
 
+        // set on click listener
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

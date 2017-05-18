@@ -4,14 +4,26 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
+import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenue;
+import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenueListAdapter;
+import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenueType;
+import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 public class DeviceViewFragment extends WebViewBaseFragment {

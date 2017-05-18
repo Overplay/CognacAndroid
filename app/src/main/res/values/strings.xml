@@ -51,4 +51,5 @@
 
     <string name="noGooglePlay">Oh no! It looks like your device does not support Google Play Services, so we are unable to show this page.</string>
 
+    <string name="action_add">Add</string>
 </resources>

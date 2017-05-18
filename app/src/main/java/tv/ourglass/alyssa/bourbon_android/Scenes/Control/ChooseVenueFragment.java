@@ -10,8 +10,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -105,6 +109,8 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
                 .registerReceiver(mBroadcastReceiver,
                         new IntentFilter(BourbonNotification.allVenuesUpdated.name()));
 
+        setHasOptionsMenu(true);
+
         super.onCreate(savedInstanceState);
     }
 
@@ -112,6 +118,12 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_venues, container, false);
 
+        // set up top toolbar
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolbar.setTitle("Venues");
+        ((MainTabsActivity) getActivity()).setSupportActionBar(toolbar);
+
+        // set up venue list
         mVenueListAdapter = new OGVenueListAdapter(getActivity(), OGVenueType.ALL,
                 new OGVenueListAdapter.OnClickVenue() {
                     @Override
@@ -121,19 +133,28 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
                                     ChooseDeviceFragment.newInstance(venue.name, venue.uuid));
                         }
                     }
-                });
-
-        // attach the adapter to the list view
+                }, View.VISIBLE);
         ListView listView = (ListView) rootView.findViewById(R.id.venueList);
         listView.setAdapter(mVenueListAdapter);
 
-        // set empty view
+        // set empty view for list
         TextView empty = (TextView) rootView.findViewById(R.id.empty);
         listView.setEmptyView(empty);
 
         this.getVenues();
 
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+
+        // hide menu items we don't want here
+        MenuItem add = menu.findItem(R.id.action_add);
+        add.setVisible(false);
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

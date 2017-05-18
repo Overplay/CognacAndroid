@@ -4,7 +4,7 @@
     android:id="@+id/activity_check_auth"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/OGBackgroundGrey"
+    android:background="@color/OGDockColor"
     tools:context="tv.ourglass.alyssa.bourbon_android.Scenes.Registration.CheckAuthActivity">
 
 </RelativeLayout>

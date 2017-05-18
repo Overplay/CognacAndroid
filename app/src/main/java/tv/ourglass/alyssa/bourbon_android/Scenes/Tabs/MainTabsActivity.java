@@ -11,10 +11,15 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
 
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Control.ChooseDeviceFragment;
+import tv.ourglass.alyssa.bourbon_android.Views.CrossFadePageTransformer;
 
 public class MainTabsActivity extends AppCompatActivity {
 
@@ -43,7 +48,11 @@ public class MainTabsActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(tabsPagerAdapter);
 
-        viewPager.setOffscreenPageLimit(2); // change this for more tabs to preserve state
+        // this preserves the state of the tabs not in view
+        viewPager.setOffscreenPageLimit(tabsPagerAdapter.getCount());
+
+        // use a cross fade transition between tabs
+        viewPager.setPageTransformer(false, new CrossFadePageTransformer());
 
         // Give the TabLayout the ViewPager
         tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -75,6 +84,12 @@ public class MainTabsActivity extends AppCompatActivity {
         super.onDestroy();
         this.unregisterReceiver(mWifiBroadcastReceiver);
     }
+
+    /*@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }*/
 
     public void openNewFragment(Fragment fragment) {
         HostFragment hostFragment = (HostFragment) tabsPagerAdapter.getItem(viewPager.getCurrentItem());
