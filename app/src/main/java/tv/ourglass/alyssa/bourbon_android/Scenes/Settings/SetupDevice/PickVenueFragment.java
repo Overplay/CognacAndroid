@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,12 @@ public class PickVenueFragment extends Fragment {
 
     BroadcastReceiver mBroadcastReceiver;
 
+    ListView mVenueList;
+
+    View mEmptyView;
+
+    ProgressBar mProgressSpinner;
+
     Applejack.HttpCallback venueCallback = new Applejack.HttpCallback() {
 
         @Override
@@ -51,6 +59,9 @@ public class PickVenueFragment extends Fragment {
                 @Override
                 public void run() {
                     mVenueListAdapter.notifyDataSetChanged();
+                    mVenueList.setEmptyView(mEmptyView);
+                    mProgressSpinner.setVisibility(View.GONE);
+
                 }
             });
             response.body().close();
@@ -62,6 +73,8 @@ public class PickVenueFragment extends Fragment {
                 @Override
                 public void run() {
                     Toast.makeText(getActivity(), "Error retrieving venues", Toast.LENGTH_SHORT).show();
+                    mVenueList.setEmptyView(mEmptyView);
+                    mProgressSpinner.setVisibility(View.GONE);
                 }
             });
         }
@@ -109,17 +122,23 @@ public class PickVenueFragment extends Fragment {
                                 SetupDeviceFragment.newInstance(venue));
                     }
                 }, View.VISIBLE);
-        ListView listView = (ListView) rootView.findViewById(R.id.venueList);
-        listView.setAdapter(mVenueListAdapter);
-
-        // set empty view for list
-        TextView empty = (TextView) rootView.findViewById(R.id.empty);
-        listView.setEmptyView(empty);
+        mVenueList = (ListView) rootView.findViewById(R.id.venueList);
+        mVenueList.setAdapter(mVenueListAdapter);
+        mEmptyView = rootView.findViewById(R.id.empty);
+        mProgressSpinner = (ProgressBar) rootView.findViewById(R.id.progress);
+        mProgressSpinner.setVisibility(View.VISIBLE);
 
         // get venues
         StateController.getInstance().findMyVenues(venueCallback);
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // set to null to remove any previously selected Yelp venue
+        ((MainTabsActivity) getActivity()).setSelectedYelpVenue(null);
     }
 
     @Override
@@ -131,6 +150,7 @@ public class PickVenueFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
+        menu.findItem(R.id.action_add).setVisible(true);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

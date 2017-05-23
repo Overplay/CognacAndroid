@@ -32,9 +32,10 @@
 
             <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
                 android:id="@+id/name"
-                style="@android:style/TextAppearance.Medium"
-                android:layout_width="wrap_content"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:layout_marginTop="8dp"
                 android:paddingEnd="@dimen/activity_horizontal_margin"
                 android:paddingStart="@dimen/activity_horizontal_margin"
@@ -42,9 +43,11 @@
 
             <tv.ourglass.alyssa.bourbon_android.Views.LightTextView
                 android:id="@+id/address"
-                style="@android:style/TextAppearance.Small"
-                android:layout_width="wrap_content"
+                style="@style/TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="marquee"
                 android:paddingEnd="@dimen/activity_horizontal_margin"
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingTop="5dp"

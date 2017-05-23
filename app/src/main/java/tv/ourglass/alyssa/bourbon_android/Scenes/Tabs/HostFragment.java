@@ -34,12 +34,12 @@ public class HostFragment extends BackStackFragment {
         return view;
     }
 
-    public void replaceFragment(Fragment fragment, boolean addToBackstack) {
-        if (addToBackstack) {
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
+        if (addToBackStack) {
             getChildFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.activity_in, R.anim.activity_out,
                             R.anim.activity_back_in, R.anim.activity_back_out)
-                    .replace(R.id.hosted_fragment, fragment)
+                    .replace(R.id.hosted_fragment, fragment, fragment.getClass().getName())
                     .addToBackStack(null)
                     .commit();
 
@@ -48,5 +48,9 @@ public class HostFragment extends BackStackFragment {
                     .replace(R.id.hosted_fragment, fragment)
                     .commit();
         }
+    }
+
+    public Fragment getFragment() {
+        return fragment;
     }
 }

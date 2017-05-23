@@ -10,4 +10,10 @@
 
     <color name="OGDockColor">#4d4d4d</color>
     <color name="colorPrimaryDark">#4d4d4d</color>
+
+    <color name="yelpRed">#d32323</color>
+
+    <color name="secondaryText">#aabfbfbf</color>
+
+    <color name="actionBlue">#007aff</color>
 </resources>

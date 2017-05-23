@@ -27,7 +27,7 @@ public class OGConstants {
     public static final String devicesPath = ":2001/venue/devices?atVenueUUID=";
     public static final String deviceControlPath = ":2001/blueline/control/?deviceUDID=";
     public static final String appControlPath = "app/control/index.html";
-    public static final String findByRegCodePath = ":2001/ogdevice/findByRegCode?regCode=";
+    public static final String findByRegCodePath = ":2001/ogdevice/findByRegCode?regcode=";
     public static final String changeDeviceNamePath = ":2001/ogdevice/changeName";
     public static final String associateWithVenuePath = ":2001/ogdevice/associateWithVenue";
     public static final String addVenuePath = ourglassBasePort + "/venue";

@@ -9,4 +9,81 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <LinearLayout
+        android:id="@+id/layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin">
+
+        <tv.ourglass.alyssa.bourbon_android.Views.MediumTextView
+            android:id="@+id/venueName"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/OGWhite"/>
+
+        <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
+            android:id="@+id/venueAddress"
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/OGWhite"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                android:id="@+id/regCode"
+                android:hint="@string/regCodeHint"
+                android:textColor="@color/OGWhite"
+                android:inputType="text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                android:id="@+id/deviceName"
+                android:hint="@string/deviceNameHint"
+                android:textColor="@color/OGWhite"
+                android:inputType="textCapSentences|textAutoCorrect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <tv.ourglass.alyssa.bourbon_android.Views.RegularButton
+            android:id="@+id/createDevice"
+            android:text="@string/createDevice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="64dp"
+            android:paddingEnd="64dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_gravity="center"
+            android:theme="@style/BlueButton"
+            style="@style/Widget.AppCompat.Button.Colored"/>
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            android:minWidth="50dp"
+            android:layout_marginTop="28dp"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
 </LinearLayout>

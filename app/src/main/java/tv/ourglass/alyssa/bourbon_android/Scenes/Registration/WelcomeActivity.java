@@ -12,6 +12,20 @@ public class WelcomeActivity extends RegistrationBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+        findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                login();
+            }
+        });
+
+        findViewById(R.id.signupButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signup();
+            }
+        });
     }
 
     @Override
@@ -19,13 +33,13 @@ public class WelcomeActivity extends RegistrationBaseActivity {
         // make Android back button do nothing
     }
 
-    public void login(View view) {
+    public void login() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
     }
 
-    public void signup(View view) {
+    public void signup() {
         Intent intent = new Intent(this, EnterNameActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.activity_in, R.anim.activity_out);

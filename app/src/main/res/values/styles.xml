@@ -7,7 +7,11 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/OGWhite</item>
         <item name="android:textColorPrimary">@color/OGWhite</item>
+        <item name="android:textColorSecondary">@color/OGWhite</item>
         <item name="android:editTextBackground">@color/OGWhite</item>
+        <item name="android:textColorHint">@color/secondaryText</item>
+        <item name="android:alertDialogTheme">@style/Theme.AppCompat.Light.Dialog.Alert</item>
+        <item name="alertDialogTheme">@style/Theme.AppCompat.Light.Dialog.Alert</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBarOverlay">true</item>
     </style>
@@ -21,6 +25,14 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="RedButton" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/yelpRed</item>
+    </style>
+
+    <style name="BlueButton" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/OGLightBlue</item>
+    </style>
+
     <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabTextAppearance">@style/MyCustomTabTextAppearance</item>
     </style>
@@ -33,7 +45,7 @@
     <style name="PageHeader">
         <item name="android:textColor">@color/OGWhite</item>
         <item name="android:textSize">30sp</item>
-        <item name="android:background">@color/OGDockColor</item>
+        <item name="android:background">@color/OGBackgroundGrey</item>
         <item name="android:paddingTop">20dp</item>
         <item name="android:paddingBottom">20dp</item>
         <item name="android:layout_width">fill_parent</item>
@@ -54,6 +66,7 @@
     <style name="EditTextCustom" parent="android:Widget.EditText">
         <item name="android:background">@drawable/apptheme_edit_text_holo_light</item>
         <item name="android:textColor">@color/OGWhite</item>
+
     </style>
 
 </resources>

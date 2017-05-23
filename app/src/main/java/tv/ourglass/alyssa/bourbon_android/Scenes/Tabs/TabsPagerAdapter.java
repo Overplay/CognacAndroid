@@ -43,7 +43,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     }
 
     private ArrayList<TabOption> tabOptions = new ArrayList<TabOption>() {{
-        add(new TabOption("TV", R.drawable.ic_tv_black_24dp));
+        add(new TabOption("Locations", R.drawable.ic_tv_black_24dp));
         add(new TabOption("Map", R.drawable.ic_map_black_24dp));
         add(new TabOption("Settings", R.drawable.ic_settings_black_24dp));
     }};

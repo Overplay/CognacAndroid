@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/OGDockColor"
+    android:background="@color/OGBackgroundGrey"
     tools:context=".Scenes.Registration.WelcomeActivity">
 
     <View
@@ -60,8 +60,7 @@
             android:id="@+id/loginButton"
             android:textAppearance="@style/TextAppearance.AppCompat"
             android:textColor="@color/OGWhite"
-            android:textSize="20sp"
-            android:onClick="login" />
+            android:textSize="20sp" />
 
         <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
             android:text="@string/or"
@@ -90,8 +89,7 @@
             android:id="@+id/signupButton"
             android:textAppearance="@style/TextAppearance.AppCompat"
             android:textColor="@color/OGWhite"
-            android:textSize="20sp"
-            android:onClick="signup" />
+            android:textSize="20sp" />
 
     </RelativeLayout>
 

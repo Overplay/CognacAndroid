@@ -15,9 +15,10 @@ import tv.ourglass.alyssa.bourbon_android.Model.StateController;
 import tv.ourglass.alyssa.bourbon_android.R;
 
 /**
+ * List adapter for OGVenues.
+ *
  * Created by atorres on 5/13/17.
  */
-
 public class OGVenueListAdapter extends BaseAdapter {
 
     public interface OnClickVenue {

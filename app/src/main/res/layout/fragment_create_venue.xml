@@ -1,12 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillViewport="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        layout="@layout/toolbar"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
 
-</LinearLayout>
+        <include
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:id="@+id/layout"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin">
+
+            <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                android:id="@+id/yelpSearchTerm"
+                android:hint="@string/yelpSearchTermHint"
+                android:drawableStart="@drawable/ic_search_light_24px"
+                android:textColor="@color/OGWhite"
+                android:inputType="textAutoCorrect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                android:id="@+id/yelpSearchLocation"
+                android:hint="@string/yelpSearchLocation"
+                android:drawableStart="@drawable/ic_location_on_light_24px"
+                android:drawableEnd="@drawable/ic_near_me_blue_24px"
+                android:textColor="@color/OGWhite"
+                android:inputType="textAutoCorrect|textCapSentences"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <tv.ourglass.alyssa.bourbon_android.Views.RegularButton
+                android:id="@+id/yelpSearch"
+                android:text="@string/yelpSearchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_gravity="center"
+                android:theme="@style/RedButton"
+                style="@style/Widget.AppCompat.Button.Colored" />
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                    android:id="@+id/venueName"
+                    android:hint="@string/venueNameHint"
+                    android:textColor="@color/OGWhite"
+                    android:inputType="textAutoCorrect|textCapSentences"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                    android:id="@+id/address"
+                    android:hint="@string/addressHint"
+                    android:textColor="@color/OGWhite"
+                    android:inputType="textAutoCorrect|textCapSentences|textPostalAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                    android:id="@+id/address2"
+                    android:hint="@string/address2Hint"
+                    android:textColor="@color/OGWhite"
+                    android:inputType="textAutoCorrect|textCapSentences|textPostalAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                    android:id="@+id/city"
+                    android:hint="@string/cityHint"
+                    android:textColor="@color/OGWhite"
+                    android:inputType="textAutoCorrect|textCapSentences"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                    android:id="@+id/state"
+                    android:hint="@string/stateHint"
+                    android:textColor="@color/OGWhite"
+                    android:inputType="textAutoCorrect|textCapSentences"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nextFocusForward="@+id/zip"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                    android:id="@+id/zip"
+                    android:hint="@string/zipHint"
+                    android:textColor="@color/OGWhite"
+                    android:inputType="number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <tv.ourglass.alyssa.bourbon_android.Views.RegularButton
+                android:id="@+id/createVenue"
+                android:text="@string/createVenue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="64dp"
+                android:paddingEnd="64dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_gravity="center"
+                android:theme="@style/BlueButton"
+                style="@style/Widget.AppCompat.Button.Colored" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

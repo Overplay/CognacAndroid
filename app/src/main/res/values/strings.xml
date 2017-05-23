@@ -52,4 +52,34 @@
     <string name="noGooglePlay">Oh no! It looks like your device does not support Google Play Services, so we are unable to show this page.</string>
 
     <string name="action_add">Add</string>
+
+    <string name="yelpSearchTermHint">e.g. tacos, delivery, Max\'s</string>
+    <string name="yelpSearchLocation">city, state, or zip code</string>
+    <string name="yelpSearchButton">Find on Yelp</string>
+
+    <string name="venueNameHint">Venue name*</string>
+    <string name="addressHint">Street Address*</string>
+    <string name="address2Hint">Street Address 2</string>
+    <string name="cityHint">City*</string>
+    <string name="stateHint">State/Province*</string>
+    <string name="zipHint">Postal/Zip Code*</string>
+
+    <string name="createVenue">Create</string>
+    <string name="createDevice">Create</string>
+
+    <string name="regCodeHint">Registration code</string>
+    <string name="deviceNameHint">Device name</string>
+
+    <string name="currentLocation">Current location</string>
+
+    <string name="yelpVenueImageDescription">Image for this Yelp venue.</string>
+
+    <string name="email_not_valid">Oops! It looks like this email is not valid.</string>
+
+    <string name="pwd_not_valid">The password you entered is not valid.</string>
+
+    <string name="req_field">This is a required field.</string>
+
+    <string name="venue_created">Venue created!</string>
+
 </resources>

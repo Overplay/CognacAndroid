@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -85,6 +85,8 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         if (mLocationClient == null) {
             mLocationClient = new GoogleApiClient.Builder(this.getContext())
                     .addConnectionCallbacks(this)
@@ -109,9 +111,7 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
                 .registerReceiver(mBroadcastReceiver,
                         new IntentFilter(BourbonNotification.allVenuesUpdated.name()));
 
-        setHasOptionsMenu(true);
-
-        super.onCreate(savedInstanceState);
+        //setHasOptionsMenu(true);
     }
 
     @Override
@@ -136,10 +136,7 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
                 }, View.VISIBLE);
         ListView listView = (ListView) rootView.findViewById(R.id.venueList);
         listView.setAdapter(mVenueListAdapter);
-
-        // set empty view for list
-        TextView empty = (TextView) rootView.findViewById(R.id.empty);
-        listView.setEmptyView(empty);
+        listView.setEmptyView(rootView.findViewById(R.id.empty));
 
         this.getVenues();
 
@@ -149,12 +146,13 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
-
-        // hide menu items we don't want here
-        MenuItem add = menu.findItem(R.id.action_add);
-        add.setVisible(false);
-
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_add).setVisible(false);
     }
 
     @Override

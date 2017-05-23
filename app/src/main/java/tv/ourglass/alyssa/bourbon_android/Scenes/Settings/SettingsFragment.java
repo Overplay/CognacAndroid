@@ -3,7 +3,10 @@ package tv.ourglass.alyssa.bourbon_android.Scenes.Settings;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -15,6 +18,8 @@ import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 
 public class SettingsFragment extends Fragment {
+
+    String TAG = "SettingsFragment";
 
     private ArrayList<SettingsListOption> options = new ArrayList<SettingsListOption>() {{
         add(new SettingsListOption("My Venues", R.drawable.default_dot));
@@ -47,5 +52,11 @@ public class SettingsFragment extends Fragment {
         listView.setAdapter(adapter);
 
         return view;
+    }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        menu.findItem(R.id.action_add).setVisible(false);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }

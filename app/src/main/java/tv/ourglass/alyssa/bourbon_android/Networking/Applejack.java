@@ -662,11 +662,11 @@ public class Applejack {
      * Performs a Yelp search.
      *
      * @param context the context to use
-     * @param location search location
      * @param term search term
+     * @param location search location
      * @param cb the callback to process the response
      */
-    public void yelpSearch(Context context, String location, String term, HttpCallback cb) {
+    public void yelpSearch(Context context, String term, String location, HttpCallback cb) {
         String url = OGConstants.ourglassCloudBaseUrl + OGConstants.yelpSearchPath;
         url += "?location=" + location + "&term=" + term;
         get(context, url, cb);
@@ -676,12 +676,12 @@ public class Applejack {
      * Performs a Yelp search.
      *
      * @param context the context to use
+     * @param term search term
      * @param latitude latitude of the search location
      * @param longitude longitude of the search location
-     * @param term search term
      * @param cb the callback to process the response
      */
-    public void yelpSearch(Context context, double latitude, double longitude, String term,
+    public void yelpSearch(Context context, String term, double latitude, double longitude,
                            HttpCallback cb) {
         String url = OGConstants.ourglassCloudBaseUrl + OGConstants.yelpSearchPath;
         url += "?latitude=" + latitude + "&longitude=" + longitude + "&term=" + term;
@@ -702,8 +702,8 @@ public class Applejack {
             params.put("yelpId", venue.yelpId);
 
             JSONObject addr = new JSONObject();
-            addr.put("street", venue.street);
-            addr.put("street2", venue.street2);
+            addr.put("street", venue.address1);
+            addr.put("street2", venue.address2);
             addr.put("city", venue.city);
             addr.put("state", venue.state);
             addr.put("zip", venue.zip);

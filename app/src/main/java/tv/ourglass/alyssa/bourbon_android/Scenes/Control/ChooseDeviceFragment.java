@@ -2,6 +2,7 @@ package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -166,7 +167,7 @@ public class ChooseDeviceFragment extends Fragment {
             mVenueUUID = "";
         }
 
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
     }
 
     @Override
@@ -182,10 +183,7 @@ public class ChooseDeviceFragment extends Fragment {
         devicesListAdapter = new DevicesListAdapter(getActivity(), mDevices);
         ListView listView = (ListView) rootView.findViewById(R.id.deviceList);
         listView.setAdapter(this.devicesListAdapter);
-
-        // set empty view for list
-        TextView empty = (TextView) rootView.findViewById(R.id.empty);
-        listView.setEmptyView(empty);
+        listView.setEmptyView(rootView.findViewById(R.id.empty));
 
         Applejack.getInstance().getDevices(getActivity(), mVenueUUID, devicesCallback);
 
@@ -195,12 +193,13 @@ public class ChooseDeviceFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
-
-        // hide menu items we don't want here
-        MenuItem add = menu.findItem(R.id.action_add);
-        add.setVisible(false);
-
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_add).setVisible(false);
     }
 
     public static ChooseDeviceFragment newInstance(String venueName, String venueUUID) {

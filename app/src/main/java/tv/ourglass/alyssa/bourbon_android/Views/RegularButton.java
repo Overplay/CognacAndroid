@@ -2,8 +2,8 @@ package tv.ourglass.alyssa.bourbon_android.Views;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
-import android.widget.Button;
 
 import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
 
@@ -11,7 +11,7 @@ import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
  * Created by atorres on 3/1/17.
  */
 
-public class RegularButton extends Button {
+public class RegularButton extends AppCompatButton {
 
     public RegularButton(Context context) {
         super(context);

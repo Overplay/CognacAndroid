@@ -96,10 +96,12 @@ public class StateController {
     }
 
     public void findAllVenues(Applejack.HttpCallback cb) {
+        Log.d(TAG, "findAllVenues");
         Applejack.getInstance().getVenues(BourbonApplication.getContext(), wrapAllVenuesCb(cb));
     }
 
     public void findMyVenues(Applejack.HttpCallback cb) {
+        Log.d(TAG, "findMyVenues");
         Applejack.getInstance().getUserVenues(BourbonApplication.getContext(), wrapMyVenuesCb(cb));
     }
 
@@ -126,7 +128,7 @@ public class StateController {
                 // TODO: test that this works under all conditions
                 // check for the optional values
                 try {
-                    ogVenue.street2 = addr.getString("street2");
+                    ogVenue.address2 = addr.getString("street2");
                 } finally {
                     try {
                         ogVenue.yelpId = venue.getString("yelpId");

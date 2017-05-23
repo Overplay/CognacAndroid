@@ -13,6 +13,7 @@
 
     <ListView
         android:id="@+id/optionsList"
+        android:divider="@color/OGDockColor"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:layout_width="match_parent"

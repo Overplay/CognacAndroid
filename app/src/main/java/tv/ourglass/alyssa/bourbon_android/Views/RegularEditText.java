@@ -2,8 +2,8 @@ package tv.ourglass.alyssa.bourbon_android.Views;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.design.widget.TextInputEditText;
 import android.util.AttributeSet;
-import android.widget.EditText;
 
 import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
 
@@ -11,7 +11,7 @@ import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
  * Created by atorres on 3/1/17.
  */
 
-public class RegularEditText extends EditText {
+public class RegularEditText extends TextInputEditText {
 
     public RegularEditText(Context context) {
         super(context);

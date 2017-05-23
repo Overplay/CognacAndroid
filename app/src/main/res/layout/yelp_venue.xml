@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+    
+    <ImageView
+        android:id="@+id/venue_image"
+        android:layout_width="@dimen/yelp_image_size"
+        android:layout_height="@dimen/yelp_image_size"
+        android:scaleType="fitXY"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/yelpVenueImageDescription"
+        android:layout_margin="8dp" />
+
+    <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
+        android:id="@+id/name"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:maxLines="2"
+        android:ellipsize="marquee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/venue_image"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:layout_alignParentTop="true"/>
+
+    <tv.ourglass.alyssa.bourbon_android.Views.LightTextView
+        android:id="@+id/address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/OGWhite"
+        android:maxLines="2"
+        android:ellipsize="marquee"
+        android:layout_toEndOf="@+id/venue_image"
+        android:layout_below="@+id/name"/>
+
+    <tv.ourglass.alyssa.bourbon_android.Views.LightTextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/OGWhite"
+        android:textAlignment="textEnd"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:maxLines="1"
+        android:layout_toEndOf="@+id/name"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>
