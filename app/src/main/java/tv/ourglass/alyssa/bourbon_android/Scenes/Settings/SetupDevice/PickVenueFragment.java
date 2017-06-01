@@ -108,7 +108,7 @@ public class PickVenueFragment extends Fragment {
 
         // set up top toolbar
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        toolbar.setTitle("Pick a venue");
+        toolbar.setTitle(getString(R.string.tb_pick_venue));
         ((MainTabsActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set up venue list

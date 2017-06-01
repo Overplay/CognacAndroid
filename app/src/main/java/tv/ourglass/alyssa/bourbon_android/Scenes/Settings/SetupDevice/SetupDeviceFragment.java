@@ -62,7 +62,7 @@ public class SetupDeviceFragment extends Fragment {
 
         // set up toolbar
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        toolbar.setTitle("Setup Device");
+        toolbar.setTitle(getString(R.string.tb_setup_device));
         ((MainTabsActivity) getActivity()).setSupportActionBar(toolbar);
 
         // setup progress spinner
@@ -224,7 +224,7 @@ public class SetupDeviceFragment extends Fragment {
             public void run() {
                 createDeviceButton.setEnabled(true);
                 progressSpinner.setVisibility(View.GONE);
-                showAlert("Uh oh!", message);
+                showAlert(getString(R.string.uhoh), message);
             }
         });
     }
@@ -233,7 +233,7 @@ public class SetupDeviceFragment extends Fragment {
         AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
         alert.setTitle(title);
         alert.setMessage(message);
-        alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok",
+        alert.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.ok),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

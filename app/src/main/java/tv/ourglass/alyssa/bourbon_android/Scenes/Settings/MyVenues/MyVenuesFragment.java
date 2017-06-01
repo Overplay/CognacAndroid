@@ -107,7 +107,7 @@ public class MyVenuesFragment extends Fragment {
 
         // set up top toolbar
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        toolbar.setTitle("My venues");
+        toolbar.setTitle(getString(R.string.tb_my_venues));
         ((MainTabsActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set up venue list

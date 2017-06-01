@@ -65,14 +65,14 @@ public class DeviceViewFragment extends WebViewBaseFragment {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 view.setVisibility(View.INVISIBLE);
-                showAlert("Uh oh!", error.getDescription().toString());
+                showAlert(getString(R.string.uhoh), error.getDescription().toString());
             }
 
             @SuppressWarnings("deprecation")
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 view.setVisibility(View.INVISIBLE);
-                showAlert("Uh oh!", description);
+                showAlert(getString(R.string.uhoh), description);
             }
 
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -110,7 +110,7 @@ public class DeviceViewFragment extends WebViewBaseFragment {
                         }
 
                         if (timeout) {
-                            showAlert("Uh oh!", "We were unable to connect to this device.");
+                            showAlert(getString(R.string.uhoh), "We were unable to connect to this device.");
                         }
                     }
                 }).start();

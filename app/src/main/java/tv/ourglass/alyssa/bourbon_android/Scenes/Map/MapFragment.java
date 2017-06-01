@@ -296,7 +296,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
         if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivity(mapIntent);
         } else {
-            showAlert("Uh oh!", "We couldn't find a navigation app installed on your device.");
+            showAlert(getString(R.string.uhoh), "We couldn't find a navigation app installed on your device.");
         }
     }
 
@@ -304,7 +304,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
         AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
         alert.setTitle(title);
         alert.setMessage(message);
-        alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok",
+        alert.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.ok),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

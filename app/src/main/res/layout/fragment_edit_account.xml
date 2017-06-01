@@ -1,8 +1,14 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="tv.ourglass.alyssa.bourbon_android.Scenes.Settings.EditAccount.EditAccountFragment">
+
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:id="@+id/edit_account"
@@ -52,19 +58,37 @@
                 android:textColor="@color/OGWhite"/>
         </android.support.design.widget.TextInputLayout>
 
-        <tv.ourglass.alyssa.bourbon_android.Views.RegularButton
-            android:id="@+id/save"
-            android:layout_marginTop="8dp"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:background="@android:color/transparent"
-            android:textColor="@color/OGWhite"
-            android:text="@string/save"
-            android:textAlignment="textEnd" />
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <tv.ourglass.alyssa.bourbon_android.Views.RegularButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/changePasswordButton"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/save"
+                android:background="@android:color/transparent"
+                android:textColor="@color/OGWhite"
+                android:text="@string/change_password"
+                android:textAlignment="textStart"/>
+
+            <tv.ourglass.alyssa.bourbon_android.Views.RegularButton
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@android:color/transparent"
+                android:textColor="@color/OGWhite"
+                android:text="@string/save"
+                android:textAlignment="textEnd" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>
 
 

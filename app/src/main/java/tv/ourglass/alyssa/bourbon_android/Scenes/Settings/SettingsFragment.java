@@ -41,7 +41,7 @@ public class SettingsFragment extends Fragment {
 
         // set up top toolbar
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Settings");
+        toolbar.setTitle(getString(R.string.tb_settings));
         ((MainTabsActivity) getActivity()).setSupportActionBar(toolbar);
 
         // Create the adapter to convert the array to views

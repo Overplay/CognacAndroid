@@ -81,6 +81,8 @@ public class OGCloud {
 
                 if (!response.isSuccessful()) {
 
+                    Log.d(TAG, String.format("%d", response.code()));
+
                     // if error 403, then check authorization
                     if (response.code() == 403) {
 

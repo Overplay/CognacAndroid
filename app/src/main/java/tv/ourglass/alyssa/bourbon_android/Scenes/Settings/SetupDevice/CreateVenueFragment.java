@@ -65,7 +65,7 @@ public class CreateVenueFragment extends Fragment {
 
         // set up toolbar
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        toolbar.setTitle("Add venue");
+        toolbar.setTitle(getString(R.string.tb_add_venue));
         ((MainTabsActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set up Yelp search on button click
@@ -252,7 +252,7 @@ public class CreateVenueFragment extends Fragment {
 
                 } catch (IOException | IndexOutOfBoundsException e) {
                     Log.e(TAG, e.getLocalizedMessage());
-                    showAlert("Uh oh!", "It looks like the address provided isn't valid.");
+                    showAlert(getString(R.string.uhoh), "It looks like the address provided isn't valid.");
                     return;
                 }
             }
@@ -281,7 +281,7 @@ public class CreateVenueFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    showAlert("Uh oh!", "It looks like something went wrong creating your venue.");
+                    showAlert(getString(R.string.uhoh), "It looks like something went wrong creating your venue.");
                 }
             });
         }
@@ -291,7 +291,7 @@ public class CreateVenueFragment extends Fragment {
         AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
         alert.setTitle(title);
         alert.setMessage(message);
-        alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok",
+        alert.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.ok),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

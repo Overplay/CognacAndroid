@@ -119,7 +119,7 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
 
         // set up top toolbar
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        toolbar.setTitle("Venues");
+        toolbar.setTitle(getString(R.string.tb_venues));
         ((MainTabsActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set up venue list

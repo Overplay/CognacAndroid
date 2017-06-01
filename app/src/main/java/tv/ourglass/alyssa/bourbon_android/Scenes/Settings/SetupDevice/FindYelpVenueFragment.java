@@ -64,7 +64,7 @@ public class FindYelpVenueFragment extends Fragment {
 
         // set up toolbar
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        toolbar.setTitle("Find venue");
+        toolbar.setTitle(getString(R.string.tb_find_venues));
         ((MainTabsActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set up progress spinner

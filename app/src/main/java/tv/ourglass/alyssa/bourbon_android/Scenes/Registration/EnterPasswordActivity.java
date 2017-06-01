@@ -100,7 +100,7 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
                                 progress.dismiss();
                                 if (e != null)
                                     Log.d(TAG, e.getLocalizedMessage());
-                                showAlert("Uh oh!", "There was a problem signing you up. Do you already have an account with that email?");
+                                showAlert(getString(R.string.uhoh), "There was a problem signing you up. Do you already have an account with that email?");
                             }
                         });
                     }

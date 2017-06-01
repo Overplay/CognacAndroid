@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -32,9 +33,6 @@ import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
-import static tv.ourglass.alyssa.bourbon_android.Scenes.Registration.RegistrationBaseActivity.isValidEmail;
-
-
 public class EditAccountFragment extends Fragment {
     final String TAG = "EditAccountFragment";
 
@@ -49,12 +47,22 @@ public class EditAccountFragment extends Fragment {
     ProgressDialog progress;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_edit_account, container, false);
 
         progress = new ProgressDialog(getActivity());
+
+        // set up top toolbar
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.tb_edit_account));
 
         mEmail = (EditText) view.findViewById(R.id.email);
         mEmail.setEnabled(false);
@@ -68,6 +76,13 @@ public class EditAccountFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 save();
+            }
+        });
+
+        (view.findViewById(R.id.changePasswordButton)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainTabsActivity) getActivity()).openNewFragment(new ChangePasswordFragment());
             }
         });
 
@@ -138,9 +153,9 @@ public class EditAccountFragment extends Fragment {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                                 builder
-                                        .setTitle("Uh oh!")
+                                        .setTitle(getString(R.string.uhoh))
                                         .setMessage("It looks like your session has expired. Please log back in.")
-                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 OGCloud.getInstance().logout(getActivity());
@@ -231,9 +246,9 @@ public class EditAccountFragment extends Fragment {
                                 progress.dismiss();
 
                                 builder
-                                        .setTitle("Uh oh!")
+                                        .setTitle(getString(R.string.uhoh))
                                         .setMessage("There was a problem saving your new account information.")
-                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.cancel();

@@ -21,6 +21,7 @@ import okhttp3.Response;
 import tv.ourglass.alyssa.bourbon_android.BourbonApplication;
 import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
 import tv.ourglass.alyssa.bourbon_android.Model.SharedPrefsManager;
+import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 /**
@@ -69,13 +70,13 @@ public class AppControlViewFragment extends WebViewBaseFragment {
             @TargetApi(android.os.Build.VERSION_CODES.M)
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 view.setVisibility(View.INVISIBLE);
-                showAlert("Uh oh!", error.getDescription().toString());
+                showAlert(getString(R.string.uhoh), error.getDescription().toString());
             }
 
             @SuppressWarnings("deprecation")
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 view.setVisibility(View.INVISIBLE);
-                showAlert("Uh oh!", description);
+                showAlert(getString(R.string.uhoh), description);
             }
 
             // start timing to detect timeout
@@ -91,7 +92,7 @@ public class AppControlViewFragment extends WebViewBaseFragment {
                         }
 
                         if (timeout) {
-                            //showAlert("Uh oh!", "We were unable to connect to this device.");
+                            //showAlert(getString(R.string.uhoh), "We were unable to connect to this device.");
                         }
                     }
                 }).start();

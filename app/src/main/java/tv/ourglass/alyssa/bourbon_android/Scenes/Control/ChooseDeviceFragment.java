@@ -68,9 +68,9 @@ public class ChooseDeviceFragment extends Fragment {
                         public void run() {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder
-                                    .setTitle("Uh oh!")
+                                    .setTitle(getString(R.string.uhoh))
                                     .setMessage("You are not authorized to access this resource.")
-                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
@@ -88,9 +88,9 @@ public class ChooseDeviceFragment extends Fragment {
                         public void run() {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder
-                                    .setTitle("Uh oh!")
+                                    .setTitle(getString(R.string.uhoh))
                                     .setMessage("It looks like your session has expired. Please log back in.")
-                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             OGCloud.getInstance().logout(getActivity());

@@ -47,7 +47,7 @@ public class RegistrationBaseActivity extends AppCompatActivity {
         AlertDialog alert = new AlertDialog.Builder(this).create();
         alert.setTitle(title);
         alert.setMessage(message);
-        alert.setButton(AlertDialog.BUTTON_NEUTRAL, "Ok",
+        alert.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.ok),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
