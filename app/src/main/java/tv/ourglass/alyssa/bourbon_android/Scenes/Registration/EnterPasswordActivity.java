@@ -6,17 +6,22 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Response;
+import tv.ourglass.alyssa.bourbon_android.Model.Input.InputType;
+import tv.ourglass.alyssa.bourbon_android.Model.Input.TextFocusChangeListener;
+import tv.ourglass.alyssa.bourbon_android.Model.Input.TextValidator;
 import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
@@ -24,10 +29,9 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
 
     public String TAG = "EnterPasswordActivity";
 
-    private EditText mPassword;
-    private ImageView mPasswordCheck;
+    EditText mPassword;
 
-    private ImageButton mNextButton;
+    ImageButton mNextButton;
 
     ProgressDialog progress;
 
@@ -36,34 +40,34 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_password);
 
-        mPassword = (EditText)findViewById(R.id.password);
-        mPasswordCheck = (ImageView)findViewById(R.id.passwordCheck);
+        mNextButton = (ImageButton) findViewById(R.id.nextButton);
 
-        mNextButton = (ImageButton)findViewById(R.id.nextButton);
+        mPassword = (EditText)findViewById(R.id.password);
+        mPassword.setOnFocusChangeListener(TextFocusChangeListener.newInstance(mPassword, InputType.PASSWORD));
 
         // Add text change listeners
-        mPassword.addTextChangedListener(new TextWatcher() {
+        mPassword.addTextChangedListener(new TextValidator(mPassword) {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isValidPassword(mPassword.getText().toString())) {
-                    mPasswordCheck.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
+            public void validate(TextView textView, String text) {
+                if (isValidPassword(text)) {
                     mNextButton.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
-
                 } else {
-                    mPasswordCheck.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
                     mNextButton.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
 
                 }
+            }
+        });
+
+        mPassword.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+                    if (!isValidPassword(mPassword.getText().toString())) {
+                        mPassword.setError(getString(R.string.pwd_not_valid));
+                    }
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -73,15 +77,22 @@ public class EnterPasswordActivity extends RegistrationBaseActivity {
 
         progress = ProgressDialog.show(this, "Signing up...", "", true);
 
-        final String email = prev.getStringExtra(OGConstants.emailExtra);
-        final String firstName = prev.getStringExtra(OGConstants.firstNameExtra);
-        final String lastName = prev.getStringExtra(OGConstants.lastNameExtra);
-        final String password = mPassword.getText().toString();
+        String email = prev.getStringExtra(OGConstants.emailExtra);
+        String firstName = prev.getStringExtra(OGConstants.firstNameExtra);
+        String lastName = prev.getStringExtra(OGConstants.lastNameExtra);
+        String password = mPassword.getText().toString();
 
-        Applejack.getInstance().register(this, email, password, firstName, lastName,
-                new Applejack.HttpCallback() {
+        if (!isValidPassword(password)) {
+            progress.dismiss();
+            mPassword.setError(getString(R.string.pwd_not_valid));
+            mPassword.requestFocus();
+            return;
+        }
+
+        OGCloud.getInstance().register(this, email, password, firstName, lastName,
+                new OGCloud.HttpCallback() {
                     @Override
-                    public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
+                    public void onFailure(Call call, final IOException e, OGCloud.OGCloudError error) {
 
                         EnterPasswordActivity.this.runOnUiThread(new Runnable() {
                             @Override

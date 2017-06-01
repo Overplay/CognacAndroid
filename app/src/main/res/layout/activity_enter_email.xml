@@ -4,7 +4,7 @@
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/OGOrange"
+    android:background="@color/OGGOLDFLASH_ORANGE"
     tools:context=".Scenes.Registration.EnterEmailActivity">
 
     <tv.ourglass.alyssa.bourbon_android.Views.MediumTextView
@@ -12,8 +12,9 @@
         style="@style/PageHeader"
         android:id="@+id/textView" />
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
         android:id="@+id/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,42 +24,17 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin" >
 
-        <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
-            android:text="@string/emailCaps"
-            style="@style/InputHeader"
-            android:layout_marginTop="20dp"
-            android:labelFor="@+id/email"
-            android:id="@+id/emailLabel" />
-
-        <LinearLayout
-            android:id="@+id/emailContainer"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/emailLabel"
-            android:layout_alignStart="@+id/emailLabel"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
-
+            android:layout_height="wrap_content">
             <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
-                android:layout_width="0dp"
-                style="@style/EditTextCustom"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/email"
+                android:hint="@string/email"
                 android:inputType="textEmailAddress"
-                android:ems="10"
-                android:id="@+id/email" />
-
-            <ImageView
-                android:id="@+id/emailCheck"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
-                android:src="@drawable/ic_check_black_36dp"
-                android:contentDescription="@string/goodCheckDescription"
-                android:tint="@color/OGWhite"
-                android:alpha="0.0" />
-
-        </LinearLayout>
+                android:textColor="@color/OGWhite"/>
+        </android.support.design.widget.TextInputLayout>
 
         <!--<ImageButton
             android:layout_width="wrap_content"
@@ -70,7 +46,7 @@
             android:layout_marginTop="50dp"
             android:src="@drawable/ic_fast_rewind_black_36dp"
             android:contentDescription="@string/goBackDescription"
-            android:background="@color/OGOrange"
+            android:background="@color/OGGOLDFLASH_ORANGE"
             android:tint="@color/OGWhite"/>-->
 
         <ImageButton
@@ -78,14 +54,13 @@
             android:layout_height="wrap_content"
             android:onClick="next"
             android:id="@+id/nextButton"
-            android:layout_below="@+id/emailContainer"
             android:layout_marginTop="50dp"
-            android:layout_alignParentEnd="true"
+            android:layout_gravity="end"
             android:src="@drawable/ic_play_circle_outline_black_36dp"
             android:contentDescription="@string/nextDescription"
-            android:background="@color/OGOrange"
+            android:background="@color/OGGOLDFLASH_ORANGE"
             android:alpha="0.0"
             android:tint="@color/OGWhite"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

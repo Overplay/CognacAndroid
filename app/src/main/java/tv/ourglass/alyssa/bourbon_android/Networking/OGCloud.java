@@ -26,46 +26,38 @@ import tv.ourglass.alyssa.bourbon_android.Model.SharedPrefsManager;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Registration.WelcomeActivity;
 
 /**
- * Created by atorres on 11/10/16.
+ * Performs HTTP requests to OGCloud endpoints.
+ * Created by atorres on 5/30/17.
  */
+public class OGCloud {
 
-public class Applejack {
-
-    public final String TAG = "Applejack";
+    public final String TAG = "OGCloud";
 
     private final OkHttpClient client = BourbonApplication.okclient;
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    public enum ApplejackError {
-        authFailure, tokenInvalid, jsonError, defaultError
-    }
+    private static OGCloud instance = new OGCloud();
 
-    private static Applejack instance = new Applejack();
+    private OGCloud() {}
 
-    private Applejack() {
-        // throwaway call to set the Sails cookie
-        this.checkJWT(BourbonApplication.getContext(), new HttpCallback() {
-            @Override
-            public void onSuccess(Response response) {
-                Log.d(TAG, "initial call success");
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e, ApplejackError error) {
-                Log.d(TAG, "initial call failure");
-            }
-        });
-    }
-
-    public static Applejack getInstance() {
+    public static OGCloud getInstance() {
         return instance;
     }
 
+    /**
+     * Error type for OGCloud HTTP requests.
+     */
+    public enum OGCloudError {
+        authFailure, tokenInvalid, jsonError, defaultError
+    }
+
+    /**
+     * Callback class to handle HTTP request responses.
+     */
     public static abstract class HttpCallback {
-        // this must close the response body or it will leak
-        abstract public void onSuccess(Response response);
-        abstract public void onFailure(Call call, IOException e, ApplejackError error);
+        abstract public void onSuccess(Response response); // this must close the response body or resources will leak
+        abstract public void onFailure(Call call, IOException e, OGCloudError error);
     }
 
     /**
@@ -81,7 +73,7 @@ public class Applejack {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                cb.onFailure(call, e, ApplejackError.defaultError);
+                cb.onFailure(call, e, OGCloudError.defaultError);
             }
 
             @Override
@@ -89,32 +81,29 @@ public class Applejack {
 
                 if (!response.isSuccessful()) {
 
-                    // if error 403, then perform checks for authorization
+                    // if error 403, then check authorization
                     if (response.code() == 403) {
-                        checkJWT(context, new HttpCallback() {
 
+                        checkJWT(context, new HttpCallback() {
                             @Override
                             public void onSuccess(Response jwtResponse) {
-                                Log.e(TAG, "resource is not allowed for this user");
+                                // this resource is not allowed for this user
                                 jwtResponse.body().close();
-                                response.body().close();
-                                cb.onFailure(call, null, ApplejackError.authFailure);
+                                cb.onFailure(call, null, OGCloudError.authFailure);
                             }
-
                             @Override
-                            public void onFailure(Call jwtCall, IOException e, ApplejackError error) {
-                                Log.e(TAG, "JWT is invalid");
-                                response.body().close();
-                                cb.onFailure(jwtCall, e, ApplejackError.tokenInvalid);
+                            public void onFailure(Call jwtCall, IOException e, OGCloudError error) {
+                                // this user's JWT is invalid
+                                cb.onFailure(jwtCall, e, OGCloudError.tokenInvalid);
                             }
                         });
 
                     } else {
-                        cb.onFailure(call, null, ApplejackError.defaultError);
-                        response.body().close();
+                        cb.onFailure(call, null, OGCloudError.defaultError);
                     }
+                    response.body().close();
 
-                } else {
+                } else { // put response in a JSONObject
                     cb.onSuccess(response);
                 }
             }
@@ -130,7 +119,7 @@ public class Applejack {
      */
     private void getWithoutAuthCheck(Context context, String url, final HttpCallback cb) {
         Request req;
-        String jwt = SharedPrefsManager.getUserApplejackJwt(context);
+        String jwt = SharedPrefsManager.getJwt(context);
 
         if (jwt != null) {
             req = new Request.Builder()
@@ -150,16 +139,17 @@ public class Applejack {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    cb.onFailure(call, null, ApplejackError.defaultError);
                     response.body().close();
-                } else {
+                    cb.onFailure(call, null, OGCloudError.defaultError);
+
+                } else { // put response in a JSONObject
                     cb.onSuccess(response);
                 }
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
-                cb.onFailure(call, e, ApplejackError.defaultError);
+                cb.onFailure(call, e, OGCloudError.defaultError);
             }
         });
     }
@@ -173,7 +163,7 @@ public class Applejack {
      */
     public void get(Context context, String url, HttpCallback cb) {
         Request req;
-        String jwt = SharedPrefsManager.getUserApplejackJwt(context);
+        String jwt = SharedPrefsManager.getJwt(context);
 
         if (jwt != null) {
             req = new Request.Builder()
@@ -204,7 +194,7 @@ public class Applejack {
         String jsonStr = params.toString();
         RequestBody body = RequestBody.create(JSON, jsonStr);
         Request req;
-        String jwt = SharedPrefsManager.getUserApplejackJwt(context);
+        String jwt = SharedPrefsManager.getJwt(context);
 
         if (jwt != null) {
             req = new Request.Builder()
@@ -235,7 +225,7 @@ public class Applejack {
         String jsonStr = params.toString();
         RequestBody body = RequestBody.create(JSON, jsonStr);
         Request req;
-        String jwt = SharedPrefsManager.getUserApplejackJwt(context);
+        String jwt = SharedPrefsManager.getJwt(context);
 
         if (jwt != null) {
             req = new Request.Builder()
@@ -271,43 +261,37 @@ public class Applejack {
             HttpCallback loginCb = new HttpCallback() {
                 @Override
                 public void onSuccess(final Response loginResponse) {
-
-                    getToken(context, new Applejack.HttpCallback() {
+                    getToken(context, new HttpCallback() {
                         @Override
                         public void onSuccess(Response tokenResponse) {
-
                             checkJWT(context, new HttpCallback() {
                                 @Override
                                 public void onSuccess(Response checkJWTResponse) {
                                     cb.onSuccess(loginResponse);
                                 }
-
                                 @Override
-                                public void onFailure(Call call, IOException e, ApplejackError error) {
+                                public void onFailure(Call call, IOException e, OGCloudError error) {
                                     cb.onFailure(call, e, error);
                                 }
                             });
                         }
-
                         @Override
-                        public void onFailure(Call call, IOException e, ApplejackError error) {
+                        public void onFailure(Call call, IOException e, OGCloudError error) {
                             cb.onFailure(call, e, error);
                         }
                     });
                 }
-
                 @Override
-                public void onFailure(Call call, IOException e, ApplejackError error) {
+                public void onFailure(Call call, IOException e, OGCloudError error) {
                     cb.onFailure(call, e, error);
                 }
             };
 
-            postJson(context, OGConstants.ourglassCloudBaseUrl + OGConstants.loginPath,
-                    params, loginCb);
+            postJson(context, OGConstants.belliniCore + OGConstants.loginPath, params, loginCb);
 
         } catch (JSONException e) {
             e.printStackTrace();
-            cb.onFailure(null, null, ApplejackError.jsonError);
+            cb.onFailure(null, null, OGCloudError.jsonError);
         }
     }
 
@@ -337,45 +321,38 @@ public class Applejack {
             HttpCallback registerCb = new HttpCallback() {
                 @Override
                 public void onSuccess(final Response regResponse) {
-
                     getToken(context, new HttpCallback() {
                         @Override
                         public void onSuccess(Response tokenResponse) {
-
                             checkJWT(context, new HttpCallback() {
                                 @Override
                                 public void onSuccess(Response checkJWTResponse) {
                                     cb.onSuccess(regResponse);
                                 }
-
                                 @Override
-                                public void onFailure(Call call, IOException e, ApplejackError error) {
+                                public void onFailure(Call call, IOException e, OGCloudError error) {
                                     cb.onFailure(call, e, error);
                                 }
                             });
                         }
-
                         @Override
-                        public void onFailure(Call call, IOException e, ApplejackError error) {
+                        public void onFailure(Call call, IOException e, OGCloudError error) {
                             cb.onFailure(call, e, error);
                         }
                     });
                 }
-
                 @Override
-                public void onFailure(Call call, IOException e, ApplejackError error) {
+                public void onFailure(Call call, IOException e, OGCloudError error) {
                     cb.onFailure(call, e, error);
                 }
             };
 
-
-            postJson(context, OGConstants.ourglassCloudBaseUrl + OGConstants.registerPath,
-                    params, registerCb);
+            postJson(context, OGConstants.belliniCore + OGConstants.registerPath, params, registerCb);
 
         } catch (JSONException e) {
             e.printStackTrace();
             Log.d(TAG, "error creating JSON object for registration");
-            cb.onFailure(null, null, ApplejackError.jsonError);
+            cb.onFailure(null, null, OGCloudError.jsonError);
         }
     }
 
@@ -394,12 +371,11 @@ public class Applejack {
             params.put("email", email);
             params.put("newpass", newPassword);
 
-            postJson(context, OGConstants.ourglassCloudBaseUrl + OGConstants.changePwdPath,
-                    params, cb);
+            postJson(context, OGConstants.belliniCore + OGConstants.changePasswordPath, params, cb);
 
         } catch (JSONException e) {
             e.printStackTrace();
-            cb.onFailure(null, null, ApplejackError.jsonError);
+            cb.onFailure(null, null, OGCloudError.jsonError);
         }
     }
 
@@ -422,7 +398,6 @@ public class Applejack {
             params.put("lastName", lastName);
 
             HttpCallback changeAcctCb = new HttpCallback() {
-
                 @Override
                 public void onSuccess(Response response) {
                     SharedPrefsManager.setUserFirstName(context, firstName);
@@ -430,19 +405,17 @@ public class Applejack {
                     SharedPrefsManager.setUserEmail(context, email);
                     cb.onSuccess(response);
                 }
-
                 @Override
-                public void onFailure(Call call, IOException e, ApplejackError error) {
+                public void onFailure(Call call, IOException e, OGCloudError error) {
                     cb.onFailure(call, e, error);
                 }
             };
 
-            putJson(context, OGConstants.ourglassCloudBaseUrl + OGConstants.changeAccountPath + userId,
-                    params, changeAcctCb);
+            putJson(context, OGConstants.belliniCore + OGConstants.changeAccountPath + userId, params, changeAcctCb);
 
         } catch (JSONException e) {
             e.printStackTrace();
-            cb.onFailure(null, null, ApplejackError.jsonError);
+            cb.onFailure(null, null, OGCloudError.jsonError);
         }
     }
 
@@ -458,12 +431,11 @@ public class Applejack {
             JSONObject params = new JSONObject();
             params.put("email", email);
 
-            postJson(context, OGConstants.ourglassCloudBaseUrl + OGConstants.inviteUserPath,
-                    params, cb);
+            postJson(context, OGConstants.belliniCore + OGConstants.inviteUserPath, params, cb);
 
         } catch (JSONException e) {
             e.printStackTrace();
-            cb.onFailure(null, null, ApplejackError.jsonError);
+            cb.onFailure(null, null, OGCloudError.jsonError);
         }
     }
 
@@ -475,30 +447,27 @@ public class Applejack {
      */
     public void getToken(final Context context, final HttpCallback cb) {
         HttpCallback getTokenCb = new HttpCallback() {
-
             @Override
             public void onSuccess(Response response) {
                 try {
                     String jsonData = response.body().string();
                     JSONObject json = new JSONObject(jsonData);
-                    SharedPrefsManager.setUserApplejackJwt(context, json.getString("token"));
-                    SharedPrefsManager.setUserApplejackJwtExpiry(context, json.getLong("expires"));
-
+                    SharedPrefsManager.setJwt(context, json.getString("token"));
+                    SharedPrefsManager.setJwtExpiry(context, json.getLong("expires"));
                     cb.onSuccess(response);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.d(TAG, "unable to get necessary token info");
-                    cb.onFailure(null, null, ApplejackError.jsonError);
+                    cb.onFailure(null, null, OGCloudError.jsonError);
                 }
             }
-
             @Override
-            public void onFailure(Call call, IOException e, ApplejackError error) {
+            public void onFailure(Call call, IOException e, OGCloudError error) {
                 cb.onFailure(call, e, error);
             }
         };
-        get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.getTokenPath, getTokenCb);
+        get(context, OGConstants.belliniCore + OGConstants.getTokenPath, getTokenCb);
     }
 
     /**
@@ -509,7 +478,6 @@ public class Applejack {
      */
     public void checkJWT(final Context context, final HttpCallback cb) {
         HttpCallback checkJWTCb = new HttpCallback() {
-
             @Override
             public void onSuccess(Response response) {
                 try {
@@ -528,16 +496,13 @@ public class Applejack {
                     cb.onSuccess(response);
                 }
             }
-
             @Override
-            public void onFailure(Call call, IOException e, ApplejackError error) {
+            public void onFailure(Call call, IOException e, OGCloudError error) {
                 cb.onFailure(call, e, error);
             }
         };
-
         // cannot use same get() as everyone else or we might end up in a loop
-        getWithoutAuthCheck(context, OGConstants.ourglassCloudBaseUrl + OGConstants.checkJWTPath,
-                checkJWTCb);
+        getWithoutAuthCheck(context, OGConstants.belliniCore + OGConstants.checkJWTPath, checkJWTCb);
     }
 
     /**
@@ -547,7 +512,7 @@ public class Applejack {
      * @param cb the callback to process the response
      */
     public void getVenues(Context context, HttpCallback cb) {
-        get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.venuesPath, cb);
+        get(context, OGConstants.belliniCore + OGConstants.venuesPath, cb);
     }
 
     /**
@@ -557,7 +522,7 @@ public class Applejack {
      * @param cb the callback to process the response
      */
     public void getUserVenues(Context context, HttpCallback cb) {
-        get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.userVenuesPath, cb);
+        get(context, OGConstants.belliniCore + OGConstants.userVenuesPath, cb);
     }
 
     /**
@@ -568,7 +533,7 @@ public class Applejack {
      * @param cb the callback to process the response
      */
     public void getDevices(Context context, String venueUUID, HttpCallback cb) {
-        get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.devicesPath + venueUUID, cb);
+        get(context, OGConstants.belliniDM + OGConstants.devicesPath + venueUUID, cb);
     }
 
     /**
@@ -579,7 +544,7 @@ public class Applejack {
      * @param cb the callback to process the response
      */
     public void findByRegCode(Context context, String regCode, HttpCallback cb) {
-        get(context, OGConstants.ourglassCloudBaseUrl + OGConstants.findByRegCodePath + regCode, cb);
+        get(context, OGConstants.belliniDM + OGConstants.findByRegCodePath + regCode, cb);
     }
 
     /**
@@ -598,25 +563,22 @@ public class Applejack {
             params.put("name", name);
 
             HttpCallback changeNameCb = new HttpCallback() {
-
                 @Override
                 public void onSuccess(Response response) {
                     BourbonNotification.updatedDevice.issue(context);
                     cb.onSuccess(response);
                 }
-
                 @Override
-                public void onFailure(Call call, IOException e, ApplejackError error) {
+                public void onFailure(Call call, IOException e, OGCloudError error) {
                     cb.onFailure(call, e, error);
                 }
             };
 
-            postJson(context, OGConstants.ourglassCloudBaseUrl + OGConstants.changeDeviceNamePath,
-                    params, changeNameCb);
+            postJson(context, OGConstants.belliniDM + OGConstants.changeDeviceNamePath, params, changeNameCb);
 
         } catch (JSONException e) {
             e.printStackTrace();
-            cb.onFailure(null, null, ApplejackError.jsonError);
+            cb.onFailure(null, null, OGCloudError.jsonError);
         }
     }
 
@@ -636,25 +598,22 @@ public class Applejack {
             params.put("venueUUID", venueUuid);
 
             HttpCallback associateCb = new HttpCallback() {
-
                 @Override
                 public void onSuccess(Response response) {
                     BourbonNotification.updatedDevice.issue(context);
                     cb.onSuccess(response);
                 }
-
                 @Override
-                public void onFailure(Call call, IOException e, ApplejackError error) {
+                public void onFailure(Call call, IOException e, OGCloudError error) {
                     cb.onFailure(call, e, error);
                 }
             };
 
-            postJson(context, OGConstants.ourglassCloudBaseUrl + OGConstants.associateWithVenuePath,
-                    params, associateCb);
+            postJson(context, OGConstants.belliniDM + OGConstants.associateWithVenuePath, params, associateCb);
 
         } catch (JSONException e) {
             e.printStackTrace();
-            cb.onFailure(null, null, ApplejackError.jsonError);
+            cb.onFailure(null, null, OGCloudError.jsonError);
         }
     }
 
@@ -667,7 +626,7 @@ public class Applejack {
      * @param cb the callback to process the response
      */
     public void yelpSearch(Context context, String term, String location, HttpCallback cb) {
-        String url = OGConstants.ourglassCloudBaseUrl + OGConstants.yelpSearchPath;
+        String url = OGConstants.belliniCore + OGConstants.yelpSearchPath;
         url += "?location=" + location + "&term=" + term;
         get(context, url, cb);
     }
@@ -683,7 +642,7 @@ public class Applejack {
      */
     public void yelpSearch(Context context, String term, double latitude, double longitude,
                            HttpCallback cb) {
-        String url = OGConstants.ourglassCloudBaseUrl + OGConstants.yelpSearchPath;
+        String url = OGConstants.belliniCore + OGConstants.yelpSearchPath;
         url += "?latitude=" + latitude + "&longitude=" + longitude + "&term=" + term;
         get(context, url, cb);
     }
@@ -714,27 +673,23 @@ public class Applejack {
             geoLoc.put("longitude", venue.longitude);
             params.put("geolocation", geoLoc);
 
-
             HttpCallback addCb = new HttpCallback() {
-
                 @Override
                 public void onSuccess(Response response) {
                     BourbonNotification.addedVenue.issue(context);
                     cb.onSuccess(response);
                 }
-
                 @Override
-                public void onFailure(Call call, IOException e, ApplejackError error) {
+                public void onFailure(Call call, IOException e, OGCloudError error) {
                     cb.onFailure(call, e, error);
                 }
             };
 
-            postJson(context, OGConstants.ourglassCloudBaseUrl + OGConstants.addVenuePath,
-                    params, addCb);
+            postJson(context, OGConstants.belliniCore + OGConstants.addVenuePath, params, addCb);
 
         } catch (JSONException e) {
             e.printStackTrace();
-            cb.onFailure(null, null, ApplejackError.jsonError);
+            cb.onFailure(null, null, OGCloudError.jsonError);
         }
     }
 
@@ -745,9 +700,8 @@ public class Applejack {
      */
     public void logout(final Context context) {
         // TODO: is there more we need to do here?
-
-        SharedPrefsManager.setUserApplejackJwt(context, null);
-        SharedPrefsManager.setUserApplejackJwtExpiry(context, 0l);
+        SharedPrefsManager.setJwt(context, null);
+        SharedPrefsManager.setJwtExpiry(context, 0l);
         SharedPrefsManager.setUserId(context, null);
 
         ((Activity)context).runOnUiThread(new Runnable() {

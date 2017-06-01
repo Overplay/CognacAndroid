@@ -1,9 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!-- includes theme colors from coolors.co -->
 <resources>
     <color name="OGWhite">#ffffff</color>
-    <color name="OGLightBlue">#20b8eb</color>
-    <color name="OGOrange">#ff8000</color>
-    <color name="OGGreen">#51b85e</color>
+
+    <color name="OGGREEN">#52b85e</color>
+    <color name="OGHURRICANE_BLUE">#27b9ec</color>
+    <color name="OGGOLDFLASH_ORANGE">#f69320</color>
+    <color name="OGVODKACRAN_RED">#ef4839</color>
+
     <color name="OGDarkGrey">#262626</color>
     <color name="OGBackgroundGrey">#333333</color>
     <color name="OGLightGrey">#c7c5c5</color>
@@ -16,4 +19,5 @@
     <color name="secondaryText">#aabfbfbf</color>
 
     <color name="actionBlue">#007aff</color>
+
 </resources>

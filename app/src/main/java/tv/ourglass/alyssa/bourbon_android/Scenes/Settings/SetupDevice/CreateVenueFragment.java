@@ -32,7 +32,7 @@ import tv.ourglass.alyssa.bourbon_android.Model.Input.TextFocusChangeListener;
 import tv.ourglass.alyssa.bourbon_android.Model.Input.TextValidator;
 import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenue;
 import tv.ourglass.alyssa.bourbon_android.Model.Yelp.YelpVenue;
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
@@ -211,7 +211,7 @@ public class CreateVenueFragment extends Fragment {
         } catch (NullPointerException e) { // keyboard not open
         }
 
-        // remove focus from the EditText's
+        // remove focus from the EditTexts
         getView().findViewById(R.id.layout).requestFocus();
 
         // check inputs for error
@@ -256,14 +256,14 @@ public class CreateVenueFragment extends Fragment {
                     return;
                 }
             }
-            Applejack.getInstance().addVenue(getActivity(), toAdd, addVenueCb);
+            OGCloud.getInstance().addVenue(getActivity(), toAdd, addVenueCb);
 
         } else {
             createButton.setEnabled(true);
         }
     }
 
-    Applejack.HttpCallback addVenueCb = new Applejack.HttpCallback() {
+    OGCloud.HttpCallback addVenueCb = new OGCloud.HttpCallback() {
         @Override
         public void onSuccess(Response response) {
             getActivity().runOnUiThread(new Runnable() {
@@ -277,7 +277,7 @@ public class CreateVenueFragment extends Fragment {
         }
 
         @Override
-        public void onFailure(Call call, IOException e, Applejack.ApplejackError error) {
+        public void onFailure(Call call, IOException e, OGCloud.OGCloudError error) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

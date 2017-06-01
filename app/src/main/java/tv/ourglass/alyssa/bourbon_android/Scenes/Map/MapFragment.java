@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,12 +35,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import okhttp3.Call;
@@ -51,7 +45,7 @@ import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenue;
 import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenueListAdapter;
 import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenueType;
 import tv.ourglass.alyssa.bourbon_android.Model.StateController;
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
 
 public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener {
@@ -68,7 +62,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
 
     BroadcastReceiver mBroadcastReceiver;
 
-    Applejack.HttpCallback venueCallback = new Applejack.HttpCallback() {
+    OGCloud.HttpCallback venueCallback = new OGCloud.HttpCallback() {
 
         @Override
         public void onSuccess(final Response response) {
@@ -85,7 +79,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnInfoWindowClick
         }
 
         @Override
-        public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
+        public void onFailure(Call call, final IOException e, OGCloud.OGCloudError error) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

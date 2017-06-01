@@ -32,7 +32,7 @@ import okhttp3.Response;
 import tv.ourglass.alyssa.bourbon_android.Model.Input.InputType;
 import tv.ourglass.alyssa.bourbon_android.Model.Input.TextFocusChangeListener;
 import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenue;
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
@@ -129,8 +129,8 @@ public class SetupDeviceFragment extends Fragment {
             final String name = deviceName.getText().toString();
             final String venueUuid = venue.uuid;
 
-            Applejack.getInstance().findByRegCode(context, regCode.getText().toString(),
-                    new Applejack.HttpCallback() {
+            OGCloud.getInstance().findByRegCode(context, regCode.getText().toString(),
+                    new OGCloud.HttpCallback() {
                         @Override
                         public void onSuccess(Response response) {
                             String deviceUdid = null;
@@ -147,15 +147,15 @@ public class SetupDeviceFragment extends Fragment {
                             // if we got a udid, change the device's name
                             if (deviceUdid != null) {
                                 final String udid = deviceUdid;
-                                Applejack.getInstance().changeDeviceName(context, deviceUdid, name,
-                                        new Applejack.HttpCallback() {
+                                OGCloud.getInstance().changeDeviceName(context, deviceUdid, name,
+                                        new OGCloud.HttpCallback() {
                                             @Override
                                             public void onSuccess(Response response) {
                                                 response.body().close();
 
                                                 // now associate the device with the venue
-                                                Applejack.getInstance().associate(context, udid, venueUuid,
-                                                        new Applejack.HttpCallback() {
+                                                OGCloud.getInstance().associate(context, udid, venueUuid,
+                                                        new OGCloud.HttpCallback() {
                                                             @Override
                                                             public void onSuccess(Response response) {
                                                                 response.body().close();
@@ -170,20 +170,19 @@ public class SetupDeviceFragment extends Fragment {
                                                             }
 
                                                             @Override
-                                                            public void onFailure(Call call, IOException e, Applejack.ApplejackError error) {
+                                                            public void onFailure(Call call, IOException e, OGCloud.OGCloudError error) {
                                                                 createDeviceFailure("Something went wrong and we were unable to create your device.");
                                                             }
                                                         });
                                             }
 
                                             @Override
-                                            public void onFailure(Call call, IOException e, Applejack.ApplejackError error) {
+                                            public void onFailure(Call call, IOException e, OGCloud.OGCloudError error) {
                                                 createDeviceFailure("Something went wrong and we were unable to create your device.");
                                             }
                                         });
 
                             } else {  // we did not get a udid
-                                Log.d(TAG, "code invalid from JSON");
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -196,9 +195,8 @@ public class SetupDeviceFragment extends Fragment {
                         }
 
                         @Override
-                        public void onFailure(Call call, IOException e, Applejack.ApplejackError error) {
-                            if (error == Applejack.ApplejackError.defaultError) { // reg code was invalid
-                                Log.d(TAG, "code invalid onFailure "+ regCode.getText().toString());
+                        public void onFailure(Call call, IOException e, OGCloud.OGCloudError error) {
+                            if (error == OGCloud.OGCloudError.defaultError) { // reg code was invalid
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {

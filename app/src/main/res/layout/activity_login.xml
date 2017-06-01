@@ -4,99 +4,49 @@
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/OGGreen"
+    android:background="@color/OGGREEN"
     tools:context=".Scenes.Registration.LoginActivity">
 
     <tv.ourglass.alyssa.bourbon_android.Views.MediumTextView
-        android:text="@string/loginCaps"
+        android:id="@+id/textView"
         style="@style/PageHeader"
-        android:id="@+id/textView" />
+        android:text="@string/loginCaps" />
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/activity_main"
+        android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/textView"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin" >
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
-            android:text="@string/emailCaps"
-            style="@style/InputHeader"
-            android:layout_marginTop="20dp"
-            android:labelFor="@+id/email"
-            android:id="@+id/emailLabel" />
-
-        <LinearLayout
-            android:id="@+id/emailContainer"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/emailLabel"
-            android:layout_alignStart="@+id/emailLabel"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
-
+            android:layout_height="wrap_content">
             <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
-                android:layout_width="0dp"
-                style="@style/EditTextCustom"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
                 android:inputType="textEmailAddress"
-                android:ems="10"
-                android:id="@+id/email" />
+                android:textColor="@color/OGWhite" />
+        </android.support.design.widget.TextInputLayout>
 
-            <ImageView
-                android:id="@+id/emailCheck"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
-                android:src="@drawable/ic_check_black_36dp"
-                android:contentDescription="@string/goodCheckDescription"
-                android:tint="@color/OGWhite"
-                android:alpha="0.0" />
-
-        </LinearLayout>
-
-        <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
-            android:text="@string/passwordCaps"
-            style="@style/InputHeader"
-            android:layout_below="@+id/emailContainer"
-            android:layout_marginTop="30dp"
-            android:labelFor="@+id/password"
-            android:id="@+id/passwordLabel" />
-
-        <LinearLayout
-            android:id="@+id/passwordContainer"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/passwordLabel"
-            android:layout_alignStart="@+id/passwordLabel"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
-
+            android:layout_height="wrap_content">
             <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
-                android:layout_width="0dp"
-                style="@style/EditTextCustom"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
                 android:inputType="textPassword"
-                android:ems="10"
-                android:id="@+id/password" />
-
-            <ImageView
-                android:id="@+id/passwordCheck"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
-                android:src="@drawable/ic_check_black_36dp"
-                android:contentDescription="@string/goodCheckDescription"
-                android:tint="@color/OGWhite"
-                android:alpha="0.0" />
-
-        </LinearLayout>
+                android:textColor="@color/OGWhite" />
+        </android.support.design.widget.TextInputLayout>
 
         <!--<ImageButton
             android:layout_width="wrap_content"
@@ -108,22 +58,20 @@
             android:layout_marginTop="50dp"
             android:src="@drawable/ic_fast_rewind_black_36dp"
             android:contentDescription="@string/goBackDescription"
-            android:background="@color/OGGreen"
+            android:background="@color/OGGREEN"
             android:tint="@color/OGWhite"/>-->
 
         <ImageButton
+            android:id="@+id/loginButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="login"
-            android:id="@+id/loginButton"
-            android:layout_below="@+id/passwordContainer"
+            android:layout_gravity="end"
             android:layout_marginTop="50dp"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_play_circle_outline_black_36dp"
+            android:background="@color/OGGREEN"
             android:contentDescription="@string/nextDescription"
-            android:background="@color/OGGreen"
-            android:tint="@color/OGWhite"
-            android:alpha="0.0"/>
+            android:onClick="login"
+            android:src="@drawable/ic_play_circle_outline_black_36dp"
+            android:tint="@color/OGWhite" />
 
-        </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

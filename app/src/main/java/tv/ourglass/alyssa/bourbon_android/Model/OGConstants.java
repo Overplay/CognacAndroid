@@ -10,28 +10,32 @@ public class OGConstants {
     public static final boolean devMode = false;  // if true, login isn't really done
     public static final boolean alwaysShowIntro = false;
 
-    // OG Cloud paths
-    public static final String ourglassCloudBaseUrl = "http://138.68.230.239";
-    public static final String ourglassBasePort = ":2000";
-    public static final String getTokenPath = ourglassBasePort + "/user/jwt";
-    public static final String registerPath = ourglassBasePort + "/auth/addUser";
-    public static final String loginPath = ourglassBasePort + "/auth/login";
-    public static final String changePwdPath = ourglassBasePort + "/auth/changePwd";
-    public static final String getAuthStatusPath = ourglassBasePort + "/auth/status";
-    public static final String changeAccountPath = ourglassBasePort + "/user/";
-    public static final String inviteUserPath = ourglassBasePort + "/user/inviteNewUser";
-    public static final String checkJWTPath = ourglassBasePort + "/user/checkjwt";
+    // OGCloud paths
+    public static final String belliniCore = "https://cloud.ourglass.tv/";
+    public static final String belliniDM = "https://cloud-dm.ourglass.tv/";
+    public static final String loginPath = "auth/login";
+    public static final String registerPath = "auth/addUser";
+    public static final String changePasswordPath = "auth/changePwd";
+    public static final String changeAccountPath = "user/";
+    public static final String inviteUserPath = "user/inviteNewUser";
+    public static final String getTokenPath = "user/jwt";
+    public static final String checkJWTPath = "user/checkjwt";
+    public static final String venuesPath = "venue/all";
+    public static final String userVenuesPath = "venue/myvenues";
+    public static final String devicesPath = "venue/devices?atVenueUUID=";
+    public static final String findByRegCodePath = "ogdevice/findByRegCode?regcode=";
+    public static final String changeDeviceNamePath = "ogdevice/changeName";
+    public static final String associateWithVenuePath = "ogdevice/associateWithVenue";
+    public static final String yelpSearchPath = "venue/yelpSearch";
+    public static final String addVenuePath = "venue";
 
-    public static final String venuesPath = ourglassBasePort + "/venue/all";
-    public static final String userVenuesPath = ourglassBasePort + "/venue/myvenues";
-    public static final String devicesPath = ":2001/venue/devices?atVenueUUID=";
-    public static final String deviceControlPath = ":2001/blueline/control/?deviceUDID=";
+    public static final String deviceControlPath = "blueline/control?deviceUDID=";
     public static final String appControlPath = "app/control/index.html";
-    public static final String findByRegCodePath = ":2001/ogdevice/findByRegCode?regcode=";
-    public static final String changeDeviceNamePath = ":2001/ogdevice/changeName";
-    public static final String associateWithVenuePath = ":2001/ogdevice/associateWithVenue";
-    public static final String addVenuePath = ourglassBasePort + "/venue";
-    public static final String yelpSearchPath = ourglassBasePort + "/venue/yelpSearch";
+
+    public static final String introSlide1Path = "bourbon/intro/slide1.jpg";
+    public static final String introSlide2Path = "bourbon/intro/slide2.jpg";
+    public static final String introSlide3Path = "bourbon/intro/slide3.jpg";
+
 
     // Regex constants
     public static final String emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}";

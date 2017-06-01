@@ -19,7 +19,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -38,7 +37,7 @@ import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenue;
 import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenueListAdapter;
 import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenueType;
 import tv.ourglass.alyssa.bourbon_android.Model.StateController;
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
@@ -58,7 +57,7 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
 
     Location mLastLocation;
 
-    Applejack.HttpCallback venueCallback = new Applejack.HttpCallback() {
+    OGCloud.HttpCallback venueCallback = new OGCloud.HttpCallback() {
 
         @Override
         public void onSuccess(final Response response) {
@@ -72,7 +71,7 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
         }
 
         @Override
-        public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
+        public void onFailure(Call call, final IOException e, OGCloud.OGCloudError error) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

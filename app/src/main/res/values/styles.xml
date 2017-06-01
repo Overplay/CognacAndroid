@@ -9,7 +9,7 @@
         <item name="android:textColorPrimary">@color/OGWhite</item>
         <item name="android:textColorSecondary">@color/OGWhite</item>
         <item name="android:editTextBackground">@color/OGWhite</item>
-        <item name="android:textColorHint">@color/secondaryText</item>
+        <item name="android:textColorHint">#64ffffff</item>
         <item name="android:alertDialogTheme">@style/Theme.AppCompat.Light.Dialog.Alert</item>
         <item name="alertDialogTheme">@style/Theme.AppCompat.Light.Dialog.Alert</item>
         <item name="android:windowActionBarOverlay">true</item>
@@ -30,7 +30,7 @@
     </style>
 
     <style name="BlueButton" parent="ThemeOverlay.AppCompat.Light">
-        <item name="colorAccent">@color/OGLightBlue</item>
+        <item name="colorAccent">@color/OGHURRICANE_BLUE</item>
     </style>
 
     <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">

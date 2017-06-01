@@ -6,17 +6,24 @@
     <string name="get_started">Let\'s get started!</string>
 
     <string name="welcome_message">WELCOME!</string>
-    <string name="welcome_text">To use Ourglass TV...</string>
+    <string name="welcome_text">To use Ourglass TV&#8230;</string>
     <string name="or">or</string>
 
     <string name="login">Log in</string>
+    <string name="loggingIn">Logging in&#8230;</string>
     <string name="loginCaps">LOG IN</string>
     <string name="signup">Sign up</string>
+    <string name="loginErrorAlertMsg">There was a problem logging in.</string>
 
     <string name="emailCaps">EMAIL</string>
     <string name="passwordCaps">PASSWORD</string>
     <string name="firstNameCaps">FIRST NAME</string>
     <string name="lastNameCaps">LAST NAME</string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="firstName">First name</string>
+    <string name="lastName">Last name</string>
 
     <string name="enterNameTitle">WHO ARE YOU?</string>
     <string name="enterEmailTitle">WHAT\'S YOUR EMAIL?</string>
@@ -28,6 +35,8 @@
 
     <string name="goBackDescription">go back</string>
     <string name="nextDescription">next</string>
+
+    <string name="uhoh">Uh oh!</string>
 
     <string name="iconDescription">icon</string>
 
@@ -81,5 +90,7 @@
     <string name="req_field">This is a required field.</string>
 
     <string name="venue_created">Venue created!</string>
+
+    <string name="offline">OFFLINE</string>
 
 </resources>

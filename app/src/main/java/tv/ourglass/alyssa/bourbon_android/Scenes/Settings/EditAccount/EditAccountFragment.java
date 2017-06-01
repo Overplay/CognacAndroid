@@ -6,15 +6,19 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -22,10 +26,14 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Response;
+import tv.ourglass.alyssa.bourbon_android.Model.Input.InputType;
+import tv.ourglass.alyssa.bourbon_android.Model.Input.TextFocusChangeListener;
+import tv.ourglass.alyssa.bourbon_android.Model.Input.TextValidator;
 import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
 import tv.ourglass.alyssa.bourbon_android.Model.SharedPrefsManager;
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 import static tv.ourglass.alyssa.bourbon_android.Scenes.Registration.RegistrationBaseActivity.isValidEmail;
 
@@ -36,7 +44,7 @@ public class EditAccountFragment extends Fragment {
     EditText mFirstName;
     EditText mLastName;
     EditText mEmail;
-    ImageView mEmailCheck;
+
     Button mSave;
 
     ProgressDialog progress;
@@ -53,7 +61,6 @@ public class EditAccountFragment extends Fragment {
         mFirstName = (EditText) view.findViewById(R.id.firstName);
         mLastName = (EditText) view.findViewById(R.id.lastName);
         mEmail = (EditText) view.findViewById(R.id.email);
-        mEmailCheck = (ImageView) view.findViewById(R.id.emailCheck);
 
         mSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,30 +70,32 @@ public class EditAccountFragment extends Fragment {
         });
 
         // Add text change listeners
-        mEmail.addTextChangedListener(new TextWatcher() {
+        mEmail.addTextChangedListener(new TextValidator(mEmail) {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isValidEmail(mEmail.getText().toString())) {
-                    mEmailCheck.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
+            public void validate(TextView textView, String text) {
+                if (isValidEmail(text)) {
                     mSave.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
-
                 } else {
-                    mEmailCheck.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
                     mSave.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
 
                 }
             }
         });
+
+        mEmail.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+                    if (!isValidEmail(mEmail.getText().toString())) {
+                        mEmail.setError(getString(R.string.email_not_valid));
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mEmail.setOnFocusChangeListener(TextFocusChangeListener.newInstance(mEmail, InputType.EMAIL));
 
         displayUserInfo();
 
@@ -95,10 +104,10 @@ public class EditAccountFragment extends Fragment {
 
     private void displayUserInfo() {
         //progress.show();
-        Applejack.getInstance().checkJWT(getActivity(),
-                new Applejack.HttpCallback() {
+        OGCloud.getInstance().checkJWT(getActivity(),
+                new OGCloud.HttpCallback() {
                     @Override
-                    public void onFailure(Call call, IOException ex, Applejack.ApplejackError error) {
+                    public void onFailure(Call call, IOException ex, OGCloud.OGCloudError error) {
                         Log.e(TAG, "bad JWT");
 
                         getActivity().runOnUiThread(new Runnable() {
@@ -112,7 +121,7 @@ public class EditAccountFragment extends Fragment {
                                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                Applejack.getInstance().logout(getActivity());
+                                                OGCloud.getInstance().logout(getActivity());
                                             }
                                         });
 
@@ -126,55 +135,48 @@ public class EditAccountFragment extends Fragment {
                     @Override
                     public void onSuccess(Response response) {
                         Log.d(TAG, "good JWT");
-                        try {
-                            String jsonData = response.body().string();
-                            JSONObject json = new JSONObject(jsonData);
 
-                            SharedPrefsManager.setUserFirstName(getActivity(), json.getString("firstName"));
-                            SharedPrefsManager.setUserLastName(getActivity(), json.getString("lastName"));
-                            SharedPrefsManager.setUserEmail(getActivity(), json.getString("email"));
-                            SharedPrefsManager.setUserId(getActivity(), json.getString("id"));
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mFirstName.setText(SharedPrefsManager.getUserFirstName(getActivity()));
+                                mLastName.setText(SharedPrefsManager.getUserLastName(getActivity()));
+                                mEmail.setText(SharedPrefsManager.getUserEmail(getActivity()));
+                                progress.dismiss();
+                            }
+                        });
 
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mFirstName.setText(SharedPrefsManager.getUserFirstName(getActivity()));
-                                    mLastName.setText(SharedPrefsManager.getUserLastName(getActivity()));
-                                    mEmail.setText(SharedPrefsManager.getUserEmail(getActivity()));
-                                    progress.dismiss();
-                                }
-                            });
+                        response.body().close();
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            response.body().close();
-                        }
                     }
                 });
     }
 
     public void save() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        if (isValidEmail(mEmail.getText().toString())) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder
-                .setTitle("Save changes")
-                .setMessage("Are you sure you want to save changes to your account information?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        saveAccountInfo();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+            builder
+                    .setTitle("Save changes")
+                    .setMessage("Are you sure you want to save changes to your account information?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            saveAccountInfo();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
 
-        AlertDialog alert = builder.create();
-        alert.show();
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else {
+            mEmail.setError(getString(R.string.email_not_valid));
+        }
     }
 
     private void saveAccountInfo() {
@@ -184,12 +186,12 @@ public class EditAccountFragment extends Fragment {
         final String lastName = mLastName.getText().toString();
         final String email = mEmail.getText().toString();
 
-        Applejack.getInstance().changeAccountInfo(getActivity(), firstName, lastName, email,
+        OGCloud.getInstance().changeAccountInfo(getActivity(), firstName, lastName, email,
                 SharedPrefsManager.getUserId(getActivity()),
-                new Applejack.HttpCallback() {
+                new OGCloud.HttpCallback() {
 
                     @Override
-                    public void onFailure(Call call, IOException e, Applejack.ApplejackError error) {
+                    public void onFailure(Call call, IOException e, OGCloud.OGCloudError error) {
                         Log.e(TAG, "save info failed");
                         getActivity().runOnUiThread(new Runnable() {
                             @Override

@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,8 +20,11 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Response;
+import tv.ourglass.alyssa.bourbon_android.Model.Input.InputType;
+import tv.ourglass.alyssa.bourbon_android.Model.Input.TextFocusChangeListener;
+import tv.ourglass.alyssa.bourbon_android.Model.Input.TextValidator;
 import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
 
 import static tv.ourglass.alyssa.bourbon_android.Scenes.Registration.RegistrationBaseActivity.isValidEmail;
@@ -27,12 +32,9 @@ import static tv.ourglass.alyssa.bourbon_android.Scenes.Registration.Registratio
 
 public class InviteFriendFragment extends Fragment {
 
-    private EditText mEmail;
+    EditText mEmail;
 
-    private ImageView mEmailCheck;
-
-    private TextView mInvite;
-
+    Button mInvite;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,8 +43,8 @@ public class InviteFriendFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_invite_friend, container, false);
 
         mEmail = (EditText) view.findViewById(R.id.email);
-        mEmailCheck = (ImageView) view.findViewById(R.id.emailCheck);
-        mInvite = (TextView) view.findViewById(R.id.inviteFriend);
+        mEmail.setOnFocusChangeListener(TextFocusChangeListener.newInstance(mEmail, InputType.EMAIL));
+        mInvite = (Button) view.findViewById(R.id.invite);
 
         mInvite.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,30 +53,27 @@ public class InviteFriendFragment extends Fragment {
             }
         });
 
-
-        // Add text change listeners
-        mEmail.addTextChangedListener(new TextWatcher() {
+        mEmail.addTextChangedListener(new TextValidator(mEmail) {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isValidEmail(mEmail.getText().toString())) {
-                    mEmailCheck.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
+            public void validate(TextView textView, String text) {
+                if (isValidEmail(text)) {
                     mInvite.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
-
                 } else {
-                    mEmailCheck.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
                     mInvite.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
-
                 }
+            }
+        });
+
+        mEmail.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+                    if (!isValidEmail(mEmail.getText().toString())) {
+                        mEmail.setError(getString(R.string.email_not_valid));
+                    }
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -83,14 +82,20 @@ public class InviteFriendFragment extends Fragment {
 
     public void invite() {
 
+        if (!isValidEmail(mEmail.getText().toString())) {
+            mEmail.setError(getString(R.string.email_not_valid));
+            mEmail.requestFocus();
+            return;
+        }
+
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm.isAcceptingText()) {
             imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
         }
 
-        Applejack.getInstance().inviteUser(getActivity(), this.mEmail.getText().toString(), new Applejack.HttpCallback() {
+        OGCloud.getInstance().inviteUser(getActivity(), this.mEmail.getText().toString(), new OGCloud.HttpCallback() {
             @Override
-            public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
+            public void onFailure(Call call, final IOException e, OGCloud.OGCloudError error) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

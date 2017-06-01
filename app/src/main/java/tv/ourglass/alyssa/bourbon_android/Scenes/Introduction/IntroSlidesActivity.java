@@ -1,5 +1,6 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Introduction;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
@@ -14,6 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
+import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Registration.CheckAuthActivity;
 
@@ -22,18 +27,15 @@ public class IntroSlidesActivity extends AppCompatActivity {
     String TAG = "IntroSlidesActivity";
 
     // slide image resources
-    int [] mResources = {
-            R.drawable.ic_add_location_black_36dp,
-            R.drawable.ic_chevron_left_black_24dp,
-            R.drawable.ic_card_giftcard_black_36dp,
-            R.drawable.ic_person_outline_black_36dp
+    String[] slideImageURLs = {
+            OGConstants.belliniCore + OGConstants.introSlide1Path,
+            OGConstants.belliniCore + OGConstants.introSlide2Path,
+            OGConstants.belliniCore + OGConstants.introSlide3Path
     };
 
     ViewPager mSlidesViewPager;
 
     SlidesPagerAdapter mSlidesPagerAdapter;
-
-    TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,21 +47,15 @@ public class IntroSlidesActivity extends AppCompatActivity {
         mSlidesViewPager = (ViewPager) findViewById(R.id.slides_viewpager);
         mSlidesPagerAdapter = new SlidesPagerAdapter(this);
         mSlidesViewPager.setAdapter(mSlidesPagerAdapter);
-
-        mTabLayout = (TabLayout) findViewById(R.id.slides_tablayout);
-        if (mTabLayout != null) {
-            mTabLayout.setupWithViewPager(mSlidesViewPager);
-        }
+        ((TabLayout) findViewById(R.id.slides_tablayout)).setupWithViewPager(mSlidesViewPager);
     }
 
     public void cancel(View view) {
-
         Intent intent = new Intent(this, CheckAuthActivity.class);
         startActivity(intent);
     }
 
     class SlidesPagerAdapter extends PagerAdapter {
-
         Context mContext;
 
         LayoutInflater mLayoutInflater;
@@ -71,7 +67,7 @@ public class IntroSlidesActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return mResources.length;
+            return slideImageURLs.length;
         }
 
         @Override
@@ -84,7 +80,23 @@ public class IntroSlidesActivity extends AppCompatActivity {
             View slideView = mLayoutInflater.inflate(R.layout.intro_slide, container, false);
 
             ImageView imageView = (ImageView) slideView.findViewById(R.id.slide_image_view);
-            imageView.setImageResource(mResources[position]);
+            Picasso.with(mContext)
+                    .load(slideImageURLs[position])
+                    .into(imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {}
+
+                        @Override
+                        public void onError() {
+                            ((Activity) mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(mContext, CheckAuthActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    });
 
             container.addView(slideView);
 

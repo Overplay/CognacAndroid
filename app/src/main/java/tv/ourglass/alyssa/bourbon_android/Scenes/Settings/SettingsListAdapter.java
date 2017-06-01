@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Settings.EditAccount.EditAccountFragment;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Settings.MyVenues.MyVenuesFragment;
@@ -87,13 +87,13 @@ public class SettingsListAdapter extends ArrayAdapter<SettingsListOption> {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                         builder
-                                .setTitle("Logging out")
+                                .setTitle("Log out")
                                 .setMessage("Are you sure you want to log out?")
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         ProgressDialog.show(context, "Logging out...", "", true);
-                                        Applejack.getInstance().logout(context);
+                                        OGCloud.getInstance().logout(context);
                                     }
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

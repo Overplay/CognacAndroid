@@ -20,7 +20,7 @@ import okhttp3.Call;
 import okhttp3.Response;
 import tv.ourglass.alyssa.bourbon_android.BourbonApplication;
 import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenue;
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 
 /**
  * Created by atorres on 5/13/17.
@@ -46,14 +46,14 @@ public class StateController {
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Applejack.HttpCallback cb = new Applejack.HttpCallback() {
+            OGCloud.HttpCallback cb = new OGCloud.HttpCallback() {
                 @Override
                 public void onSuccess(Response response) {
 
                 }
 
                 @Override
-                public void onFailure(Call call, IOException e, Applejack.ApplejackError error) {
+                public void onFailure(Call call, IOException e, OGCloud.OGCloudError error) {
 
                 }
             };
@@ -95,14 +95,14 @@ public class StateController {
         return mManagedVenues;
     }
 
-    public void findAllVenues(Applejack.HttpCallback cb) {
+    public void findAllVenues(OGCloud.HttpCallback cb) {
         Log.d(TAG, "findAllVenues");
-        Applejack.getInstance().getVenues(BourbonApplication.getContext(), wrapAllVenuesCb(cb));
+        OGCloud.getInstance().getVenues(BourbonApplication.getContext(), wrapAllVenuesCb(cb));
     }
 
-    public void findMyVenues(Applejack.HttpCallback cb) {
+    public void findMyVenues(OGCloud.HttpCallback cb) {
         Log.d(TAG, "findMyVenues");
-        Applejack.getInstance().getUserVenues(BourbonApplication.getContext(), wrapMyVenuesCb(cb));
+        OGCloud.getInstance().getUserVenues(BourbonApplication.getContext(), wrapMyVenuesCb(cb));
     }
 
     private ArrayList<OGVenue> processVenues(JSONArray venueJson) {
@@ -153,8 +153,8 @@ public class StateController {
         return venues;
     }
 
-    private Applejack.HttpCallback wrapAllVenuesCb(final Applejack.HttpCallback cb) {
-        return new Applejack.HttpCallback() {
+    private OGCloud.HttpCallback wrapAllVenuesCb(final OGCloud.HttpCallback cb) {
+        return new OGCloud.HttpCallback() {
             @Override
             public void onSuccess(Response response) {
                 try {
@@ -164,7 +164,7 @@ public class StateController {
 
                 } catch (IOException | JSONException e) {
                     Log.e(TAG, e.getLocalizedMessage());
-                    cb.onFailure(null, null, Applejack.ApplejackError.jsonError);
+                    cb.onFailure(null, null, OGCloud.OGCloudError.jsonError);
 
                 } finally {
                     response.body().close();
@@ -172,14 +172,14 @@ public class StateController {
             }
 
             @Override
-            public void onFailure(Call call, IOException e, Applejack.ApplejackError error) {
+            public void onFailure(Call call, IOException e, OGCloud.OGCloudError error) {
                 cb.onFailure(call, e, error);
             }
         };
     }
 
-    private Applejack.HttpCallback wrapMyVenuesCb(final Applejack.HttpCallback cb) {
-        return new Applejack.HttpCallback() {
+    private OGCloud.HttpCallback wrapMyVenuesCb(final OGCloud.HttpCallback cb) {
+        return new OGCloud.HttpCallback() {
             @Override
             public void onSuccess(Response response) {
                 try {
@@ -197,7 +197,7 @@ public class StateController {
 
                 } catch (IOException | JSONException e) {
                     Log.e(TAG, e.getLocalizedMessage());
-                    cb.onFailure(null, null, Applejack.ApplejackError.jsonError);
+                    cb.onFailure(null, null, OGCloud.OGCloudError.jsonError);
 
                 } finally {
                     response.body().close();
@@ -205,7 +205,7 @@ public class StateController {
             }
 
             @Override
-            public void onFailure(Call call, IOException e, Applejack.ApplejackError error) {
+            public void onFailure(Call call, IOException e, OGCloud.OGCloudError error) {
                 cb.onFailure(call, e, error);
             }
         };

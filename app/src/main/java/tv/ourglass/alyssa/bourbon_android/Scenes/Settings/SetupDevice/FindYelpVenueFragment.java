@@ -1,7 +1,5 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Settings.SetupDevice;
 
-import android.app.Activity;
-import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,7 +23,7 @@ import okhttp3.Call;
 import okhttp3.Response;
 import tv.ourglass.alyssa.bourbon_android.Model.Yelp.YelpVenue;
 import tv.ourglass.alyssa.bourbon_android.Model.Yelp.YelpVenueListAdapter;
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.Networking.SingleShotLocationProvider;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
@@ -87,14 +85,14 @@ public class FindYelpVenueFragment extends Fragment {
 
         // find yelp venues
         if (searchTerm != null && searchLocation != null) {
-            Applejack.getInstance().yelpSearch(getActivity(), searchTerm, searchLocation, yelpSearchCb);
+            OGCloud.getInstance().yelpSearch(getActivity(), searchTerm, searchLocation, yelpSearchCb);
 
         } else if (searchTerm != null && useCurrentLocation) {
             SingleShotLocationProvider.requestSingleUpdate(getActivity(),
                     new SingleShotLocationProvider.LocationCallback() {
                 @Override
                 public void onLocationAvailable(Location location) {
-                    Applejack.getInstance().yelpSearch(getActivity(), searchTerm,
+                    OGCloud.getInstance().yelpSearch(getActivity(), searchTerm,
                             location.getLatitude(), location.getLongitude(), yelpSearchCb);
                 }
 
@@ -118,7 +116,7 @@ public class FindYelpVenueFragment extends Fragment {
         return rootView;
     }
 
-    Applejack.HttpCallback yelpSearchCb = new Applejack.HttpCallback() {
+    OGCloud.HttpCallback yelpSearchCb = new OGCloud.HttpCallback() {
         @Override
         public void onSuccess(Response response) {
             try {
@@ -145,7 +143,7 @@ public class FindYelpVenueFragment extends Fragment {
         }
 
         @Override
-        public void onFailure(Call call, IOException e, Applejack.ApplejackError error) {
+        public void onFailure(Call call, IOException e, OGCloud.OGCloudError error) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

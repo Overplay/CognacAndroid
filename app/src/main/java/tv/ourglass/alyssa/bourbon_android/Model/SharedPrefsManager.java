@@ -17,8 +17,8 @@ public class SharedPrefsManager {
     private static final String USER_FIRST_NAME = "USER_FIRST_NAME";
     private static final String USER_LAST_NAME = "USER_LAST_NAME";
     private static final String USER_EMAIL = "USER_EMAIL";
-    private static final String USER_APPLEJACK_JWT = "USER_APPLEJACK_JWT";
-    private static final String USER_APPLEJACK_JWT_EXPIRY = "USER_APPLEJACK_JWT_EXPIRY";
+    private static final String USER_BELLINI_JWT = "USER_BELLINI_JWT";
+    private static final String USER_BELLINI_JWT_EXPIRY = "USER_BELLINI_JWT_EXPIRY";
 
     private SharedPrefsManager() {}
 
@@ -76,23 +76,23 @@ public class SharedPrefsManager {
         editor.apply();
     }
 
-    public static String getUserApplejackJwt(Context context) {
-        return getSharedPreferences(context).getString(USER_APPLEJACK_JWT, null);
+    public static String getJwt(Context context) {
+        return getSharedPreferences(context).getString(USER_BELLINI_JWT, null);
     }
 
-    public static void setUserApplejackJwt(Context context, String newValue) {
+    public static void setJwt(Context context, String newValue) {
         final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-        editor.putString(USER_APPLEJACK_JWT, newValue);
+        editor.putString(USER_BELLINI_JWT, newValue);
         editor.apply();
     }
 
-    public static Long getUserApplejackJwtExpiry(Context context) {
-        return getSharedPreferences(context).getLong(USER_APPLEJACK_JWT_EXPIRY, 0l);
+    public static Long getJwtExpiry(Context context) {
+        return getSharedPreferences(context).getLong(USER_BELLINI_JWT_EXPIRY, 0l);
     }
 
-    public static void setUserApplejackJwtExpiry(Context context, Long newValue) {
+    public static void setJwtExpiry(Context context, Long newValue) {
         final SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-        editor.putLong(USER_APPLEJACK_JWT_EXPIRY, newValue);
+        editor.putLong(USER_BELLINI_JWT_EXPIRY, newValue);
         editor.apply();
     }
 }

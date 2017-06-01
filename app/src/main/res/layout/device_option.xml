@@ -20,7 +20,7 @@
         android:layout_gravity="center"/>
 
     <View
-        android:background="@color/OGLightBlue"
+        android:background="@color/OGHURRICANE_BLUE"
         android:layout_height="match_parent"
         android:layout_width="2dp" />
 
@@ -39,6 +39,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/name" />
+
+        <tv.ourglass.alyssa.bourbon_android.Views.LightTextView
+            android:id="@+id/station"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/OGLightGrey" />
 
     </LinearLayout>
 

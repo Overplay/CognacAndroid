@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +28,7 @@ import okhttp3.Call;
 import okhttp3.Response;
 import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
 import tv.ourglass.alyssa.bourbon_android.Model.OGDevice;
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
@@ -39,16 +40,28 @@ public class ChooseDeviceFragment extends Fragment {
 
     DevicesListAdapter devicesListAdapter;
 
+    View mEmptyView;
+
+    ListView mDevicesList;
+
+    ProgressBar mProgressSpinner;
+
     String mVenueName;
     String mVenueUUID;
 
-    Applejack.HttpCallback devicesCallback = new Applejack.HttpCallback() {
+    OGCloud.HttpCallback devicesCallback = new OGCloud.HttpCallback() {
 
         @Override
-        public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
+        public void onFailure(Call call, final IOException e, OGCloud.OGCloudError error) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mDevicesList.setEmptyView(mEmptyView);
+                    mProgressSpinner.setVisibility(View.GONE);
+                }
+            });
 
             switch (error) {
-
                 case authFailure:
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -63,7 +76,6 @@ public class ChooseDeviceFragment extends Fragment {
                                             dialog.dismiss();
                                         }
                                     });
-
                             AlertDialog alert = builder.create();
                             alert.show();
                         }
@@ -81,10 +93,9 @@ public class ChooseDeviceFragment extends Fragment {
                                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Applejack.getInstance().logout(getActivity());
+                                            OGCloud.getInstance().logout(getActivity());
                                         }
                                     });
-
                             AlertDialog alert = builder.create();
                             alert.show();
                         }
@@ -92,12 +103,7 @@ public class ChooseDeviceFragment extends Fragment {
                     break;
 
                 default:
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getActivity(), "Error retrieving devices", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    break;
             }
         }
 
@@ -113,14 +119,7 @@ public class ChooseDeviceFragment extends Fragment {
                 Log.d(TAG, String.format("%d devices found!", deviceArray.length()));
 
                 for (int i = 0; i < deviceArray.length(); i++) {
-                    JSONObject device = deviceArray.getJSONObject(i);
-
-                    // Get device info
-                    String name = device.getString("name");
-                    String venueUUID = device.getString("atVenueUUID");
-                    String udid = device.getString("deviceUDID");
-
-                    devices.add(new OGDevice(name, venueUUID, udid));
+                    devices.add(new OGDevice(deviceArray.getJSONObject(i)));
                 }
 
                 getActivity().runOnUiThread(new Runnable() {
@@ -129,6 +128,8 @@ public class ChooseDeviceFragment extends Fragment {
                         mDevices.clear();
                         mDevices.addAll(devices);
                         devicesListAdapter.notifyDataSetChanged();
+                        mProgressSpinner.setVisibility(View.GONE);
+                        mDevicesList.setEmptyView(mEmptyView);
                     }
                 });
 
@@ -137,7 +138,8 @@ public class ChooseDeviceFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getActivity(), "Error retrieving devices", Toast.LENGTH_SHORT).show();
+                        mDevicesList.setEmptyView(mEmptyView);
+                        mProgressSpinner.setVisibility(View.GONE);
                     }
                 });
 
@@ -181,11 +183,13 @@ public class ChooseDeviceFragment extends Fragment {
 
         // set up devices list
         devicesListAdapter = new DevicesListAdapter(getActivity(), mDevices);
-        ListView listView = (ListView) rootView.findViewById(R.id.deviceList);
-        listView.setAdapter(this.devicesListAdapter);
-        listView.setEmptyView(rootView.findViewById(R.id.empty));
+        mDevicesList = (ListView) rootView.findViewById(R.id.deviceList);
+        mDevicesList.setAdapter(this.devicesListAdapter);
+        mEmptyView = rootView.findViewById(R.id.empty);
+        mProgressSpinner = (ProgressBar) rootView.findViewById(R.id.progress);
+        mProgressSpinner.setVisibility(View.VISIBLE);
 
-        Applejack.getInstance().getDevices(getActivity(), mVenueUUID, devicesCallback);
+        OGCloud.getInstance().getDevices(getActivity(), mVenueUUID, devicesCallback);
 
         return rootView;
     }

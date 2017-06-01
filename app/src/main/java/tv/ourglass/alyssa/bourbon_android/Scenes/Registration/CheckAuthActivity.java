@@ -5,7 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Response;
 import tv.ourglass.alyssa.bourbon_android.Model.SharedPrefsManager;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
@@ -17,15 +22,25 @@ public class CheckAuthActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_auth);
-        checkAuthStatus();
+
+        // perform this initial call to set the Sails cookie
+        OGCloud.getInstance().checkJWT(this, new OGCloud.HttpCallback() {
+            @Override
+            public void onSuccess(Response response) {
+                checkAuthStatus();
+            }
+            @Override
+            public void onFailure(Call call, IOException e, OGCloud.OGCloudError error) {
+                checkAuthStatus();
+            }
+        });
     }
 
     private void checkAuthStatus() {
+        Long expiry = SharedPrefsManager.getJwtExpiry(this);
 
-        Long expiry = SharedPrefsManager.getUserApplejackJwtExpiry(this);
-
-        if (SharedPrefsManager.getUserApplejackJwt(this) != null &&
-                System.currentTimeMillis() + 86400000l < expiry) {  // if JWT is good within the next 24hrs
+        if (SharedPrefsManager.getJwt(this) != null &&
+                System.currentTimeMillis() + 86400000l < expiry) { // if JWT is good within the next 24hrs
             Log.d(TAG, "good jwt");
             Intent intent = new Intent(CheckAuthActivity.this, MainTabsActivity.class);
             startActivity(intent);

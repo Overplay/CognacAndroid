@@ -3,20 +3,17 @@ package tv.ourglass.alyssa.bourbon_android.Scenes.Registration;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Response;
-import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Model.Input.InputType;
+import tv.ourglass.alyssa.bourbon_android.Model.Input.TextFocusChangeListener;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
@@ -25,12 +22,7 @@ public class LoginActivity extends RegistrationBaseActivity {
     private final String TAG = "LoginActivity";
 
     private EditText mEmail;
-    private ImageView mEmailCheck;
-
     private EditText mPassword;
-    private ImageView mPasswordCheck;
-
-    private ImageButton mLoginButton;
 
     ProgressDialog progress;
 
@@ -40,85 +32,39 @@ public class LoginActivity extends RegistrationBaseActivity {
         setContentView(R.layout.activity_login);
 
         mEmail = (EditText) findViewById(R.id.email);
-        mEmailCheck = (ImageView) findViewById(R.id.emailCheck);
+        mEmail.setOnFocusChangeListener(TextFocusChangeListener.newInstance(mEmail, InputType.EMAIL));
 
         mPassword = (EditText) findViewById(R.id.password);
-        mPasswordCheck = (ImageView) findViewById(R.id.passwordCheck);
-
-        mLoginButton = (ImageButton) findViewById(R.id.loginButton);
-
-        // Add text change listeners
-        mEmail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isValidEmail(mEmail.getText().toString())) {
-                    mEmailCheck.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
-
-                } else {
-                    mEmailCheck.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
-                }
-                checkFields();
-            }
-        });
-
-        mPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isValidPassword(mPassword.getText().toString())) {
-                    mPasswordCheck.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
-
-                } else {
-                    mPasswordCheck.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
-                }
-                checkFields();
-            }
-        });
-    }
-
-    private void checkFields() {
-        if (isValidEmail(mEmail.getText().toString()) && isValidPassword(mPassword.getText().toString())) {
-            mLoginButton.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
-        } else {
-            mLoginButton.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
-        }
+        mPassword.setOnFocusChangeListener(TextFocusChangeListener.newInstance(mPassword, InputType.PASSWORD));
     }
 
     public void login(View view) {
-        final String email = mEmail.getText().toString();
-        final String password = mPassword.getText().toString();
+        String email = mEmail.getText().toString();
+        String password = mPassword.getText().toString();
+        progress = ProgressDialog.show(this, getString(R.string.loggingIn), "", true);
 
-        progress = ProgressDialog.show(this, "Logging in...", "", true);
+        boolean emailValid = true, pwdValid = true;
 
-        if (!OGConstants.devMode) {
-            Applejack.getInstance().login(this, email, password,
-                    new Applejack.HttpCallback() {
+        if (!isValidEmail(email)) {
+            emailValid = false;
+            mEmail.setError(getString(R.string.email_not_valid));
+        }
+
+        if (!isValidPassword(password)) {
+            pwdValid = false;
+            mPassword.setError(getString(R.string.pwd_not_valid));
+        }
+
+        if (emailValid && pwdValid) {
+            OGCloud.getInstance().login(this, email, password,
+                    new OGCloud.HttpCallback() {
                         @Override
-                        public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
+                        public void onFailure(Call call, final IOException e, OGCloud.OGCloudError error) {
                             LoginActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     progress.dismiss();
-                                    showAlert("Uh oh!", "There was a problem logging in.");
+                                    showAlert(getString(R.string.uhoh), getString(R.string.loginErrorAlertMsg));
                                     if (e != null) {
                                         Log.d(TAG, e.getLocalizedMessage());
                                     }
@@ -128,7 +74,6 @@ public class LoginActivity extends RegistrationBaseActivity {
 
                         @Override
                         public void onSuccess(Response response) {
-
                             LoginActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -138,17 +83,16 @@ public class LoginActivity extends RegistrationBaseActivity {
                                     Log.d(TAG, "login success");
                                 }
                             });
-
                             response.body().close();
                         }
                     });
-        }
-
-        if (OGConstants.devMode) {
-            Intent intent = new Intent(LoginActivity.this, MainTabsActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
-            Log.d(TAG, "non-login success");
+        } else {
+            if (emailValid && !pwdValid) {
+                mPassword.requestFocus();
+            } else {
+                mEmail.requestFocus();
+            }
+            progress.dismiss();
         }
     }
 }

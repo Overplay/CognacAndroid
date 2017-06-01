@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -30,7 +28,7 @@ import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenue;
 import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenueListAdapter;
 import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenueType;
 import tv.ourglass.alyssa.bourbon_android.Model.StateController;
-import tv.ourglass.alyssa.bourbon_android.Networking.Applejack;
+import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
@@ -51,7 +49,7 @@ public class PickVenueFragment extends Fragment {
 
     ProgressBar mProgressSpinner;
 
-    Applejack.HttpCallback venueCallback = new Applejack.HttpCallback() {
+    OGCloud.HttpCallback venueCallback = new OGCloud.HttpCallback() {
 
         @Override
         public void onSuccess(final Response response) {
@@ -68,7 +66,7 @@ public class PickVenueFragment extends Fragment {
         }
 
         @Override
-        public void onFailure(Call call, final IOException e, Applejack.ApplejackError error) {
+        public void onFailure(Call call, final IOException e, OGCloud.OGCloudError error) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

@@ -1,6 +1,7 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import tv.ourglass.alyssa.bourbon_android.Model.OGDevice;
 import tv.ourglass.alyssa.bourbon_android.R;
@@ -30,21 +32,23 @@ public class DevicesListAdapter extends ArrayAdapter<OGDevice> {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    @NonNull
+    public View getView(int position, View view, @NonNull ViewGroup parent) {
         OGDevice device = getItem(position);
 
         if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.device_option, parent, false);
         }
 
-        TextView number = (TextView) view.findViewById(R.id.number);
         if (device != null) {
-            number.setText(String.format("%02d", position + 1));
-        }
+            ((TextView) view.findViewById(R.id.number)).setText(String.format(Locale.ENGLISH, "%02d", position + 1));
+            ((TextView) view.findViewById(R.id.name)).setText(device.name);
 
-        TextView name = (TextView) view.findViewById(R.id.name);
-        if (device != null) {
-            name.setText(device.name);
+            if (device.isActive) {
+                ((TextView) view.findViewById(R.id.station)).setText(device.stationName);
+            } else {
+                ((TextView) view.findViewById(R.id.station)).setText(R.string.offline);
+            }
         }
 
         view.setTag(device);
@@ -54,7 +58,6 @@ public class DevicesListAdapter extends ArrayAdapter<OGDevice> {
             @Override
             public void onClick(View view) {
                 OGDevice device = (OGDevice) view.getTag();
-
                 if (device != null) {
                     ((MainTabsActivity) context)
                             .openNewFragment(DeviceViewFragment.newInstance(device.name, device.getUrl()));

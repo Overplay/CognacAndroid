@@ -1,18 +1,27 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Control;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
+import okhttp3.Request;
+import okhttp3.Response;
+import tv.ourglass.alyssa.bourbon_android.BourbonApplication;
 import tv.ourglass.alyssa.bourbon_android.Model.OGConstants;
+import tv.ourglass.alyssa.bourbon_android.Model.SharedPrefsManager;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
 /**
  * Created by atorres on 4/5/17.
@@ -82,8 +91,7 @@ public class AppControlViewFragment extends WebViewBaseFragment {
                         }
 
                         if (timeout) {
-                            view.setVisibility(View.INVISIBLE);
-                            showAlert("Uh oh!", "We were unable to connect to this device.");
+                            //showAlert("Uh oh!", "We were unable to connect to this device.");
                         }
                     }
                 }).start();
@@ -93,6 +101,18 @@ public class AppControlViewFragment extends WebViewBaseFragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 timeout = false;
+            }
+
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                return getNewResponse(request.getUrl().toString());
+            }
+
+            @SuppressWarnings("deprecation")
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                return getNewResponse(url);
             }
         };
     }
