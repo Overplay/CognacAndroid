@@ -21,6 +21,18 @@
             <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/email"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/OGLightGrey" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/firstName"
                 android:hint="@string/firstName"
                 android:inputType="textPersonName"
@@ -37,19 +49,6 @@
                 android:id="@+id/lastName"
                 android:hint="@string/lastName"
                 android:inputType="textPersonName"
-                android:textColor="@color/OGWhite"/>
-        </android.support.design.widget.TextInputLayout>
-
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/email"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress"
                 android:textColor="@color/OGWhite"/>
         </android.support.design.widget.TextInputLayout>
 

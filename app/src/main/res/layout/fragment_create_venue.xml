@@ -82,7 +82,7 @@
                     android:id="@+id/address"
                     android:hint="@string/addressHint"
                     android:textColor="@color/OGWhite"
-                    android:inputType="textAutoCorrect|textCapSentences|textPostalAddress"
+                    android:inputType="textPostalAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -97,7 +97,7 @@
                     android:id="@+id/address2"
                     android:hint="@string/address2Hint"
                     android:textColor="@color/OGWhite"
-                    android:inputType="textAutoCorrect|textCapSentences|textPostalAddress"
+                    android:inputType="textPostalAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -112,7 +112,7 @@
                     android:id="@+id/city"
                     android:hint="@string/cityHint"
                     android:textColor="@color/OGWhite"
-                    android:inputType="textAutoCorrect|textCapSentences"
+                    android:inputType="textCapWords"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -127,7 +127,7 @@
                     android:id="@+id/state"
                     android:hint="@string/stateHint"
                     android:textColor="@color/OGWhite"
-                    android:inputType="textAutoCorrect|textCapSentences"
+                    android:inputType="textCapCharacters"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nextFocusForward="@+id/zip"/>

@@ -6,9 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -42,7 +39,9 @@ public class EditAccountFragment extends Fragment {
     final String TAG = "EditAccountFragment";
 
     EditText mFirstName;
+
     EditText mLastName;
+
     EditText mEmail;
 
     Button mSave;
@@ -57,10 +56,13 @@ public class EditAccountFragment extends Fragment {
 
         progress = new ProgressDialog(getActivity());
 
+        mEmail = (EditText) view.findViewById(R.id.email);
+        mEmail.setEnabled(false);
+
         mSave = (Button) view.findViewById(R.id.save);
         mFirstName = (EditText) view.findViewById(R.id.firstName);
+        mFirstName.requestFocus(); // take away focus from email which is not enabled
         mLastName = (EditText) view.findViewById(R.id.lastName);
-        mEmail = (EditText) view.findViewById(R.id.email);
 
         mSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,24 +72,26 @@ public class EditAccountFragment extends Fragment {
         });
 
         // Add text change listeners
-        mEmail.addTextChangedListener(new TextValidator(mEmail) {
+        mFirstName.addTextChangedListener(new TextValidator(mFirstName) {
             @Override
             public void validate(TextView textView, String text) {
-                if (isValidEmail(text)) {
-                    mSave.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
-                } else {
-                    mSave.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
-
-                }
+                checkFields();
             }
         });
 
-        mEmail.setOnKeyListener(new View.OnKeyListener() {
+        mLastName.addTextChangedListener(new TextValidator(mLastName) {
+            @Override
+            public void validate(TextView textView, String text) {
+                checkFields();
+            }
+        });
+
+        mFirstName.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
-                    if (!isValidEmail(mEmail.getText().toString())) {
-                        mEmail.setError(getString(R.string.email_not_valid));
+                    if (mFirstName.getText().toString().trim().isEmpty()) {
+                        mFirstName.setError(getString(R.string.req_field));
                     }
                     return true;
                 }
@@ -95,11 +99,30 @@ public class EditAccountFragment extends Fragment {
             }
         });
 
-        mEmail.setOnFocusChangeListener(TextFocusChangeListener.newInstance(mEmail, InputType.EMAIL));
+        mLastName.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+                    if (mLastName.getText().toString().trim().isEmpty()) {
+                        mLastName.setError(getString(R.string.req_field));
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
 
         displayUserInfo();
 
         return view;
+    }
+
+    public void checkFields() {
+        if (mFirstName.getText().toString().trim().isEmpty() || mLastName.getText().toString().trim().isEmpty()) {
+            mSave.animate().alpha(0f).setDuration(OGConstants.fadeOutTime).start();
+        } else {
+            mSave.animate().alpha(1f).setDuration(OGConstants.fadeInTime).start();
+        }
     }
 
     private void displayUserInfo() {
@@ -109,7 +132,6 @@ public class EditAccountFragment extends Fragment {
                     @Override
                     public void onFailure(Call call, IOException ex, OGCloud.OGCloudError error) {
                         Log.e(TAG, "bad JWT");
-
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -124,7 +146,6 @@ public class EditAccountFragment extends Fragment {
                                                 OGCloud.getInstance().logout(getActivity());
                                             }
                                         });
-
                                 progress.dismiss();
                                 AlertDialog alert = builder.create();
                                 alert.show();
@@ -135,7 +156,6 @@ public class EditAccountFragment extends Fragment {
                     @Override
                     public void onSuccess(Response response) {
                         Log.d(TAG, "good JWT");
-
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -145,7 +165,6 @@ public class EditAccountFragment extends Fragment {
                                 progress.dismiss();
                             }
                         });
-
                         response.body().close();
 
                     }
@@ -153,7 +172,20 @@ public class EditAccountFragment extends Fragment {
     }
 
     public void save() {
-        if (isValidEmail(mEmail.getText().toString())) {
+        Boolean firstNameValid = true, lastNameValid = true;
+
+        if (mFirstName.getText().toString().trim().isEmpty()) {
+            firstNameValid = false;
+            mFirstName.setError(getString(R.string.req_field));
+            mFirstName.requestFocus();
+        }
+        if (mLastName.getText().toString().trim().isEmpty()) {
+            lastNameValid = false;
+            mLastName.setError(getString(R.string.req_field));
+            mLastName.requestFocus();
+        }
+
+        if (firstNameValid && lastNameValid) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
             builder
@@ -174,8 +206,6 @@ public class EditAccountFragment extends Fragment {
 
             AlertDialog alert = builder.create();
             alert.show();
-        } else {
-            mEmail.setError(getString(R.string.email_not_valid));
         }
     }
 
@@ -184,7 +214,7 @@ public class EditAccountFragment extends Fragment {
 
         final String firstName = mFirstName.getText().toString();
         final String lastName = mLastName.getText().toString();
-        final String email = mEmail.getText().toString();
+        final String email = SharedPrefsManager.getUserEmail(getActivity());
 
         OGCloud.getInstance().changeAccountInfo(getActivity(), firstName, lastName, email,
                 SharedPrefsManager.getUserId(getActivity()),
@@ -221,14 +251,12 @@ public class EditAccountFragment extends Fragment {
 
                         SharedPrefsManager.setUserFirstName(getActivity(), firstName);
                         SharedPrefsManager.setUserLastName(getActivity(), lastName);
-                        SharedPrefsManager.setUserEmail(getActivity(), email);
 
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 mFirstName.setText(firstName);
                                 mLastName.setText(lastName);
-                                mEmail.setText(email);
                                 progress.dismiss();
                             }
                         });
