@@ -30,6 +30,7 @@ import tv.ourglass.alyssa.bourbon_android.Model.OGVenue.OGVenueType;
 import tv.ourglass.alyssa.bourbon_android.Model.StateController;
 import tv.ourglass.alyssa.bourbon_android.Networking.OGCloud;
 import tv.ourglass.alyssa.bourbon_android.R;
+import tv.ourglass.alyssa.bourbon_android.Scenes.Control.ChooseDeviceFragment;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Settings.SetupDevice.CreateVenueFragment;
 import tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.MainTabsActivity;
 
@@ -115,7 +116,10 @@ public class MyVenuesFragment extends Fragment {
                 new OGVenueListAdapter.OnClickVenue() {
                     @Override
                     public void onClick(View view, OGVenue venue) {
-
+                        if (venue != null) {
+                            ((MainTabsActivity) getActivity()).openNewFragment(
+                                    ChooseDeviceFragment.newInstance(venue.name, venue.uuid));
+                        }
                     }
                 });
         mVenueList = (ListView) rootView.findViewById(R.id.venueList);

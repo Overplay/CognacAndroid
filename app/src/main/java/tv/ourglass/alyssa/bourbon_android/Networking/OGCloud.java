@@ -81,8 +81,6 @@ public class OGCloud {
 
                 if (!response.isSuccessful()) {
 
-                    Log.d(TAG, String.format("%d", response.code()));
-
                     // if error 403, then check authorization
                     if (response.code() == 403) {
 
@@ -290,6 +288,29 @@ public class OGCloud {
             };
 
             postJson(context, OGConstants.belliniCore + OGConstants.loginPath, params, loginCb);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            cb.onFailure(null, null, OGCloudError.jsonError);
+        }
+    }
+
+    /**
+     * Logs in to OurGlass without getting a token.
+     * @param context the context to use
+     * @param email user's email
+     * @param password user's password
+     * @param cb the callback to process the response
+     */
+    public void loginOnly(final Context context, final String email, final String password,
+                      final HttpCallback cb) {
+        try {
+            JSONObject params = new JSONObject();
+            params.put("email", email);
+            params.put("password", password);
+            params.put("type", "local");
+
+            postJson(context, OGConstants.belliniCore + OGConstants.loginPath, params, cb);
 
         } catch (JSONException e) {
             e.printStackTrace();

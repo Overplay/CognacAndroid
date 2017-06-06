@@ -1,6 +1,7 @@
 package tv.ourglass.alyssa.bourbon_android.Scenes.Settings.EditAccount;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,6 +29,8 @@ import tv.ourglass.alyssa.bourbon_android.Scenes.Registration.RegistrationBaseAc
  */
 
 public class ChangePasswordFragment extends Fragment {
+
+    String TAG = "ChangePasswordFragment";
 
     EditText mCurrentPassword, mNewPassword, mRepeatNewPassword;
 
@@ -62,6 +66,13 @@ public class ChangePasswordFragment extends Fragment {
     private void saveNewPassword() {
         mProgress.show();
 
+        // hide keyboard
+        try {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        } catch (NullPointerException e) { // keyboard not open
+        }
+
         // check if new password is valid
         if (!RegistrationBaseActivity.isValidPassword(mNewPassword.getText().toString())) {
             mNewPassword.setError(getString(R.string.passwordRequirements));
@@ -81,7 +92,7 @@ public class ChangePasswordFragment extends Fragment {
         final String email = SharedPrefsManager.getUserEmail(getActivity());
         final String newPassword = mNewPassword.getText().toString();
 
-        OGCloud.getInstance().login(getActivity(), email, mCurrentPassword.getText().toString(),
+        OGCloud.getInstance().loginOnly(getActivity(), email, mCurrentPassword.getText().toString(),
                 new OGCloud.HttpCallback() {
                     @Override
                     public void onSuccess(Response response) {
@@ -104,8 +115,8 @@ public class ChangePasswordFragment extends Fragment {
 
                                     @Override
                                     public void onFailure(Call call, IOException e, OGCloud.OGCloudError error) {
-                                        Log.d("ChangePassword", error.name());
-                                        Log.d("ChangePassword", SharedPrefsManager.getJwt(getActivity()));
+                                        Log.d(TAG, error.name());
+                                        Log.d(TAG, SharedPrefsManager.getJwt(getActivity()));
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
