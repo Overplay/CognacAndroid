@@ -168,8 +168,6 @@ public class ChooseDeviceFragment extends Fragment {
             mVenueName = "";
             mVenueUUID = "";
         }
-
-        //setHasOptionsMenu(true);
     }
 
     @Override
@@ -179,7 +177,6 @@ public class ChooseDeviceFragment extends Fragment {
         // set up top toolbar
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         toolbar.setTitle(mVenueName);
-        ((MainTabsActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set up devices list
         devicesListAdapter = new DevicesListAdapter(getActivity(), mDevices);

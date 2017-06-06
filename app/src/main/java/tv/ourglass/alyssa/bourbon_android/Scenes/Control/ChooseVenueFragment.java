@@ -109,8 +109,6 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(mBroadcastReceiver,
                         new IntentFilter(BourbonNotification.allVenuesUpdated.name()));
-
-        //setHasOptionsMenu(true);
     }
 
     @Override
@@ -120,7 +118,6 @@ public class ChooseVenueFragment extends Fragment implements GoogleApiClient.Con
         // set up top toolbar
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.tb_venues));
-        ((MainTabsActivity) getActivity()).setSupportActionBar(toolbar);
 
         // set up venue list
         mVenueListAdapter = new OGVenueListAdapter(getActivity(), OGVenueType.ALL,

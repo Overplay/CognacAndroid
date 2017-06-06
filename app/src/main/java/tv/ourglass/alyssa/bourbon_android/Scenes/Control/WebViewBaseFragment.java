@@ -51,9 +51,6 @@ public class WebViewBaseFragment extends Fragment {
 
         mActivity = getActivity();
 
-        //TextView deviceNameLabel = (TextView) view.findViewById(R.id.title);
-        //deviceNameLabel.setText(title);
-
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle(title);
 
