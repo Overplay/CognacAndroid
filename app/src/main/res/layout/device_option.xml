@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
-    <tv.ourglass.alyssa.bourbon_android.Views.SemiBoldTextView
+    <tv.ourglass.ourglasstv.Views.SemiBoldTextView
         android:id="@+id/number"
         android:layout_width="30dp"
         android:layout_height="match_parent"
@@ -33,14 +33,14 @@
         android:layout_marginBottom="15dp"
         android:orientation="vertical">
 
-        <tv.ourglass.alyssa.bourbon_android.Views.SemiBoldTextView
+        <tv.ourglass.ourglasstv.Views.SemiBoldTextView
             android:textColor="@color/OGWhite"
             style="@android:style/TextAppearance.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/name" />
 
-        <tv.ourglass.alyssa.bourbon_android.Views.LightTextView
+        <tv.ourglass.ourglasstv.Views.LightTextView
             android:id="@+id/station"
             style="@style/TextAppearance.AppCompat.Small"
             android:layout_width="match_parent"

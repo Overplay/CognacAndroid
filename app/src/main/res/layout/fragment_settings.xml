@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context=".Scenes.Settings.SettingsFragment"
+    tools:context="tv.ourglass.ourglasstv.Scenes.Settings.SettingsFragment"
     android:orientation="vertical">
 
     <include

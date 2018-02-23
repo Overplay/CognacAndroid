@@ -5,7 +5,7 @@
     android:id="@+id/activity_intro_slides"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="tv.ourglass.alyssa.bourbon_android.Scenes.Introduction.IntroSlidesActivity">
+    tools:context="tv.ourglass.alyssa.ourglasstv.tv.ourglass.ourglasstv.Scenes.Introduction.IntroSlidesActivity">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/slides_viewpager"

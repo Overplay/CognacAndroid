@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Scenes.Map.MapFragment"
+    tools:context="tv.ourglass.ourglasstv.Scenes.Map.MapFragment"
     android:orientation="vertical">
 
-        <tv.ourglass.alyssa.bourbon_android.Views.LightTextView
+        <tv.ourglass.ourglasstv.Views.LightTextView
             android:id="@+id/error"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

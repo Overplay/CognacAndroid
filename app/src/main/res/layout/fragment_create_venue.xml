@@ -26,7 +26,7 @@
             android:paddingEnd="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin">
 
-            <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+            <tv.ourglass.ourglasstv.Views.RegularEditText
                 android:id="@+id/yelpSearchTerm"
                 android:hint="@string/yelpSearchTermHint"
                 android:drawableStart="@drawable/ic_search_light_24px"
@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+            <tv.ourglass.ourglasstv.Views.RegularEditText
                 android:id="@+id/yelpSearchLocation"
                 android:hint="@string/yelpSearchLocation"
                 android:drawableStart="@drawable/ic_location_on_light_24px"
@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <tv.ourglass.alyssa.bourbon_android.Views.RegularButton
+            <tv.ourglass.ourglasstv.Views.RegularButton
                 android:id="@+id/yelpSearch"
                 android:text="@string/yelpSearchButton"
                 android:layout_width="wrap_content"
@@ -63,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                <tv.ourglass.ourglasstv.Views.RegularEditText
                     android:id="@+id/venueName"
                     android:hint="@string/venueNameHint"
                     android:textColor="@color/OGWhite"
@@ -78,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                <tv.ourglass.ourglasstv.Views.RegularEditText
                     android:id="@+id/address"
                     android:hint="@string/addressHint"
                     android:textColor="@color/OGWhite"
@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                <tv.ourglass.ourglasstv.Views.RegularEditText
                     android:id="@+id/address2"
                     android:hint="@string/address2Hint"
                     android:textColor="@color/OGWhite"
@@ -108,7 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                <tv.ourglass.ourglasstv.Views.RegularEditText
                     android:id="@+id/city"
                     android:hint="@string/cityHint"
                     android:textColor="@color/OGWhite"
@@ -123,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                <tv.ourglass.ourglasstv.Views.RegularEditText
                     android:id="@+id/state"
                     android:hint="@string/stateHint"
                     android:textColor="@color/OGWhite"
@@ -139,7 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <tv.ourglass.alyssa.bourbon_android.Views.RegularEditText
+                <tv.ourglass.ourglasstv.Views.RegularEditText
                     android:id="@+id/zip"
                     android:hint="@string/zipHint"
                     android:textColor="@color/OGWhite"
@@ -149,7 +149,7 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <tv.ourglass.alyssa.bourbon_android.Views.RegularButton
+            <tv.ourglass.ourglasstv.Views.RegularButton
                 android:id="@+id/createVenue"
                 android:text="@string/createVenue"
                 android:layout_width="wrap_content"

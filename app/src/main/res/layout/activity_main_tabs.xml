@@ -5,9 +5,9 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".Scenes.Tabs.MainTabsActivity">
+    tools:context="tv.ourglass.ourglasstv.Scenes.Tabs.MainTabsActivity">
 
-    <tv.ourglass.alyssa.bourbon_android.Scenes.Tabs.CustomViewPager
+    <tv.ourglass.ourglasstv.Scenes.Tabs.CustomViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="0px"

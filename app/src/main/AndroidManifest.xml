@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="tv.ourglass.alyssa.bourbon_android">
+    package="tv.ourglass.ourglasstv">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -13,24 +13,24 @@
     <uses-feature android:name="android.hardware.location.gps" />
 
     <application
-        android:name=".BourbonApplication"
+        android:name="tv.ourglass.ourglasstv.OGTVApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Scenes.Registration.WelcomeActivity" />
-        <activity android:name=".Scenes.Registration.LoginActivity" />
-        <activity android:name=".Scenes.Registration.EnterNameActivity" />
-        <activity android:name=".Scenes.Registration.EnterEmailActivity" />
-        <activity android:name=".Scenes.Registration.EnterPasswordActivity" />
-        <activity android:name=".Scenes.Tabs.MainTabsActivity"
+        <activity android:name="tv.ourglass.ourglasstv.Scenes.Registration.WelcomeActivity" />
+        <activity android:name="tv.ourglass.ourglasstv.Scenes.Registration.LoginActivity" />
+        <activity android:name="tv.ourglass.ourglasstv.Scenes.Registration.EnterNameActivity" />
+        <activity android:name="tv.ourglass.ourglasstv.Scenes.Registration.EnterEmailActivity" />
+        <activity android:name="tv.ourglass.ourglasstv.Scenes.Registration.EnterPasswordActivity" />
+        <activity android:name="tv.ourglass.ourglasstv.Scenes.Tabs.MainTabsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".Scenes.Registration.CheckAuthActivity">
+        <activity android:name="tv.ourglass.ourglasstv.Scenes.Registration.CheckAuthActivity">
         </activity>
-        <activity android:name=".Scenes.Introduction.IntroSlidesActivity" />
-        <activity android:name=".Scenes.Introduction.CheckAppOpenedActivity">
+        <activity android:name="tv.ourglass.ourglasstv.Scenes.Introduction.IntroSlidesActivity" />
+        <activity android:name="tv.ourglass.ourglasstv.Scenes.Introduction.CheckAppOpenedActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

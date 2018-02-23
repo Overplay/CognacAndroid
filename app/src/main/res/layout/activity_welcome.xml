@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/OGBackgroundGrey"
-    tools:context=".Scenes.Registration.WelcomeActivity">
+    tools:context="tv.ourglass.ourglasstv.Scenes.Registration.WelcomeActivity">
 
     <View
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-        <tv.ourglass.alyssa.bourbon_android.Views.BoldTextView
+        <tv.ourglass.ourglasstv.Views.BoldTextView
             android:text="@string/welcome_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             android:textSize="50sp"
             android:textColor="@color/OGHURRICANE_BLUE"/>
 
-        <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
+        <tv.ourglass.ourglasstv.Views.RegularTextView
             android:text="@string/welcome_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             android:id="@+id/textView1"
             android:textAlignment="viewStart" />
 
-        <tv.ourglass.alyssa.bourbon_android.Views.RegularButton
+        <tv.ourglass.ourglasstv.Views.RegularButton
             android:text="@string/login"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
             android:textColor="@color/OGWhite"
             android:textSize="20sp" />
 
-        <tv.ourglass.alyssa.bourbon_android.Views.RegularTextView
+        <tv.ourglass.ourglasstv.Views.RegularTextView
             android:text="@string/or"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
             android:id="@+id/textView2"
             android:textAlignment="viewStart" />
 
-        <tv.ourglass.alyssa.bourbon_android.Views.RegularButton
+        <tv.ourglass.ourglasstv.Views.RegularButton
             android:text="@string/signup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

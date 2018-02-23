@@ -8,6 +8,6 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="tv.ourglass.alyssa.bourbon_android.Scenes.Introduction.CheckAppOpenedActivity">
+    tools:context="tv.ourglass.alyssa.ourglasstv.tv.ourglass.ourglasstv.Scenes.Introduction.CheckAppOpenedActivity">
 
 </RelativeLayout>

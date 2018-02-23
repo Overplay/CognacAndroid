@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="tv.ourglass.alyssa.bourbon_android.Scenes.Settings.SetupDevice.FindYelpVenueFragment">
+    tools:context="tv.ourglass.alyssa.ourglasstv.tv.ourglass.ourglasstv.Scenes.Settings.SetupDevice.FindYelpVenueFragment">
 
     <include
         layout="@layout/toolbar"
@@ -31,7 +31,7 @@
 
     </ListView>
 
-    <tv.ourglass.alyssa.bourbon_android.Views.LightTextView
+    <tv.ourglass.ourglasstv.Views.LightTextView
         android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
